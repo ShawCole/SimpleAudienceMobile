@@ -1,0 +1,29 @@
+{
+  "name": "simpleaudience-mobile",
+  "version": "1.0.0",
+  "description": "Mobile-first interface for SimpleAudience audience creation and management",
+  "private": true,
+  "workspaces": [
+    "backend",
+    "mobile",
+    "shared"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:mobile\"",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:mobile": "cd mobile && npm run dev",
+    "build": "npm run build:backend && npm run build:mobile",
+    "build:backend": "cd backend && npm run build",
+    "build:mobile": "cd mobile && npm run build",
+    "start": "concurrently \"npm run start:backend\" \"npm run start:mobile\"",
+    "start:backend": "cd backend && npm run start",
+    "start:mobile": "cd mobile && npm run start"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

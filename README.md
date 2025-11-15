@@ -1,354 +1,431 @@
-SimpleAudience Mobile Builder
-A mobile-first interface for building, managing, and automating SimpleAudience lists
-
-SimpleAudience Mobile Builder is a mobile application and headless automation layer that allows users to easily create, modify, track, and download audiences from SimpleAudience.io using a clean, intuitive mobile UI.
-
-This project mirrors all core audience-building functionality of the SimpleAudience web platform — including filters, intent selection, previewing, generating, refreshing, duplicating, and downloading — through a fully managed automation engine running behind the scenes.
-
-🚀 Features
-Audience Creation (Mobile UI → Headless Automation)
-
-Select filters across all categories:
-
-Business
-
-Financial
-
-Personal
-
-Family
-
-Housing
-
-Contact
-
-Multi-select Cities, States, Zip Codes, with automatic validation:
-
-Proper comma-separated insertion
-
-Load-indicator detection
-
-Auto-submit with Enter/Return once ready
-
-Full Intent Engine:
-
-Premade B2B/B2C keyword selection
-
-Manual keyword entry
-
-AI-generated keyword suggestions
-
-Intent score selection (Low, Medium, High)
-
-Filter validation before saving
-
-Auto-sync to SimpleAudience
-
-Audience Preview & Generation
-
-Real-time audience preview call
-
-Automatic extraction of preview size
-
-Generate Audience flow:
-
-Detects the “Generate Audience” button
-
-Confirms popup actions
-
-Monitors generation pipeline (“In Queue” → “Processing” → “Hydrating” → “Completed”)
-
-Audience Status Tracking
-
-Each created audience automatically appears in the mobile dashboard, showing:
-
-Status
-
-Audience size
-
-Creation date
-
-Last refreshed
-
-Refresh count
-
-Audience Management Tools
-
-For every audience, users can:
-
-Refresh (manual or scheduled)
-
-Edit (reopen filter UI with prior settings)
-
-Download CSVs (with history timestamps & row counts)
-
-Duplicate audience
-
-Delete audience
-
-Add Webhook
-
-For push notifications when audiences finish generating
-
-Test webhook connectivity directly from the app
-
-Webhooks & Notifications
-
-Receive mobile notifications when:
-
-Audience generation completes
-
-A new downloadable CSV is available
-
-A scheduled refresh finishes
-
-🧠 System Architecture
-1. Mobile Client (iOS / Android)
-
-Built with:
-
-React Native or Flutter
-
-Optimized for:
-
-One-handed navigation
-
-Simple, structured filtering menus
-
-Fast audience creation
-
-2. Headless Automation Engine
-
-Responsible for:
-
-Authenticating to SimpleAudience
-
-Applying filters based on selections
-
-Handling UI-driven operations through automation (headless browser or API-like layer)
-
-Monitoring audience generation lifecycle
-
-Extracting dynamic fields (# of results, status, CSV download links)
-
-Triggering webhook notifications
-
-Managing CRUD operations for audiences
-
-3. API Gateway
-
-Mobile client communicates with the automation layer through a secure REST API
-
-Endpoints:
-
-/audiences/create
-
-/audiences/:id/status
-
-/audiences/:id/refresh
-
-/audiences/:id/downloads
-
-/audiences/:id/duplicate
-
-/audiences/:id/delete
-
-/webhook/register
-
-/intent/generate
-
-4. Database Layer
-
-Stores:
-
-User sessions
-
-Audience metadata
-
-Webhook URLs
-
-Activity logs
-
-Pending refresh schedules
-
-5. Notification System
-
-Push notifications handled through:
-
-Firebase (Android)
-
-APNs (iOS)
-
-Triggered by:
-
-Audience completed
-
-CSV available
-
-Refresh completed
-
-Webhook events
-
-📦 Installation
-Prerequisites
-
-Node.js 18+
-
-Yarn or npm
-
-Docker (for automation engine)
-
-SimpleAudience account credentials
-
-API keys for Firebase/APNs
-
-Setup
-git clone https://github.com/<your-org>/simpleaudience-mobile-builder
-cd simpleaudience-mobile-builder
-
-# Install mobile dependencies
-cd mobile
-yarn install
-
-# Install automation layer dependencies
-cd ../backend
+# 📱 SimpleAudience Mobile
+
+> **Mobile-first web application for creating, managing, and automating SimpleAudience audiences**
+
+A complete solution for building and managing SimpleAudience audiences through an intuitive mobile interface backed by a powerful headless automation engine.
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Node.js](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen)](https://nodejs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.3-blue)](https://www.typescriptlang.org/)
+
+---
+
+## ✨ Features
+
+### 🎯 Audience Creation & Management
+- **Multi-step wizard** for intuitive audience creation
+- **Real-time filtering** with location, intent, and custom criteria
+- **AI-powered intent generation** for smart keyword suggestions
+- **Live preview** of audience size before generation
+- **Status monitoring** with automatic updates
+
+### 🔄 Automation Engine
+- **Headless browser automation** using Puppeteer
+- **Smart XPath selectors** for reliable DOM interaction
+- **State machine** for deterministic workflow management
+- **Retry logic** with exponential backoff
+- **Error recovery** and detailed logging
+
+### 📊 Dashboard & Monitoring
+- **Mobile-optimized dashboard** showing all audiences
+- **Real-time status updates** (via SWR polling)
+- **Filter-based audience details**
+- **Refresh scheduling** (manual, daily, weekly, monthly)
+- **Duplicate & delete** operations with confirmation
+
+### 🚀 Mobile-First Design
+- **Responsive layout** for iOS, Android, and desktop
+- **Touch-friendly UI** (44px minimum touch targets)
+- **Dark mode support**
+- **Progressive Web App** ready
+- **Offline-capable** (with service workers)
+
+---
+
+## 🏗️ Architecture
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    Mobile Web Interface                      │
+│                    (Next.js + React)                         │
+│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐   │
+│  │Dashboard │  │ Create   │  │ Audience │  │ Settings │   │
+│  │          │  │ Wizard   │  │ Detail   │  │          │   │
+│  └──────────┘  └──────────┘  └──────────┘  └──────────┘   │
+└────────────────────┬────────────────────────────────────────┘
+                     │ HTTP/REST
+                     ▼
+┌─────────────────────────────────────────────────────────────┐
+│                     REST API Server                          │
+│                   (Express + TypeScript)                     │
+│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐   │
+│  │Audiences │  │ Webhooks │  │  Google  │  │  Auth    │   │
+│  │  CRUD    │  │ Manager  │  │  Drive   │  │ Service  │   │
+│  └──────────┘  └──────────┘  └──────────┘  └──────────┘   │
+└────────────────────┬────────────────────────────────────────┘
+                     │
+                     ▼
+┌─────────────────────────────────────────────────────────────┐
+│              Headless Automation Engine                      │
+│                  (Puppeteer + State Machine)                 │
+│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐   │
+│  │ Browser  │  │  XPath   │  │  State   │  │  Retry   │   │
+│  │ Manager  │  │ Helpers  │  │ Machine  │  │  Logic   │   │
+│  └──────────┘  └──────────┘  └──────────┘  └──────────┘   │
+└────────────────────┬────────────────────────────────────────┘
+                     │
+                     ▼
+┌─────────────────────────────────────────────────────────────┐
+│                  SimpleAudience Web App                      │
+│              (Automated via Puppeteer)                       │
+└─────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+- **Node.js** 18.0.0 or higher
+- **npm** or **yarn**
+- **SimpleAudience account** with credentials
+
+### Installation
+
+```bash
+# Clone the repository
+git clone <repository-url>
+cd SimpleAudienceMobile
+
+# Install dependencies
 npm install
 
-# Setup environment variables
-cp .env.example .env
+# Set up environment variables
+cp backend/.env.example backend/.env
+cp mobile/.env.local.example mobile/.env.local
 
-Run Development Environment
-Backend (Headless Automation Engine)
-cd backend
+# Edit backend/.env with your SimpleAudience credentials
+# SIMPLEAUDIENCE_EMAIL=your-email@example.com
+# SIMPLEAUDIENCE_PASSWORD=your-password
+
+# Start development servers
 npm run dev
+```
 
-Mobile App
+The application will be available at:
+- **Frontend:** http://localhost:3000
+- **Backend API:** http://localhost:3001
+
+### First Run
+
+1. Open http://localhost:3000
+2. Click **"Create Audience"**
+3. Follow the wizard:
+   - Enter audience name
+   - Add location filters (optional)
+   - Set intent targeting (optional)
+   - Review and create
+4. Monitor audience status on the dashboard
+
+---
+
+## 📂 Project Structure
+
+```
+SimpleAudienceMobile/
+├── backend/                    # Node.js automation engine
+│   ├── src/
+│   │   ├── automation/        # Browser automation & state machine
+│   │   │   ├── browser-manager.ts
+│   │   │   ├── state-machine.ts
+│   │   │   └── simpleaudience-client.ts
+│   │   ├── api/               # REST API routes
+│   │   │   └── routes.ts
+│   │   ├── services/          # Business logic
+│   │   │   ├── database.ts
+│   │   │   ├── audience-service.ts
+│   │   │   └── google-drive-service.ts
+│   │   ├── utils/             # Utilities
+│   │   │   ├── logger.ts
+│   │   │   ├── xpath.ts
+│   │   │   ├── retry.ts
+│   │   │   └── selectors.ts
+│   │   └── index.ts           # Server entry point
+│   ├── data/                  # SQLite database
+│   └── logs/                  # Application logs
+│
+├── mobile/                     # Next.js mobile UI
+│   └── src/
+│       ├── app/               # Next.js app router
+│       │   ├── page.tsx       # Dashboard
+│       │   ├── create/        # Audience creation wizard
+│       │   └── audience/[id]/ # Audience detail page
+│       ├── components/        # React components
+│       │   ├── layout/        # Header, navigation
+│       │   ├── ui/            # Button, Card, Input, etc.
+│       │   └── audience/      # Audience-specific components
+│       ├── hooks/             # Custom hooks (SWR)
+│       ├── services/          # API client
+│       └── styles/            # Global styles
+│
+├── shared/                     # Shared TypeScript types
+│   ├── types/                 # Common interfaces
+│   │   ├── audience.ts
+│   │   ├── api.ts
+│   │   └── automation.ts
+│   └── utils/                 # Shared utilities
+│       ├── validators.ts
+│       └── formatters.ts
+│
+├── docs/                       # Documentation
+│   ├── INSTALLATION.md
+│   ├── API.md
+│   └── DEVELOPMENT.md
+│
+├── CLAUDE.md                   # AI assistant context
+├── README.md                   # This file
+└── package.json               # Workspace configuration
+```
+
+---
+
+## 🎯 Core Workflows
+
+### Creating an Audience
+
+```typescript
+// 1. User fills out creation wizard
+const audienceData = {
+  name: "Tech Startups in California",
+  filters: {
+    location: {
+      states: ["CA"],
+      cities: ["San Francisco", "Los Angeles"]
+    },
+    intent: {
+      type: "custom",
+      keywords: ["cloud computing", "SaaS"],
+      score: "medium"
+    }
+  }
+};
+
+// 2. API request to backend
+POST /api/audiences
+{
+  "name": "Tech Startups in California",
+  "filters": { ... }
+}
+
+// 3. Backend automation flow
+BrowserManager → Authenticate → Navigate to Create Audience
+→ Apply Filters → Preview → Generate → Monitor Status
+
+// 4. Status updates propagate to UI
+building → previewing → generating → in_queue → processing → completed
+```
+
+### Refreshing an Audience
+
+```typescript
+// Manual refresh
+POST /api/audiences/:id/refresh
+
+// Scheduled refresh
+POST /api/audiences/:id/refresh
+{
+  "schedule": "7_days"  // everyday, 3_days, 7_days, 14_days, monthly
+}
+```
+
+---
+
+## 🛠️ Technology Stack
+
+### Backend
+| Technology | Purpose |
+|-----------|---------|
+| **Node.js + TypeScript** | Server runtime & type safety |
+| **Express** | REST API framework |
+| **Puppeteer** | Headless browser automation |
+| **better-sqlite3** | Embedded database |
+| **Winston** | Logging |
+| **Zod** | Schema validation |
+
+### Frontend
+| Technology | Purpose |
+|-----------|---------|
+| **Next.js 14** | React framework with App Router |
+| **TypeScript** | Type safety |
+| **Tailwind CSS** | Utility-first styling |
+| **SWR** | Data fetching & caching |
+| **Axios** | HTTP client |
+| **React Hot Toast** | Notifications |
+| **Lucide React** | Icons |
+
+---
+
+## 📖 Documentation
+
+- **[Installation Guide](docs/INSTALLATION.md)** - Detailed setup instructions
+- **[API Reference](docs/API.md)** - Complete API documentation
+- **[CLAUDE.md](CLAUDE.md)** - AI assistant context & future iterations
+
+---
+
+## 🔧 Configuration
+
+### Backend Environment Variables
+
+```env
+# Server
+PORT=3001
+NODE_ENV=development
+
+# SimpleAudience
+SIMPLEAUDIENCE_EMAIL=your-email@example.com
+SIMPLEAUDIENCE_PASSWORD=your-password
+SIMPLEAUDIENCE_BASE_URL=https://app.simpleaudience.io
+
+# Database
+DATABASE_PATH=./data/simpleaudience.db
+
+# Browser Automation
+HEADLESS=true
+BROWSER_TIMEOUT=30000
+
+# Google Drive (Optional)
+GOOGLE_CLIENT_ID=your-client-id
+GOOGLE_CLIENT_SECRET=your-client-secret
+GOOGLE_REDIRECT_URI=http://localhost:3001/auth/google/callback
+```
+
+### Frontend Environment Variables
+
+```env
+NEXT_PUBLIC_API_URL=http://localhost:3001/api
+```
+
+---
+
+## 🧪 Development
+
+### Running Tests
+
+```bash
+# Backend tests
+cd backend
+npm test
+
+# Frontend tests
 cd mobile
-npx expo start
+npm test
+```
 
-📘 Usage Overview
-1. Create a New Audience
+### Building for Production
 
-Tap Create Audience
+```bash
+# Build all packages
+npm run build
 
-Select:
+# Start production servers
+npm start
+```
 
-Business filters
+### Debugging
 
-Personal/Financial filters
+```bash
+# Enable verbose logging
+LOG_LEVEL=debug npm run dev
 
-Contact type (personal email, work email, etc.)
+# Disable headless mode (see browser automation)
+HEADLESS=false npm run dev
 
-Intent (optional)
+# Take screenshots during automation
+# See: backend/src/automation/browser-manager.ts
+```
 
-Tap Preview
+---
 
-Wait for result count
+## 📊 Database Schema
 
-Tap Generate Audience
+The application uses SQLite with the following tables:
 
-Confirm in popup
+- **audiences** - Audience metadata and filters
+- **downloads** - CSV download history
+- **webhooks** - Webhook configurations
+- **operations** - Operation history and status
 
-2. Monitor Audience Status
+See `backend/src/services/database.ts` for detailed schema.
 
-View:
+---
 
-Status
+## 🚨 Known Limitations
 
-Size
+### Current Implementation
 
-Dates
+✅ **Fully Implemented:**
+- Audience creation with location & intent filters
+- Dashboard with real-time updates
+- Refresh, duplicate, delete operations
+- Mobile-responsive UI
 
-Refresh count
+⚠️ **Partial Implementation:**
+- XPath selectors (need customization for your SimpleAudience instance)
+- AI intent generation (placeholder logic)
+- Status polling (simulated, needs actual DOM scraping)
 
-Updates in real time.
+❌ **Not Yet Implemented:**
+- Google Drive file upload
+- Webhook triggers
+- Advanced filters (business, financial, personal)
+- CSV download handling
+- Mobile share sheet
 
-3. Download Audience
+### SimpleAudience-Specific Challenges
 
-Tap Downloads
+- **XPath Selectors:** The selectors in `backend/src/utils/selectors.ts` are placeholders. You must inspect your SimpleAudience instance and update them.
+- **Rate Limiting:** No protection against automation detection
+- **Dynamic Content:** Some UI elements may load slowly or change
+- **Popup Handling:** Multiple popups can stack unexpectedly
 
-Select any CSV timestamp
+---
 
-File is delivered to device
+## 🤝 Contributing
 
-4. Edit / Duplicate / Refresh
+Contributions are welcome! Please follow these steps:
 
-Accessible via Audience Options.
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-5. Webhook Notifications
+---
 
-Register a webhook to receive:
+## 📄 License
 
-Audience Completed events
+This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
 
-CSV Ready events
+---
 
-🛠️ Development Notes
-Filter Mapping
+## 🙏 Acknowledgments
 
-Each mobile UI selection maps to a known XPath or abstraction in the headless engine:
+- Built with [Next.js](https://nextjs.org/)
+- Automation powered by [Puppeteer](https://pptr.dev/)
+- UI components inspired by [Tailwind UI](https://tailwindui.com/)
 
-Filters
+---
 
-Dropdown options
+## 📞 Support
 
-Input validation logic
+For issues, questions, or feature requests, please:
 
-Popup handling
+1. Check existing [issues](../../issues)
+2. Review the [documentation](docs/)
+3. Open a new issue with detailed information
 
-Loading indicator detection
+---
 
-Enter key confirmations (Cities, States, Zips)
-
-Refresh Modal Handling
-
-Dropdown options include:
-
-Everyday
-
-3 Days
-
-7 Days
-
-14 Days
-
-1st of Every Month (UTC)
-
-Download Modal Parsing
-
-Each downloadable entry includes:
-
-Timestamp
-
-Row count
-
-Download endpoint
-
-Error Handling
-
-Failed audiences
-
-Timeouts
-
-Missing filter selections
-
-Invalid location inputs
-
-Webhook failures
-
-📄 License
-
-MIT License — free for commercial and private use.
-
-🤝 Contributing
-
-Pull requests are welcome!
-Please open an issue before submitting large changes.
-
-If you'd like, I can also generate:
-
-✅ A diagram of the system architecture
-✅ A full API specification
-✅ A mobile UI wireframe
-✅ A database schema
-✅ A naming structure for endpoints and events
+**Made with ❤️ for SimpleAudience automation**
