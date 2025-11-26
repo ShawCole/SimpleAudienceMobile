@@ -1,7 +1,7 @@
 [build]
   base = "mobile"
   command = "npm run build"
-  publish = ".netlify"
+  publish = ".next"
 
 [[plugins]]
      package = "@netlify/plugin-nextjs"
