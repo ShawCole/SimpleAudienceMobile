@@ -3,6 +3,8 @@
  * Shared between backend automation and mobile UI
  */
 
+import { FILTER_TAXONOMY } from '../taxonomy/filter-taxonomy';
+
 export type AudienceStatus =
   | 'idle'
   | 'building'
@@ -26,70 +28,116 @@ export type RefreshSchedule =
   | '14_days'
   | 'monthly';
 
-export interface LocationFilter {
-  cities?: string[];
-  states?: string[];
-  zipCodes?: string[];
+export type AudienceMode = 'b2b' | 'b2c';
+export type IntentMode = 'none' | 'custom' | 'ai' | 'premade';
+export type BinaryChoice = 'yes' | 'no' | 'any';
+export type ToggleChoice = 'on' | 'off' | 'any';
+
+export interface IndexedOptionValue {
+  index: number;
+  label: string;
 }
 
-export interface BusinessFilter {
-  industries?: string[];
-  companySize?: string[];
-  revenue?: string[];
-  sicCodes?: string[];
-  naicsCodes?: string[];
+export interface NumericRange {
+  min?: number;
+  max?: number;
 }
 
-export interface FinancialFilter {
-  creditScore?: string[];
-  homeValue?: string[];
-  netWorth?: string[];
-  income?: string[];
+export interface LocationFilters {
+  cities: string[];
+  states: string[];
+  zipCodes: string[];
 }
 
-export interface PersonalFilter {
-  age?: string[];
-  gender?: string[];
-  education?: string[];
-  occupation?: string[];
-}
-
-export interface FamilyFilter {
-  maritalStatus?: string[];
-  childrenPresent?: boolean;
-  childrenAges?: string[];
-}
-
-export interface HousingFilter {
-  homeOwner?: boolean;
-  homeType?: string[];
-  lengthOfResidence?: string[];
-}
-
-export interface ContactFilter {
-  emailType?: ('personal' | 'work')[];
-  phoneType?: ('mobile' | 'landline')[];
-  hasEmail?: boolean;
-  hasPhone?: boolean;
-  hasAddress?: boolean;
-}
-
-export interface IntentFilter {
-  type: 'premade' | 'custom' | 'ai_generated';
-  keywords?: string[];
-  score?: IntentScore;
+export interface IntentFilters {
+  mode: IntentMode;
+  keywords: string[];
   aiPrompt?: string;
+  score?: IntentScore;
+  audienceType?: AudienceMode;
+  premadeTopics?: IndexedOptionValue[];
 }
 
-export interface AudienceFilters {
-  location?: LocationFilter;
-  business?: BusinessFilter;
-  financial?: FinancialFilter;
-  personal?: PersonalFilter;
-  family?: FamilyFilter;
-  housing?: HousingFilter;
-  contact?: ContactFilter;
-  intent?: IntentFilter;
+export interface BusinessFilters {
+  seniority?: IndexedOptionValue[];
+  departments?: IndexedOptionValue[];
+  industries?: IndexedOptionValue[];
+  employeeCount?: IndexedOptionValue[];
+  companyRevenue?: IndexedOptionValue[];
+}
+
+export interface FinancialFilters {
+  incomeRange?: IndexedOptionValue[];
+  netWorth?: IndexedOptionValue[];
+  creditRating?: IndexedOptionValue[];
+  newCreditRange?: IndexedOptionValue[];
+  investment?: IndexedOptionValue[];
+  craCode?: IndexedOptionValue[];
+  occupationGroup?: IndexedOptionValue[];
+  occupationType?: IndexedOptionValue[];
+  creditCardUser?: IndexedOptionValue[];
+  mortgageAmount?: NumericRange;
+}
+
+export interface PersonalFilters {
+  ageRange?: NumericRange;
+  gender?: IndexedOptionValue[];
+  ethnicity?: IndexedOptionValue[];
+  language?: IndexedOptionValue[];
+  education?: IndexedOptionValue[];
+  smoker?: IndexedOptionValue[];
+}
+
+export interface FamilyFilters {
+  married?: IndexedOptionValue[];
+  maritalStatus?: IndexedOptionValue[];
+  singleParent?: IndexedOptionValue[];
+  generationsInHousehold?: IndexedOptionValue[];
+  children?: IndexedOptionValue[];
+}
+
+export interface HousingFilters {
+  homeownerStatus?: IndexedOptionValue[];
+  dwellingType?: IndexedOptionValue[];
+  yearBuilt?: NumericRange;
+  purchasePrice?: NumericRange;
+  purchaseYear?: NumericRange;
+  estimatedHomeValue?: IndexedOptionValue[];
+}
+
+export interface ContactFilters {
+  verifiedPersonalEmails?: ToggleChoice;
+  verifiedBusinessEmails?: ToggleChoice;
+  validPhones?: ToggleChoice;
+  skipTracedWireless?: ToggleChoice;
+  skipTracedWirelessB2B?: ToggleChoice;
+}
+
+export interface AdvancedFilters {
+  business?: BusinessFilters;
+  financial?: FinancialFilters;
+  personal?: PersonalFilters;
+  family?: FamilyFilters;
+  housing?: HousingFilters;
+  contact?: ContactFilters;
+}
+
+export interface AudiencePayload {
+  name: string;
+  /**
+   * Human-friendly client label for this audience
+   * Optional for backwards compatibility with existing payloads,
+   * but required by the create-audience UI for new audiences.
+   */
+  clientName?: string;
+  /**
+   * Optional freeform price note for how much the list will be sold for.
+   * Stored as a string so users can include currency symbols and ranges.
+   */
+  listPrice?: string;
+  location: LocationFilters;
+  intent: IntentFilters;
+  filters: AdvancedFilters;
 }
 
 export interface AudienceMetadata {
@@ -103,7 +151,7 @@ export interface AudienceMetadata {
   lastRefreshed?: Date;
   refreshCount: number;
   nextRefresh?: Date;
-  filters: AudienceFilters;
+  payload: AudiencePayload;
 }
 
 export interface DownloadEntry {
@@ -134,3 +182,7 @@ export interface AudienceOperation {
   completedAt?: Date;
   error?: string;
 }
+
+export type AudienceFilters = AdvancedFilters;
+export const TAXONOMY = FILTER_TAXONOMY;
+
