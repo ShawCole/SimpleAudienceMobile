@@ -29,9 +29,10 @@ export const Textarea: React.FC<TextareaProps> = ({
       <textarea
         className={clsx(
           'block px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 sm:text-sm',
+          'bg-white text-gray-900 placeholder-gray-500 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400',
           error
             ? 'border-red-300 text-red-900 placeholder-red-300 focus:ring-red-500 focus:border-red-500'
-            : 'border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white',
+            : 'border-gray-300 dark:border-gray-600',
           fullWidth && 'w-full',
           className
         )}

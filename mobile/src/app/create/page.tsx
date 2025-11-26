@@ -17,6 +17,8 @@ import {
   Home,
   Phone,
   ClipboardCheck,
+  Sun,
+  Moon,
 } from 'lucide-react';
 import { Header } from '../../components/layout/header';
 import { Button } from '../../components/ui/button';
@@ -794,6 +796,7 @@ export default function CreateAudiencePage() {
   const keywordsInputId = useId();
   const keywordsErrorId = `${keywordsInputId}-error`;
   const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
+  const [theme, setTheme] = useState<'light' | 'dark'>('light');
 
   const mortgageAmount = draft.filters.financial?.mortgageAmount;
   const mortgageInvalid =
@@ -871,6 +874,32 @@ export default function CreateAudiencePage() {
     setCurrentStepIndex(prev => Math.min(prev + 1, steps.length - 1));
     scrollToTop();
   };
+
+  useEffect(() => {
+    if (typeof window === 'undefined') {
+      return;
+    }
+    const storedTheme = localStorage.getItem('theme');
+    if (storedTheme === 'light' || storedTheme === 'dark') {
+      setTheme(storedTheme);
+    } else {
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      setTheme(prefersDark ? 'dark' : 'light');
+    }
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') {
+      return;
+    }
+    const root = document.documentElement;
+    if (theme === 'dark') {
+      root.classList.add('dark');
+    } else {
+      root.classList.remove('dark');
+    }
+    localStorage.setItem('theme', theme);
+  }, [theme]);
 
   const handleBack = () => {
     if (currentStepIndex === 0) {
@@ -1958,6 +1987,15 @@ export default function CreateAudiencePage() {
           </div>
         </div>
       )}
+      <Button
+        variant="secondary"
+        size="sm"
+        aria-label="Toggle color theme"
+        className="fixed bottom-6 right-6 z-40 rounded-full border border-gray-200 bg-white/90 backdrop-blur shadow-lg dark:border-gray-700 dark:bg-gray-900/90"
+        onClick={() => setTheme(prev => (prev === 'dark' ? 'light' : 'dark'))}
+      >
+        {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+      </Button>
     </div>
   );
 }
