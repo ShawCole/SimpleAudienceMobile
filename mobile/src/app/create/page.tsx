@@ -1626,12 +1626,6 @@ export default function CreateAudiencePage() {
               value={draft.clientName || ''}
               onChange={(e) => setDraft(prev => ({ ...prev, clientName: e.target.value }))}
             />
-            <Input
-              label="How much will you sell this list for? (optional)"
-              placeholder="e.g., $5,000"
-              value={draft.listPrice || ''}
-              onChange={(e) => setDraft(prev => ({ ...prev, listPrice: e.target.value }))}
-            />
           </div>
         );
       case 'location':
