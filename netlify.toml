@@ -2,18 +2,3 @@
   base = "mobile"
   command = "npm run build"
   publish = ".next"
-
-[[redirects]]
-  from = "/"
-  to = "/server/app/index.html"
-  status = 200
-
-[[redirects]]
-  from = "/create"
-  to = "/server/app/create.html"
-  status = 200
-
-[[redirects]]
-  from = "/audience/*"
-  to = "/server/app/index.html"
-  status = 200
