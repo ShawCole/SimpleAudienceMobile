@@ -805,6 +805,7 @@ export default function CreateAudiencePage() {
     );
 
   const currentStep = steps[currentStepIndex];
+  const NAV_ICON_SIZE = 24;
 
   const canProceedFromNameStep =
     currentStep.id === 'name'
@@ -1864,7 +1865,7 @@ export default function CreateAudiencePage() {
         <div className="flex gap-3 mb-4">
           {currentStepIndex > 0 && (
             <Button variant="secondary" size="lg" onClick={handleBack} className="flex items-center">
-              <ArrowLeft size={20} className="mr-2" />
+              <ArrowLeft size={NAV_ICON_SIZE} className="mr-2" />
               Back
             </Button>
           )}
@@ -1878,17 +1879,16 @@ export default function CreateAudiencePage() {
                 className="flex flex-1 items-center justify-center"
               >
                 Next
-                <ArrowRight size={20} className="ml-2" />
+                <ArrowRight size={NAV_ICON_SIZE} className="ml-2" />
               </Button>
             ) : (
               <Button
                 variant="primary"
                 size="lg"
-                fullWidth
-                onClick={handleSubmit}
-                loading={loading}
+                onClick={() => setIsRequestModalOpen(true)}
+                className="flex flex-1 items-center justify-center"
               >
-                Create Audience
+                Request Audience
               </Button>
             )
           )}
@@ -1908,7 +1908,7 @@ export default function CreateAudiencePage() {
         <div className="flex gap-3">
           {currentStepIndex > 0 && (
             <Button variant="secondary" size="lg" onClick={handleBack} className="flex items-center">
-              <ArrowLeft size={20} className="mr-2" />
+              <ArrowLeft size={NAV_ICON_SIZE} className="mr-2" />
               Back
             </Button>
           )}
@@ -1923,13 +1923,13 @@ export default function CreateAudiencePage() {
               disabled={!canProceedFromNameStep}
             >
               Next
-              <ArrowRight size={20} className="ml-2" />
+              <ArrowRight size={NAV_ICON_SIZE} className="ml-2" />
             </Button>
           ) : (
             <Button
               variant="primary"
               size="lg"
-              fullWidth
+              className={`flex items-center justify-center ${currentStepIndex > 0 ? 'flex-1' : ''}`}
               onClick={() => setIsRequestModalOpen(true)}
             >
               Request Audience
