@@ -879,13 +879,13 @@ export default function CreateAudiencePage() {
     if (typeof window === 'undefined') {
       return;
     }
-    const storedTheme = localStorage.getItem('theme');
-    if (storedTheme === 'light' || storedTheme === 'dark') {
-      setTheme(storedTheme);
-    } else {
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      setTheme(prefersDark ? 'dark' : 'light');
-    }
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const updateTheme = (event: MediaQueryList | MediaQueryListEvent) => {
+      setTheme(event.matches ? 'dark' : 'light');
+    };
+    updateTheme(mediaQuery);
+    mediaQuery.addEventListener('change', updateTheme);
+    return () => mediaQuery.removeEventListener('change', updateTheme);
   }, []);
 
   useEffect(() => {
@@ -898,7 +898,6 @@ export default function CreateAudiencePage() {
     } else {
       root.classList.remove('dark');
     }
-    localStorage.setItem('theme', theme);
   }, [theme]);
 
   const handleBack = () => {
@@ -1987,15 +1986,6 @@ export default function CreateAudiencePage() {
           </div>
         </div>
       )}
-      <Button
-        variant="secondary"
-        size="sm"
-        aria-label="Toggle color theme"
-        className="fixed bottom-6 right-6 z-40 rounded-full border border-gray-200 bg-white/90 backdrop-blur shadow-lg dark:border-gray-700 dark:bg-gray-900/90"
-        onClick={() => setTheme(prev => (prev === 'dark' ? 'light' : 'dark'))}
-      >
-        {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
-      </Button>
     </div>
   );
 }
