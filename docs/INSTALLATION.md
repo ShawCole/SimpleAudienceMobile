@@ -121,6 +121,11 @@ Open your browser and navigate to:
 - **Frontend:** http://localhost:3000
 - **API:** http://localhost:3001/api
 
+## Feature Highlights
+
+- The 10-step audience builder now exposes all financial controls, including **Credit Card User (Yes/No)** and **Mortgage Amount (min/max)** inputs.
+- Personal targeting supports the full 305-item **Occupation Type** taxonomy with a searchable dropdown to keep intent prompts grounded in real buyer roles.
+
 ## Production Build
 
 ### 1. Build Backend

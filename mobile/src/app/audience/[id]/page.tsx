@@ -162,45 +162,60 @@ export default function AudienceDetailPage() {
           </h2>
 
           <div className="space-y-4">
-            {audience.filters.location && (
-              <div>
-                <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Location
-                </p>
-                <div className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
-                  {audience.filters.location.cities && (
-                    <p>Cities: {audience.filters.location.cities.join(', ')}</p>
-                  )}
-                  {audience.filters.location.states && (
-                    <p>States: {audience.filters.location.states.join(', ')}</p>
-                  )}
-                  {audience.filters.location.zipCodes && (
-                    <p>ZIP Codes: {audience.filters.location.zipCodes.join(', ')}</p>
-                  )}
+            {(audience.payload.location.cities.length > 0 ||
+              audience.payload.location.states.length > 0 ||
+              audience.payload.location.zipCodes.length > 0) && (
+                <div>
+                  <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    Location
+                  </p>
+                  <div className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
+                    {audience.payload.location.cities.length > 0 && (
+                      <p>Cities: {audience.payload.location.cities.join(', ')}</p>
+                    )}
+                    {audience.payload.location.states.length > 0 && (
+                      <p>States: {audience.payload.location.states.join(', ')}</p>
+                    )}
+                    {audience.payload.location.zipCodes.length > 0 && (
+                      <p>ZIP Codes: {audience.payload.location.zipCodes.join(', ')}</p>
+                    )}
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
 
-            {audience.filters.intent && (
-              <div>
-                <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Intent
-                </p>
-                <div className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
-                  <p>Type: {audience.filters.intent.type}</p>
-                  {audience.filters.intent.keywords && (
-                    <p>Keywords: {audience.filters.intent.keywords.join(', ')}</p>
-                  )}
-                  {audience.filters.intent.score && (
-                    <p>Score: {audience.filters.intent.score}</p>
-                  )}
+            {(audience.payload.intent.mode !== 'none' ||
+              audience.payload.intent.keywords.length > 0 ||
+              (audience.payload.intent.premadeTopics?.length ?? 0) > 0) && (
+                <div>
+                  <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    Intent
+                  </p>
+                  <div className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
+                    <p>Mode: {audience.payload.intent.mode}</p>
+                    {audience.payload.intent.keywords.length > 0 && (
+                      <p>Keywords: {audience.payload.intent.keywords.join(', ')}</p>
+                    )}
+                    {audience.payload.intent.score && (
+                      <p>Score: {audience.payload.intent.score}</p>
+                    )}
+                    {audience.payload.intent.premadeTopics?.length ? (
+                      <p>
+                        Premade:{' '}
+                        {audience.payload.intent.premadeTopics.map(topic => topic.label).join(', ')}
+                      </p>
+                    ) : null}
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
 
-            {!audience.filters.location && !audience.filters.intent && (
-              <p className="text-sm text-gray-500 dark:text-gray-400">No filters applied</p>
-            )}
+            {audience.payload.location.cities.length === 0 &&
+              audience.payload.location.states.length === 0 &&
+              audience.payload.location.zipCodes.length === 0 &&
+              audience.payload.intent.mode === 'none' &&
+              audience.payload.intent.keywords.length === 0 &&
+              (audience.payload.intent.premadeTopics?.length ?? 0) === 0 && (
+                <p className="text-sm text-gray-500 dark:text-gray-400">No filters applied</p>
+              )}
           </div>
         </Card>
 

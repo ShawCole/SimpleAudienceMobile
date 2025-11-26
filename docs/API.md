@@ -126,10 +126,20 @@ Create a new audience with filters.
       "type": "custom",
       "keywords": ["cloud computing", "SaaS"],
       "score": "medium"
+    },
+    "financial": {
+      "netWorth": [8, 9, 10],
+      "creditCardUser": [0],
+      "mortgageAmount": { "min": 250000, "max": 1000000 }
+    },
+    "personal": {
+      "occupationType": [4, 11, 12]
     }
   }
 }
 ```
+
+> Indices used in `netWorth`, `creditCardUser`, and `occupationType` reference the canonical tables in `docs/audience_filter_options_grouped*.md` (e.g., `creditCardUser: [0]` = Yes).
 
 **Response:**
 ```json

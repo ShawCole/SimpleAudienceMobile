@@ -117,11 +117,46 @@ const result = await apiClient.createAudience(complexAudience);
 console.log(`Audience ${result.id} is now ${result.status}`);
 ```
 
+### Example 5: High Net Worth Cardholders
+
+Create an audience that targets high-net-worth consumers who actively use credit cards and hold mortgages:
+
+```typescript
+import { AudiencePayload } from '../../shared/types';
+
+const draft: AudiencePayload = {
+  name: 'High-net-worth cardholders',
+  location: {
+    states: ['CA', 'NY']
+  },
+  intent: {
+    mode: 'custom',
+    keywords: ['premium credit card', 'wealth management'],
+    score: 'high'
+  },
+  filters: {
+    financial: {
+      netWorth: [8, 9, 10],          // $250k – $749,999
+      creditCardUser: [0],           // Yes
+      mortgageAmount: { min: 250000, max: 1000000 }
+    },
+    personal: {
+      occupationType: [4, 11, 12]    // Engineer, Engineer/Mechanical, Geologist
+    }
+  }
+};
+
+const preview = await apiClient.previewAudience(draft);
+console.log('Estimated size:', preview.count);
+
+await apiClient.createAudience(draft);
+```
+
 ---
 
 ## Managing Audiences
 
-### Example 5: Monitor Audience Status
+### Example 6: Monitor Audience Status
 
 Poll an audience until it's completed:
 
@@ -150,7 +185,7 @@ const newAudience = await apiClient.createAudience({ ... });
 await waitForCompletion(newAudience.id);
 ```
 
-### Example 6: Scheduled Refresh
+### Example 7: Scheduled Refresh
 
 Set up automatic weekly refresh:
 
@@ -165,7 +200,7 @@ await apiClient.refreshAudience(audienceId, {
 console.log('Audience will refresh every 7 days');
 ```
 
-### Example 7: Bulk Duplicate
+### Example 8: Bulk Duplicate
 
 Create multiple variants of an audience:
 
@@ -184,7 +219,7 @@ const duplicated = await Promise.all(
 console.log(`Created ${duplicated.length} variants`);
 ```
 
-### Example 8: Batch Delete
+### Example 9: Batch Delete
 
 Delete multiple audiences:
 

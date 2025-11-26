@@ -18,12 +18,9 @@
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
+  background: linear-gradient(to bottom,
       transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+      rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
 }
 
 @layer utilities {
@@ -38,10 +35,17 @@ html {
   -webkit-tap-highlight-color: transparent;
 }
 
-/* Touch-friendly buttons */
-button, a {
-  min-height: 44px;
-  min-width: 44px;
+/* Touch-friendly buttons (default). Individual components can override with min-h-0/min-w-0. */
+button,
+a {
+  min-height: 22px;
+  min-width: 22px;
+}
+
+/* Normalize lucide back-arrow icon sizing across top and bottom buttons */
+.lucide-arrow-left {
+  width: 20px;
+  height: 20px;
 }
 
 /* Safe area for mobile devices */

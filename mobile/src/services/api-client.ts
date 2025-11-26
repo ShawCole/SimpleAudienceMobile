@@ -12,6 +12,8 @@ import {
   GenerateIntentRequest,
   AudienceListResponse,
   AudienceMetadata,
+  AudiencePayload,
+  PreviewResponse,
 } from '../../../shared/types';
 
 class ApiClient {
@@ -89,9 +91,23 @@ class ApiClient {
   /**
    * Generate AI intent keywords
    */
-  async generateIntent(prompt: string): Promise<{ keywords: string[]; suggestedScore: string }> {
+  async generateIntent(
+    prompt: string,
+    draft?: AudiencePayload
+  ): Promise<{ keywords: string[]; suggestedScore: string }> {
     const response = await this.client.post<ApiResponse>('/intent/generate', {
       prompt,
+      draft,
+    });
+    return response.data.data!;
+  }
+
+  /**
+   * Preview an audience (placeholder – backend route may not yet exist)
+   */
+  async previewAudience(draft: AudiencePayload): Promise<PreviewResponse> {
+    const response = await this.client.post<ApiResponse<PreviewResponse>>('/audiences/preview', {
+      draft,
     });
     return response.data.data!;
   }
