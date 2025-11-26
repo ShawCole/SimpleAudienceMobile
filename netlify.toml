@@ -1,7 +1,12 @@
 [build]
-  base = "mobile"
-  command = "npm run build"
-  publish = ".next"
+  # We stay at the root so the plugin finds node_modules
+  base = ""
+  
+  # We manually go into mobile to build
+  command = "cd mobile && npm run build"
+  
+  # We point to the output folder relative to the root
+  publish = "mobile/.next"
 
 [[plugins]]
-     package = "@netlify/plugin-nextjs"
+  package = "@netlify/plugin-nextjs"
