@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo, useState, useEffect, useRef } from 'react';
+import React, { useMemo, useState, useEffect, useRef, useId } from 'react';
 import { FixedSizeList as List } from 'react-window';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
@@ -131,6 +131,8 @@ const REVIEW_GROUP_STEP_MAP: Record<string, StepId> = {
   housing: 'housing',
   contact: 'contact',
 };
+
+const SHOW_ADVANCED_INTENT_OPTIONS = false;
 
 const currencyFormatter = new Intl.NumberFormat('en-US', {
   style: 'currency',
@@ -760,22 +762,17 @@ interface ToggleFieldProps {
 }
 
 const ToggleField: React.FC<ToggleFieldProps> = ({ label, value = 'any', onChange }) => {
-  const options: ToggleChoice[] = ['any', 'on', 'off'];
+  const isRequired = value === 'on';
   return (
-    <Card padding="md">
-      <p className="text-sm font-medium text-gray-900 dark:text-white mb-2">{label}</p>
-      <div className="flex gap-2">
-        {options.map(option => (
-          <Button
-            key={`${label}-${option}`}
-            variant={value === option ? 'primary' : 'secondary'}
-            size="sm"
-            onClick={() => onChange(option)}
-          >
-            {option.toUpperCase()}
-          </Button>
-        ))}
-      </div>
+    <Card padding="md" className="flex items-center justify-between">
+      <p className="text-sm font-medium text-gray-900 dark:text-white">{label}</p>
+      <Button
+        variant={isRequired ? 'primary' : 'secondary'}
+        size="sm"
+        onClick={() => onChange(isRequired ? 'any' : 'on')}
+      >
+        {isRequired ? 'Required' : 'Not Required'}
+      </Button>
     </Card>
   );
 };
@@ -786,11 +783,17 @@ export default function CreateAudiencePage() {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [locationForm, setLocationForm] = useState({ cities: '', states: '', zipCodes: '' });
   const [customKeywords, setCustomKeywords] = useState('');
+  const [showKeywordError, setShowKeywordError] = useState(false);
   const [aiDescription, setAiDescription] = useState('');
+  const [minAgeTouched, setMinAgeTouched] = useState(false);
+  const [zipTouched, setZipTouched] = useState(false);
   const [previewState, setPreviewState] = useState<{ loading: boolean; count: number | null; status: string }>(
     { loading: false, count: null, status: 'idle' }
   );
   const [loading, setLoading] = useState(false);
+  const keywordsInputId = useId();
+  const keywordsErrorId = `${keywordsInputId}-error`;
+  const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
 
   const mortgageAmount = draft.filters.financial?.mortgageAmount;
   const mortgageInvalid =
@@ -822,6 +825,13 @@ export default function CreateAudiencePage() {
     }
   };
 
+  const zipTokens = locationForm.zipCodes
+    .split(',')
+    .map(token => token.trim())
+    .filter(Boolean);
+  const isZipFormatValid =
+    zipTokens.length === 0 || zipTokens.every(token => /^\d{5}$/.test(token));
+
   const handleNext = () => {
     if (currentStep.id === 'name') {
       if (!draft.name.trim()) {
@@ -830,6 +840,26 @@ export default function CreateAudiencePage() {
       }
       if (!draft.clientName?.trim()) {
         toast.error('Please enter a client name.');
+        return;
+      }
+    }
+    if (currentStep.id === 'intent') {
+      if (!isKeywordRequirementMet) {
+        setShowKeywordError(true);
+        return;
+      }
+    }
+    if (currentStep.id === 'location') {
+      if (!isZipFormatValid) {
+        setZipTouched(true);
+        toast.error('Please ensure all ZIP codes are five digits separated by commas.');
+        return;
+      }
+    }
+    if (currentStep.id === 'personal') {
+      if (!isMinAgeValid) {
+        setMinAgeTouched(true);
+        toast.error('Minimum age must be at least 18.');
         return;
       }
     }
@@ -907,6 +937,52 @@ export default function CreateAudiencePage() {
     updateSectionField(section, field as any, choice);
   };
 
+  const normalizeZipInput = (rawValue: string) => {
+    const cleaned = rawValue.replace(/[^0-9,\s]/g, '');
+    const parts = cleaned
+      .split(',')
+      .map(part => part.trim())
+      .filter(part => part.length > 0);
+    const hasTrailingComma = /,\s*$/.test(cleaned);
+    const rebuilt = parts.join(', ');
+    if (hasTrailingComma) {
+      return rebuilt ? `${rebuilt}, ` : '';
+    }
+    return rebuilt;
+  };
+
+  const handleZipChange = (rawValue: string) => {
+    const normalized = normalizeZipInput(rawValue);
+    updateLocation('zipCodes', normalized);
+  };
+
+  const handleZipKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key !== 'Backspace') {
+      return;
+    }
+    const input = event.currentTarget;
+    const { selectionStart, selectionEnd, value } = input;
+    if (selectionStart === null || selectionEnd === null) {
+      return;
+    }
+    if (selectionStart !== selectionEnd) {
+      return;
+    }
+    if (selectionStart < 2) {
+      return;
+    }
+    const preceding = value.slice(selectionStart - 2, selectionStart);
+    if (preceding === ', ') {
+      event.preventDefault();
+      const newValue = value.slice(0, selectionStart - 2) + value.slice(selectionStart);
+      handleZipChange(newValue);
+      const nextPos = selectionStart - 2;
+      requestAnimationFrame(() => {
+        input.setSelectionRange(nextPos, nextPos);
+      });
+    }
+  };
+
   const renderBusinessStep = () => (
     <div className="space-y-4">
       {Object.entries(BUSINESS_FIELD_MAP).map(([label, fieldKey]) => (
@@ -967,17 +1043,27 @@ export default function CreateAudiencePage() {
   const renderPersonalStep = () => (
     <div className="space-y-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <Input
-          label="Min Age"
-          type="number"
-          value={draft.filters.personal?.ageRange?.min?.toString() || ''}
-          onChange={(e) =>
-            updateSectionField('personal', 'ageRange', {
-              ...draft.filters.personal?.ageRange,
-              min: e.target.value ? Number(e.target.value) : undefined,
-            })
-          }
-        />
+        <div>
+          <div className="flex items-center justify-between">
+            <label className="text-sm font-medium text-gray-900 dark:text-white">Min Age</label>
+            {showMinAgeError && (
+              <span className="text-xs text-red-600">Any minimum age must be 18 or older</span>
+            )}
+          </div>
+          <Input
+            type="number"
+            value={draft.filters.personal?.ageRange?.min?.toString() || ''}
+            className={showMinAgeError ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : undefined}
+            onChange={(e) => {
+              const value = e.target.value ? Number(e.target.value) : undefined;
+              updateSectionField('personal', 'ageRange', {
+                ...draft.filters.personal?.ageRange,
+                min: value,
+              });
+            }}
+            onBlur={() => setMinAgeTouched(true)}
+          />
+        </div>
         <Input
           label="Max Age"
           type="number"
@@ -1106,6 +1192,11 @@ export default function CreateAudiencePage() {
 
   const renderContactStep = () => (
     <div className="space-y-4">
+      {requiredContactCount > 1 && (
+        <div className="rounded-lg border border-amber-300 bg-amber-50 text-amber-700 px-3 py-2 text-sm font-medium">
+          More Filters = Smaller List
+        </div>
+      )}
       {Object.entries(CONTACT_FIELD_MAP).map(([label, fieldKey]) => (
         <ToggleField
           key={label}
@@ -1249,6 +1340,33 @@ export default function CreateAudiencePage() {
     return segments.length ? `You're targeting ${segments.join('; ')}.` : '';
   }, [draft]);
 
+  const intentModeLabel = useMemo(() => {
+    if (draft.intent.mode === 'none') {
+      return 'SKIP';
+    }
+    return draft.intent.audienceType?.toUpperCase() ?? draft.intent.mode;
+  }, [draft.intent.mode, draft.intent.audienceType]);
+
+  const intentLevelLabel = useMemo(() => {
+    if (!draft.intent.score) {
+      return null;
+    }
+    const label = draft.intent.score.charAt(0).toUpperCase() + draft.intent.score.slice(1);
+    return label;
+  }, [draft.intent.score]);
+
+  const trimmedKeywordLength = customKeywords.trim().length;
+  const shouldValidateKeywords = draft.intent.mode === 'custom';
+  const isKeywordRequirementMet = !shouldValidateKeywords || trimmedKeywordLength >= 10;
+  const keywordErrorVisible = shouldValidateKeywords && showKeywordError && !isKeywordRequirementMet;
+  const minAgeValue = draft.filters.personal?.ageRange?.min;
+  const isMinAgeValid = minAgeValue === undefined || minAgeValue >= 18;
+  const showMinAgeError = minAgeTouched && !isMinAgeValid;
+  const requiredContactCount = useMemo(() => {
+    const contactFilters = draft.filters.contact || {};
+    return Object.values(contactFilters).filter(value => value === 'on').length;
+  }, [draft.filters.contact]);
+
   const handleGenerateKeywords = async () => {
     if (!aiDescription.trim()) {
       toast.error('Please describe your target audience first.');
@@ -1345,39 +1463,21 @@ export default function CreateAudiencePage() {
 
       <div>
         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-          Audience Type
-        </label>
-        <div className="flex gap-2">
-          {(['b2b', 'b2c'] as const).map(mode => (
-            <Button
-              key={mode}
-              variant={draft.intent.audienceType === mode ? 'primary' : 'secondary'}
-              fullWidth
-              onClick={() =>
-                setDraft(prev => ({
-                  ...prev,
-                  intent: { ...prev.intent, audienceType: mode },
-                }))
-              }
-            >
-              {mode.toUpperCase()}
-            </Button>
-          ))}
-        </div>
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
           Intent Mode
         </label>
         <div className="grid grid-cols-2 gap-2">
           {(
-            [
-              { id: 'custom', label: 'Custom Keywords' },
-              { id: 'ai', label: 'AI Generated' },
-              { id: 'premade', label: 'Premade Library' },
-              { id: 'none', label: 'Skip Intent' },
-            ] as const
+            SHOW_ADVANCED_INTENT_OPTIONS
+              ? ([
+                { id: 'custom', label: 'Keywords' },
+                { id: 'ai', label: 'AI Generated' },
+                { id: 'premade', label: 'Premade Library' },
+                { id: 'none', label: 'Skip Intent' },
+              ] as const)
+              : ([
+                { id: 'custom', label: 'Keywords' },
+                { id: 'none', label: 'Skip Intent' },
+              ] as const)
           ).map(mode => (
             <Button
               key={mode.id}
@@ -1399,29 +1499,78 @@ export default function CreateAudiencePage() {
         </div>
       </div>
 
-      {draft.intent.mode === 'custom' && (
-        <Textarea
-          label="Keywords (comma-separated)"
-          placeholder="cloud computing, SaaS, HR software"
-          rows={4}
-          value={customKeywords}
-          onChange={(e) => {
-            setCustomKeywords(e.target.value);
-            setDraft(prev => ({
-              ...prev,
-              intent: {
-                ...prev.intent,
-                keywords: e.target.value
-                  .split(',')
-                  .map(token => token.trim())
-                  .filter(Boolean),
-              },
-            }));
-          }}
-        />
+      {draft.intent.mode !== 'none' && (
+        <div>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            Audience Type
+          </label>
+          <div className="flex gap-2">
+            {(['b2b', 'b2c'] as const).map(mode => (
+              <Button
+                key={mode}
+                variant={draft.intent.audienceType === mode ? 'primary' : 'secondary'}
+                fullWidth
+                onClick={() =>
+                  setDraft(prev => ({
+                    ...prev,
+                    intent: { ...prev.intent, audienceType: mode },
+                  }))
+                }
+              >
+                {mode.toUpperCase()}
+              </Button>
+            ))}
+          </div>
+        </div>
       )}
 
-      {draft.intent.mode === 'ai' && (
+      {draft.intent.mode === 'custom' && (
+        <>
+          <label
+            htmlFor={keywordsInputId}
+            className="flex items-center justify-between text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+          >
+            <span>Keywords (comma-separated)</span>
+            {keywordErrorVisible && (
+              <span id={keywordsErrorId} className="text-xs font-normal text-red-600">
+                Please enter at least 10 characters
+              </span>
+            )}
+          </label>
+          <Textarea
+            id={keywordsInputId}
+            aria-invalid={keywordErrorVisible}
+            aria-describedby={keywordErrorVisible ? keywordsErrorId : undefined}
+            placeholder="cloud computing, SaaS, HR software"
+            rows={4}
+            value={customKeywords}
+            className={
+              keywordErrorVisible
+                ? 'border-red-300 text-red-900 placeholder-red-300 focus:ring-red-500 focus:border-red-500'
+                : undefined
+            }
+            onChange={(e) => {
+              const value = e.target.value;
+              setCustomKeywords(value);
+              setDraft(prev => ({
+                ...prev,
+                intent: {
+                  ...prev.intent,
+                  keywords: value
+                    .split(',')
+                    .map(token => token.trim())
+                    .filter(Boolean),
+                },
+              }));
+              if (value.trim().length >= 10 && showKeywordError) {
+                setShowKeywordError(false);
+              }
+            }}
+          />
+        </>
+      )}
+
+      {SHOW_ADVANCED_INTENT_OPTIONS && draft.intent.mode === 'ai' && (
         <div className="space-y-3">
           <Textarea
             label="Describe your target audience"
@@ -1436,7 +1585,7 @@ export default function CreateAudiencePage() {
         </div>
       )}
 
-      {draft.intent.mode === 'premade' && (
+      {SHOW_ADVANCED_INTENT_OPTIONS && draft.intent.mode === 'premade' && (
         <MultiSelectField
           label={`Premade Topics (${draft.intent.audienceType?.toUpperCase()})`}
           options={PREMADE_TOPICS[draft.intent.audienceType || 'b2b']}
@@ -1453,31 +1602,33 @@ export default function CreateAudiencePage() {
         />
       )}
 
-      <div>
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-          Intent Score
-        </label>
-        <div className="flex gap-2">
-          {(['low', 'medium', 'high'] as const).map(score => (
-            <Button
-              key={score}
-              variant={draft.intent.score === score ? 'primary' : 'secondary'}
-              fullWidth
-              onClick={() =>
-                setDraft(prev => ({
-                  ...prev,
-                  intent: {
-                    ...prev.intent,
-                    score,
-                  },
-                }))
-              }
-            >
-              {score.toUpperCase()}
-            </Button>
-          ))}
+      {draft.intent.mode !== 'none' && (
+        <div>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            Intent Score
+          </label>
+          <div className="flex gap-2">
+            {(['low', 'medium', 'high'] as const).map(score => (
+              <Button
+                key={score}
+                variant={draft.intent.score === score ? 'primary' : 'secondary'}
+                fullWidth
+                onClick={() =>
+                  setDraft(prev => ({
+                    ...prev,
+                    intent: {
+                      ...prev.intent,
+                      score,
+                    },
+                  }))
+                }
+              >
+                {score.toUpperCase()}
+              </Button>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
       <p className="text-xs text-gray-500">
         Leave blank to skip intent targeting.
@@ -1519,17 +1670,17 @@ export default function CreateAudiencePage() {
                 <p className="text-gray-500">No location filters</p>
               )}
           </div>
-          <div>
-            <p className="font-medium mb-1">Intent</p>
-            <p>Mode: {draft.intent.mode}</p>
-            {draft.intent.keywords.length > 0 && <p>Keywords: {draft.intent.keywords.join(', ')}</p>}
-            {draft.intent.premadeTopics?.length ? (
-              <p>Premade: {draft.intent.premadeTopics.map(topic => topic.label).join(', ')}</p>
-            ) : null}
-            <Button variant="ghost" size="sm" className="mt-2" onClick={() => goToStep('intent')}>
-              Change Intent
-            </Button>
-          </div>
+          {draft.intent.mode !== 'none' && (
+            <div>
+              <p className="font-medium mb-1">Intent</p>
+              <p>Mode: {intentModeLabel}</p>
+              {intentLevelLabel && <p>Intent Level: {intentLevelLabel}</p>}
+              {draft.intent.keywords.length > 0 && <p>Keywords: {draft.intent.keywords.join(', ')}</p>}
+              {draft.intent.premadeTopics?.length ? (
+                <p>Premade: {draft.intent.premadeTopics.map(topic => topic.label).join(', ')}</p>
+              ) : null}
+            </div>
+          )}
         </div>
       </Card>
 
@@ -1568,21 +1719,23 @@ export default function CreateAudiencePage() {
         </Card>
       )}
 
-      <Card padding="md" className="space-y-2">
-        <p className="text-sm font-medium text-gray-900 dark:text-white">Preview Audience Size</p>
-        <div className="flex items-center gap-3">
-          <Button variant="secondary" size="sm" loading={previewState.loading} onClick={handlePreview}>
-            Preview Audience
-          </Button>
-          {!previewState.loading && previewState.status !== 'idle' && (
-            <p className="text-sm">
-              {previewState.status === 'ok'
-                ? `Estimated size: ${previewState.count?.toLocaleString() ?? 'N/A'}`
-                : 'Preview unavailable'}
-            </p>
-          )}
-        </div>
-      </Card>
+      {false && (
+        <Card padding="md" className="space-y-2">
+          <p className="text-sm font-medium text-gray-900 dark:text-white">Preview Audience Size</p>
+          <div className="flex items-center gap-3">
+            <Button variant="secondary" size="sm" loading={previewState.loading} onClick={handlePreview}>
+              Preview Audience
+            </Button>
+            {!previewState.loading && previewState.status !== 'idle' && (
+              <p className="text-sm">
+                {previewState.status === 'ok'
+                  ? `Estimated size: ${previewState.count?.toLocaleString() ?? 'N/A'}`
+                  : 'Preview unavailable'}
+              </p>
+            )}
+          </div>
+        </Card>
+      )}
 
       <Card padding="md" className="space-y-2">
         <div className="flex items-center justify-between gap-3">
@@ -1643,12 +1796,24 @@ export default function CreateAudiencePage() {
               value={locationForm.states}
               onChange={(e) => updateLocation('states', e.target.value)}
             />
-            <Input
-              label="ZIP Codes"
-              placeholder="94102, 10001, 78701"
-              value={locationForm.zipCodes}
-              onChange={(e) => updateLocation('zipCodes', e.target.value)}
-            />
+            <div className="space-y-1">
+              <label className="flex items-center justify-between text-sm font-medium text-gray-700 dark:text-gray-300">
+                <span>ZIP Codes</span>
+                {zipTouched && !isZipFormatValid && (
+                  <span className="text-xs text-red-600">
+                    Use five-digit ZIPs separated by commas (e.g., 94102, 10001)
+                  </span>
+                )}
+              </label>
+              <Input
+                placeholder="94102, 10001, 78701"
+                value={locationForm.zipCodes}
+                className={zipTouched && !isZipFormatValid ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : undefined}
+                onChange={(e) => handleZipChange(e.target.value)}
+                onKeyDown={handleZipKeyDown}
+                onBlur={() => setZipTouched(true)}
+              />
+            </div>
             <p className="text-xs text-gray-500">Leave blank to skip location targeting.</p>
           </div>
         );
@@ -1765,14 +1930,34 @@ export default function CreateAudiencePage() {
               variant="primary"
               size="lg"
               fullWidth
-              onClick={handleSubmit}
-              loading={loading}
+              onClick={() => setIsRequestModalOpen(true)}
             >
-              Create Audience
+              Request Audience
             </Button>
           )}
         </div>
       </main>
+      {isRequestModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
+          <div className="w-full max-w-lg rounded-2xl bg-white dark:bg-gray-900 shadow-2xl p-6 space-y-4">
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Audience Request Not Yet Received</h3>
+              <p className="text-sm text-gray-600 dark:text-gray-400">We are in beta testing</p>
+            </div>
+            <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+              Please press the copy button here and send us the resulting copied text to receive your audience. Allow 24-48 hours to receive your list.
+            </p>
+            <div className="flex justify-end gap-2 pt-2">
+              <Button variant="secondary" onClick={() => setIsRequestModalOpen(false)}>
+                Close
+              </Button>
+              <Button variant="primary" onClick={handleCopyFilters}>
+                Copy Filters
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
