@@ -1,0 +1,39 @@
+{
+  "meta": {
+    "sessionId": "2025-12-09-location",
+    "section": "location",
+    "capturedAt": "2025-12-09T21:10:00.000Z",
+    "operator": "sample",
+    "environment": "staging",
+    "topLevelButton": "top.location"
+  },
+  "events": [
+    {
+      "buttonKey": "location.states",
+      "buttonLabel": "States Input",
+      "selectorHint": "input[placeholder='Enter states']",
+      "notes": "Typed CA and pressed enter",
+      "network": {
+        "type": "FETCH",
+        "url": "https://provider.example.com/api/location/states",
+        "method": "POST",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "payload": {
+          "query": "CA"
+        },
+        "response": {
+          "matches": [
+            {
+              "name": "California",
+              "abbreviation": "CA"
+            }
+          ]
+        },
+        "status": 200,
+        "timestamp": "2025-12-09T21:10:02.000Z"
+      }
+    }
+  ]
+}

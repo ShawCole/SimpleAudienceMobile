@@ -1,0 +1,812 @@
+{
+  "version": 1,
+  "updatedAt": "2025-12-09T00:00:00.000Z",
+  "entries": [
+    {
+      "buttonKey": "top.location",
+      "label": "Location Filters Tab",
+      "section": "location",
+      "type": "top_level",
+      "path": [
+        "Location"
+      ],
+      "selectorHint": "SELECTORS.locationFiltersTab",
+      "notes": "Opens the location popover that houses city/state/ZIP pickers.",
+      "captureStatus": "pending",
+      "trace": null
+    },
+    {
+      "buttonKey": "location.cities",
+      "label": "Cities Input",
+      "section": "location",
+      "type": "filter",
+      "path": [
+        "Location",
+        "Cities"
+      ],
+      "parentKey": "top.location",
+      "selectorHint": "input[placeholder=\"Enter cities\"]",
+      "notes": "Type at least one city and press Enter to trigger the lookup call.",
+      "captureStatus": "pending",
+      "trace": null
+    },
+    {
+      "buttonKey": "location.states",
+      "label": "States Input",
+      "section": "location",
+      "type": "filter",
+      "path": [
+        "Location",
+        "States"
+      ],
+      "parentKey": "top.location",
+      "selectorHint": "input[placeholder=\"Enter states\"]",
+      "notes": "Supports 2-letter codes; each confirmation should emit a network request.",
+      "captureStatus": "pending",
+      "trace": null
+    },
+    {
+      "buttonKey": "location.zip_codes",
+      "label": "ZIP Codes Input",
+      "section": "location",
+      "type": "filter",
+      "path": [
+        "Location",
+        "ZIP Codes"
+      ],
+      "parentKey": "top.location",
+      "selectorHint": "input[placeholder=\"Enter zip codes\"]",
+      "notes": "Comma-separated list of ZIP codes.",
+      "captureStatus": "pending",
+      "trace": null
+    },
+    {
+      "buttonKey": "top.business",
+      "label": "Business Filters Tab",
+      "section": "business",
+      "type": "top_level",
+      "path": [
+        "Business"
+      ],
+      "selectorHint": "SELECTORS.businessFiltersTab",
+      "notes": "Opens the Business filter modal containing company/role pickers.",
+      "captureStatus": "pending",
+      "trace": null
+    },
+    {
+      "buttonKey": "business.seniority",
+      "label": "Seniority",
+      "section": "business",
+      "type": "filter",
+      "path": [
+        "Business",
+        "Seniority"
+      ],
+      "parentKey": "top.business",
+      "notes": "Multi-select list for role seniority tiers.",
+      "captureStatus": "pending",
+      "trace": null
+    },
+    {
+      "buttonKey": "business.departments",
+      "label": "Departments",
+      "section": "business",
+      "type": "filter",
+      "path": [
+        "Business",
+        "Departments"
+      ],
+      "parentKey": "top.business",
+      "notes": "Multi-select list for departmental targeting.",
+      "captureStatus": "pending",
+      "trace": null
+    },
+    {
+      "buttonKey": "business.industries",
+      "label": "Industries",
+      "section": "business",
+      "type": "filter",
+      "path": [
+        "Business",
+        "Industries"
+      ],
+      "parentKey": "top.business",
+      "notes": "Industry multi-select.",
+      "captureStatus": "pending",
+      "trace": null
+    },
+    {
+      "buttonKey": "business.employee_count",
+      "label": "Employee Count",
+      "section": "business",
+      "type": "filter",
+      "path": [
+        "Business",
+        "Employee Count"
+      ],
+      "parentKey": "top.business",
+      "notes": "Company size ranges.",
+      "captureStatus": "pending",
+      "trace": null
+    },
+    {
+      "buttonKey": "business.company_revenue",
+      "label": "Estimated Company Revenue",
+      "section": "business",
+      "type": "filter",
+      "path": [
+        "Business",
+        "Estimated Company Revenue"
+      ],
+      "parentKey": "top.business",
+      "notes": "Revenue buckets multi-select.",
+      "captureStatus": "pending",
+      "trace": null
+    },
+    {
+      "buttonKey": "top.financial",
+      "label": "Financial Filters Tab",
+      "section": "financial",
+      "type": "top_level",
+      "path": [
+        "Financial"
+      ],
+      "selectorHint": "SELECTORS.financialFiltersTab",
+      "notes": "Opens household financial filter popover.",
+      "captureStatus": "pending",
+      "trace": null
+    },
+    {
+      "buttonKey": "financial.income_range",
+      "label": "Income Range",
+      "section": "financial",
+      "type": "filter",
+      "path": [
+        "Financial",
+        "Income Range"
+      ],
+      "parentKey": "top.financial",
+      "notes": "Annual household income ranges.",
+      "captureStatus": "pending",
+      "trace": null
+    },
+    {
+      "buttonKey": "financial.net_worth",
+      "label": "Net Worth",
+      "section": "financial",
+      "type": "filter",
+      "path": [
+        "Financial",
+        "Net Worth"
+      ],
+      "parentKey": "top.financial",
+      "notes": "Net worth ranges.",
+      "captureStatus": "pending",
+      "trace": null
+    },
+    {
+      "buttonKey": "financial.credit_rating",
+      "label": "Credit Rating",
+      "section": "financial",
+      "type": "filter",
+      "path": [
+        "Financial",
+        "Credit Rating"
+      ],
+      "parentKey": "top.financial",
+      "notes": "Credit score tiers.",
+      "captureStatus": "pending",
+      "trace": null
+    },
+    {
+      "buttonKey": "financial.new_credit_range",
+      "label": "New Credit Range",
+      "section": "financial",
+      "type": "filter",
+      "path": [
+        "Financial",
+        "New Credit Range"
+      ],
+      "parentKey": "top.financial",
+      "notes": "Recent credit inquiries.",
+      "captureStatus": "pending",
+      "trace": null
+    },
+    {
+      "buttonKey": "financial.investment",
+      "label": "Investment",
+      "section": "financial",
+      "type": "filter",
+      "path": [
+        "Financial",
+        "Investment"
+      ],
+      "parentKey": "top.financial",
+      "notes": "Investment preference buckets.",
+      "captureStatus": "pending",
+      "trace": null
+    },
+    {
+      "buttonKey": "financial.cra_code",
+      "label": "CRA Code",
+      "section": "financial",
+      "type": "filter",
+      "path": [
+        "Financial",
+        "CRA Code"
+      ],
+      "parentKey": "top.financial",
+      "notes": "Community Reinvestment Act codes.",
+      "captureStatus": "pending",
+      "trace": null
+    },
+    {
+      "buttonKey": "financial.occupation_group",
+      "label": "Occupation Group",
+      "section": "financial",
+      "type": "filter",
+      "path": [
+        "Financial",
+        "Occupation Group"
+      ],
+      "parentKey": "top.financial",
+      "notes": "Occupation groups multi-select.",
+      "captureStatus": "pending",
+      "trace": null
+    },
+    {
+      "buttonKey": "financial.occupation_type",
+      "label": "Occupation Type",
+      "section": "financial",
+      "type": "filter",
+      "path": [
+        "Financial",
+        "Occupation Type"
+      ],
+      "parentKey": "top.financial",
+      "notes": "Occupation types multi-select.",
+      "captureStatus": "pending",
+      "trace": null
+    },
+    {
+      "buttonKey": "financial.credit_card_user",
+      "label": "Credit Card User",
+      "section": "financial",
+      "type": "filter",
+      "path": [
+        "Financial",
+        "Credit Card User"
+      ],
+      "parentKey": "top.financial",
+      "notes": "Binary toggle for credit card usage.",
+      "captureStatus": "pending",
+      "trace": null
+    },
+    {
+      "buttonKey": "financial.mortgage_amount",
+      "label": "Mortgage Amount Range",
+      "section": "financial",
+      "type": "filter",
+      "path": [
+        "Financial",
+        "Mortgage Amount"
+      ],
+      "parentKey": "top.financial",
+      "notes": "Numeric range for outstanding mortgage amount.",
+      "captureStatus": "pending",
+      "trace": null
+    },
+    {
+      "buttonKey": "top.personal",
+      "label": "Personal Filters Tab",
+      "section": "personal",
+      "type": "top_level",
+      "path": [
+        "Personal"
+      ],
+      "selectorHint": "SELECTORS.personalFiltersTab",
+      "notes": "Opens the Personal demographics modal.",
+      "captureStatus": "pending",
+      "trace": null
+    },
+    {
+      "buttonKey": "personal.age_range",
+      "label": "Age Range",
+      "section": "personal",
+      "type": "filter",
+      "path": [
+        "Personal",
+        "Age Range"
+      ],
+      "parentKey": "top.personal",
+      "notes": "Numeric min/max inputs.",
+      "captureStatus": "pending",
+      "trace": null
+    },
+    {
+      "buttonKey": "personal.gender",
+      "label": "Gender",
+      "section": "personal",
+      "type": "filter",
+      "path": [
+        "Personal",
+        "Gender"
+      ],
+      "parentKey": "top.personal",
+      "notes": "Gender multi-select.",
+      "captureStatus": "pending",
+      "trace": null
+    },
+    {
+      "buttonKey": "personal.ethnicity",
+      "label": "Ethnicity",
+      "section": "personal",
+      "type": "filter",
+      "path": [
+        "Personal",
+        "Ethnicity"
+      ],
+      "parentKey": "top.personal",
+      "notes": "Ethnicity multi-select.",
+      "captureStatus": "pending",
+      "trace": null
+    },
+    {
+      "buttonKey": "personal.language",
+      "label": "Language",
+      "section": "personal",
+      "type": "filter",
+      "path": [
+        "Personal",
+        "Language"
+      ],
+      "parentKey": "top.personal",
+      "notes": "Primary spoken language.",
+      "captureStatus": "pending",
+      "trace": null
+    },
+    {
+      "buttonKey": "personal.education",
+      "label": "Education",
+      "section": "personal",
+      "type": "filter",
+      "path": [
+        "Personal",
+        "Education"
+      ],
+      "parentKey": "top.personal",
+      "notes": "Education attainment multi-select.",
+      "captureStatus": "pending",
+      "trace": null
+    },
+    {
+      "buttonKey": "personal.smoker",
+      "label": "Smoker",
+      "section": "personal",
+      "type": "filter",
+      "path": [
+        "Personal",
+        "Smoker"
+      ],
+      "parentKey": "top.personal",
+      "notes": "Smoking habit options.",
+      "captureStatus": "pending",
+      "trace": null
+    },
+    {
+      "buttonKey": "top.family",
+      "label": "Family Filters Tab",
+      "section": "family",
+      "type": "top_level",
+      "path": [
+        "Family"
+      ],
+      "selectorHint": "SELECTORS.familyFiltersTab",
+      "notes": "Opens household composition filters.",
+      "captureStatus": "pending",
+      "trace": null
+    },
+    {
+      "buttonKey": "family.married",
+      "label": "Married",
+      "section": "family",
+      "type": "filter",
+      "path": [
+        "Family",
+        "Married"
+      ],
+      "parentKey": "top.family",
+      "notes": "Binary toggle.",
+      "captureStatus": "pending",
+      "trace": null
+    },
+    {
+      "buttonKey": "family.marital_status",
+      "label": "Marital Status",
+      "section": "family",
+      "type": "filter",
+      "path": [
+        "Family",
+        "Marital Status"
+      ],
+      "parentKey": "top.family",
+      "notes": "Marital status multi-select.",
+      "captureStatus": "pending",
+      "trace": null
+    },
+    {
+      "buttonKey": "family.single_parent",
+      "label": "Single Parent",
+      "section": "family",
+      "type": "filter",
+      "path": [
+        "Family",
+        "Single Parent"
+      ],
+      "parentKey": "top.family",
+      "notes": "Single parent toggle.",
+      "captureStatus": "pending",
+      "trace": null
+    },
+    {
+      "buttonKey": "family.generations_in_household",
+      "label": "Generations in Household",
+      "section": "family",
+      "type": "filter",
+      "path": [
+        "Family",
+        "Generations in Household"
+      ],
+      "parentKey": "top.family",
+      "notes": "Multi-select counts.",
+      "captureStatus": "pending",
+      "trace": null
+    },
+    {
+      "buttonKey": "family.children",
+      "label": "Children",
+      "section": "family",
+      "type": "filter",
+      "path": [
+        "Family",
+        "Children"
+      ],
+      "parentKey": "top.family",
+      "notes": "Children age buckets.",
+      "captureStatus": "pending",
+      "trace": null
+    },
+    {
+      "buttonKey": "top.housing",
+      "label": "Housing Filters Tab",
+      "section": "housing",
+      "type": "top_level",
+      "path": [
+        "Housing"
+      ],
+      "selectorHint": "SELECTORS.housingFiltersTab",
+      "notes": "Opens housing/property filters.",
+      "captureStatus": "pending",
+      "trace": null
+    },
+    {
+      "buttonKey": "housing.homeowner_status",
+      "label": "Homeowner Status",
+      "section": "housing",
+      "type": "filter",
+      "path": [
+        "Housing",
+        "Homeowner Status"
+      ],
+      "parentKey": "top.housing",
+      "notes": "Homeowner vs renter toggle.",
+      "captureStatus": "pending",
+      "trace": null
+    },
+    {
+      "buttonKey": "housing.dwelling_type",
+      "label": "Dwelling Type",
+      "section": "housing",
+      "type": "filter",
+      "path": [
+        "Housing",
+        "Dwelling Type"
+      ],
+      "parentKey": "top.housing",
+      "notes": "Dwelling categories multi-select.",
+      "captureStatus": "pending",
+      "trace": null
+    },
+    {
+      "buttonKey": "housing.estimated_home_value",
+      "label": "Estimated Home Value",
+      "section": "housing",
+      "type": "filter",
+      "path": [
+        "Housing",
+        "Estimated Home Value"
+      ],
+      "parentKey": "top.housing",
+      "notes": "Home value estimate buckets.",
+      "captureStatus": "pending",
+      "trace": null
+    },
+    {
+      "buttonKey": "housing.year_built",
+      "label": "Year Built Range",
+      "section": "housing",
+      "type": "filter",
+      "path": [
+        "Housing",
+        "Year Built"
+      ],
+      "parentKey": "top.housing",
+      "notes": "Numeric inputs for property year built.",
+      "captureStatus": "pending",
+      "trace": null
+    },
+    {
+      "buttonKey": "housing.purchase_price",
+      "label": "Purchase Price Range",
+      "section": "housing",
+      "type": "filter",
+      "path": [
+        "Housing",
+        "Purchase Price"
+      ],
+      "parentKey": "top.housing",
+      "notes": "Numeric inputs for last purchase price.",
+      "captureStatus": "pending",
+      "trace": null
+    },
+    {
+      "buttonKey": "housing.purchase_year",
+      "label": "Purchase Year Range",
+      "section": "housing",
+      "type": "filter",
+      "path": [
+        "Housing",
+        "Purchase Year"
+      ],
+      "parentKey": "top.housing",
+      "notes": "Numeric inputs for purchase year.",
+      "captureStatus": "pending",
+      "trace": null
+    },
+    {
+      "buttonKey": "top.contact",
+      "label": "Contact Filters Tab",
+      "section": "contact",
+      "type": "top_level",
+      "path": [
+        "Contact"
+      ],
+      "selectorHint": "SELECTORS.contactFiltersTab",
+      "notes": "Opens email/phone quality toggles.",
+      "captureStatus": "pending",
+      "trace": null
+    },
+    {
+      "buttonKey": "contact.verified_personal_emails",
+      "label": "Verified Personal Emails",
+      "section": "contact",
+      "type": "filter",
+      "path": [
+        "Contact",
+        "Verified Personal Emails"
+      ],
+      "parentKey": "top.contact",
+      "notes": "Toggle requiring verified personal emails.",
+      "captureStatus": "pending",
+      "trace": null
+    },
+    {
+      "buttonKey": "contact.verified_business_emails",
+      "label": "Verified Business Emails",
+      "section": "contact",
+      "type": "filter",
+      "path": [
+        "Contact",
+        "Verified Business Emails"
+      ],
+      "parentKey": "top.contact",
+      "notes": "Toggle requiring verified business emails.",
+      "captureStatus": "pending",
+      "trace": null
+    },
+    {
+      "buttonKey": "contact.valid_phones",
+      "label": "Valid Phones",
+      "section": "contact",
+      "type": "filter",
+      "path": [
+        "Contact",
+        "Valid Phones"
+      ],
+      "parentKey": "top.contact",
+      "notes": "Toggle requiring valid phone numbers.",
+      "captureStatus": "pending",
+      "trace": null
+    },
+    {
+      "buttonKey": "contact.skip_traced_wireless",
+      "label": "Skip Traced Wireless Phone Number",
+      "section": "contact",
+      "type": "filter",
+      "path": [
+        "Contact",
+        "Skip Traced Wireless Phone Number"
+      ],
+      "parentKey": "top.contact",
+      "notes": "Toggle for skip traced consumer wireless numbers.",
+      "captureStatus": "pending",
+      "trace": null
+    },
+    {
+      "buttonKey": "contact.skip_traced_wireless_b2b",
+      "label": "Skip Traced Wireless B2B Phone Number",
+      "section": "contact",
+      "type": "filter",
+      "path": [
+        "Contact",
+        "Skip Traced Wireless B2B Phone Number"
+      ],
+      "parentKey": "top.contact",
+      "notes": "Toggle for skip traced business wireless numbers.",
+      "captureStatus": "pending",
+      "trace": null
+    },
+    {
+      "buttonKey": "top.intent",
+      "label": "Intent Filters Tab",
+      "section": "intent",
+      "type": "top_level",
+      "path": [
+        "Intent"
+      ],
+      "selectorHint": "SELECTORS.intentFiltersTab",
+      "notes": "Opens the intent targeting modal.",
+      "captureStatus": "pending",
+      "trace": null
+    },
+    {
+      "buttonKey": "intent.mode_selector",
+      "label": "Intent Mode Buttons",
+      "section": "intent",
+      "type": "filter",
+      "path": [
+        "Intent",
+        "Intent Mode"
+      ],
+      "parentKey": "top.intent",
+      "notes": "Keywords / AI / Premade / Skip buttons.",
+      "captureStatus": "pending",
+      "trace": null
+    },
+    {
+      "buttonKey": "intent.audience_type",
+      "label": "Audience Type Buttons",
+      "section": "intent",
+      "type": "filter",
+      "path": [
+        "Intent",
+        "Audience Type"
+      ],
+      "parentKey": "top.intent",
+      "notes": "B2B vs B2C selection.",
+      "captureStatus": "pending",
+      "trace": null
+    },
+    {
+      "buttonKey": "intent.keywords_input",
+      "label": "Keywords Input",
+      "section": "intent",
+      "type": "filter",
+      "path": [
+        "Intent",
+        "Keywords"
+      ],
+      "parentKey": "top.intent",
+      "notes": "Free-form keywords textarea.",
+      "captureStatus": "pending",
+      "trace": null
+    },
+    {
+      "buttonKey": "intent.score_buttons",
+      "label": "Intent Score Buttons",
+      "section": "intent",
+      "type": "filter",
+      "path": [
+        "Intent",
+        "Intent Score"
+      ],
+      "parentKey": "top.intent",
+      "notes": "Low / Medium / High buttons.",
+      "captureStatus": "pending",
+      "trace": null
+    },
+    {
+      "buttonKey": "intent.ai_description",
+      "label": "AI Description Textarea",
+      "section": "intent",
+      "type": "filter",
+      "path": [
+        "Intent",
+        "AI Description"
+      ],
+      "parentKey": "top.intent",
+      "notes": "Prompt for AI keyword generation.",
+      "captureStatus": "pending",
+      "trace": null
+    },
+    {
+      "buttonKey": "intent.generate_keywords",
+      "label": "Generate Keywords Button",
+      "section": "intent",
+      "type": "action",
+      "path": [
+        "Intent",
+        "Generate Keywords"
+      ],
+      "parentKey": "top.intent",
+      "notes": "Buttons that kick off AI keyword generation flow.",
+      "captureStatus": "pending",
+      "trace": null
+    },
+    {
+      "buttonKey": "intent.premade_topics",
+      "label": "Premade Topics Multi-Select",
+      "section": "intent",
+      "type": "filter",
+      "path": [
+        "Intent",
+        "Premade Topics"
+      ],
+      "parentKey": "top.intent",
+      "notes": "Multi-select for curated topics.",
+      "captureStatus": "pending",
+      "trace": null
+    },
+    {
+      "buttonKey": "action.preview",
+      "label": "Preview Audience Button",
+      "section": "actions",
+      "type": "action",
+      "path": [
+        "Actions",
+        "Preview Audience"
+      ],
+      "selectorHint": "SELECTORS.previewButtonMid | SELECTORS.previewButtonTop",
+      "notes": "Triggers the preview audience API call.",
+      "captureStatus": "pending",
+      "trace": null
+    },
+    {
+      "buttonKey": "action.generate",
+      "label": "Generate Audience Button",
+      "section": "actions",
+      "type": "action",
+      "path": [
+        "Actions",
+        "Generate Audience"
+      ],
+      "selectorHint": "SELECTORS.generateButton",
+      "notes": "Commits the audience build.",
+      "captureStatus": "pending",
+      "trace": null
+    },
+    {
+      "buttonKey": "action.copy_filters",
+      "label": "Copy Filters Button",
+      "section": "actions",
+      "type": "action",
+      "path": [
+        "Actions",
+        "Copy Filters"
+      ],
+      "notes": "Copies the textual summary (no API call, kept for completeness).",
+      "captureStatus": "pending",
+      "trace": null
+    }
+  ]
+}

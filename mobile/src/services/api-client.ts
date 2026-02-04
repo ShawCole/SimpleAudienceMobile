@@ -20,8 +20,14 @@ class ApiClient {
   private client: AxiosInstance;
 
   constructor() {
+    // Ensure baseURL always ends with /api
+    const envUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+    const baseURL = envUrl.endsWith('/api') ? envUrl : `${envUrl.replace(/\/$/, '')}/api`;
+
+    console.log('[ApiClient] Initializing with baseURL:', baseURL);
+
     this.client = axios.create({
-      baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api',
+      baseURL,
       timeout: 30000,
       headers: {
         'Content-Type': 'application/json',
@@ -105,11 +111,32 @@ class ApiClient {
   /**
    * Preview an audience (placeholder – backend route may not yet exist)
    */
-  async previewAudience(draft: AudiencePayload): Promise<PreviewResponse> {
-    const response = await this.client.post<ApiResponse<PreviewResponse>>('/audiences/preview', {
-      draft,
+  async previewAudience(payload: any): Promise<PreviewResponse> {
+    const response = await this.client.post<PreviewResponse>(`/audiences/preview?t=${Date.now()}`, payload, {
+      timeout: 90000,
     });
-    return response.data.data!;
+    return response.data;
+  }
+
+  /**
+   * Pre-warm Vacuum Session
+   */
+  async prewarmVacuum(): Promise<void> {
+    await this.client.post(`/vacuum/prewarm?t=${Date.now()}`, {}, {
+      timeout: 90000,
+    });
+  }
+
+  /**
+   * Initialize a Vacuum Audience
+   */
+  async initVacuumAudience(name: string): Promise<{ accountId: string; audienceId: string }> {
+    const response = await this.client.post(`/vacuum/init?t=${Date.now()}`, { name }, {
+      timeout: 90000,
+    });
+    // Backend returns {success: true, accountId, audienceId}
+    const { accountId, audienceId } = response.data;
+    return { accountId, audienceId };
   }
 
   /**

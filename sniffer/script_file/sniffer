@@ -1,0 +1,78 @@
+// ==========================================
+// API SNIFFER: CAPTURE FETCH & XHR
+// ==========================================
+(function () {
+    const log = [];
+    console.clear();
+    console.log("%c 🕵️ API SNIFFER STARTED ", "background: #222; color: #bada55; font-size: 16px");
+
+    // 1. Intercept fetch()
+    const originalFetch = window.fetch;
+    window.fetch = async (...args) => {
+        const [resource, config] = args;
+        const response = await originalFetch(...args);
+
+        const clone = response.clone();
+        let responseBody = "";
+        try { responseBody = await clone.json(); } catch(e) { responseBody = "Not JSON"; }
+
+        const entry = {
+            type: 'FETCH',
+            url: resource instanceof Request ? resource.url : resource,
+            method: config?.method || 'GET',
+            payload: config?.body ? parseBody(config.body) : null,
+            response: responseBody,
+            timestamp: new Date().toISOString()
+        };
+
+        console.log("Captured Fetch:", entry);
+        log.push(entry);
+        return response;
+    };
+
+    // 2. Intercept XMLHttpRequest (XHR)
+    const originalOpen = XMLHttpRequest.prototype.open;
+    const originalSend = XMLHttpRequest.prototype.send;
+
+    XMLHttpRequest.prototype.open = function (method, url) {
+        this._url = url;
+        this._method = method;
+        originalOpen.apply(this, arguments);
+    };
+
+    XMLHttpRequest.prototype.send = function (body) {
+        this.addEventListener('load', function () {
+            let responseBody = "";
+            try { responseBody = JSON.parse(this.responseText); } catch(e) { responseBody = "Not JSON"; }
+
+            const entry = {
+                type: 'XHR',
+                url: this._url,
+                method: this._method,
+                payload: parseBody(body),
+                response: responseBody,
+                timestamp: new Date().toISOString()
+            };
+
+            console.log("Captured XHR:", entry);
+            log.push(entry);
+        });
+        originalSend.apply(this, arguments);
+    };
+
+    function parseBody(body) {
+        if (typeof body === 'string') {
+            try { return JSON.parse(body); } catch(e) { return body; }
+        }
+        return body;
+    }
+
+    // Helper to download the log
+    window.downloadLog = function () {
+        const blob = new Blob([JSON.stringify(log, null, 2)], {type: 'application/json'});
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'provider_api_trace.json';
+        a.click();
+    };
+})();

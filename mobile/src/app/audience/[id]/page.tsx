@@ -201,7 +201,7 @@ export default function AudienceDetailPage() {
                     {audience.payload.intent.premadeTopics?.length ? (
                       <p>
                         Premade:{' '}
-                        {audience.payload.intent.premadeTopics.map(topic => topic.label).join(', ')}
+                        {audience.payload.intent.premadeTopics.map((topic: any) => topic.label).join(', ')}
                       </p>
                     ) : null}
                   </div>

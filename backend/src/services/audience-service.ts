@@ -12,7 +12,7 @@ import {
   AudienceMetadata,
   AudienceStatus,
   RefreshSchedule,
-} from '../../../shared/types';
+} from '@shared/types';
 
 export class AudienceService {
   private db: DatabaseService;
@@ -47,7 +47,12 @@ export class AudienceService {
       id: audienceId,
       name,
       status: 'building',
-      filters,
+      payload: {
+        name,
+        location: { cities: [], states: [], zipCodes: [] },
+        intent: { mode: 'none', keywords: [] },
+        filters,
+      },
       createdAt: now,
       updatedAt: now,
       refreshCount: 0,
@@ -208,7 +213,7 @@ export class AudienceService {
     }
 
     // Create new audience with same filters
-    return await this.createAudience(newName, original.filters);
+    return await this.createAudience(newName, original.payload.filters);
   }
 
   /**

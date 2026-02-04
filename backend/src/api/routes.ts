@@ -7,6 +7,7 @@ import { Router, Request, Response } from 'express';
 import { v4 as uuidv4 } from 'uuid';
 import AudienceService from '../services/audience-service';
 import GoogleDriveService from '../services/google-drive-service';
+import { VacuumEngine } from '../automation/vacuum'; // Vacuum Integration
 import logger from '../utils/logger';
 import {
   CreateAudienceRequest,
@@ -63,6 +64,178 @@ export function createRouter(
   });
 
   /**
+   * Vacuum: Live Preview via Partner Injection
+   * Connects to Partner Portal via Puppeteer to fetch real-time preview data
+   */
+  router.post('/audiences/preview', async (req: Request, res: Response) => {
+    try {
+      const payload = req.body; // Expects AudiencePayload structure
+      logger.info('Starting Vacuum Preview...', { accountId: payload.accountId });
+
+      const vacuumResult = await VacuumEngine.preview(payload);
+
+      if (vacuumResult.success) {
+        const response: ApiResponse = {
+          success: true,
+          // @ts-ignore - Extending ApiResponse dynamically for this specific endpoint contract
+          source: 'remote',
+          data: vacuumResult.data, // { count, preview, fullCount }
+          debug: {
+            raw: vacuumResult.raw,
+            payloadSent: payload
+          },
+          timestamp: new Date(),
+        };
+        res.json(response);
+      } else {
+        const response: ApiResponse = {
+          success: false,
+          error: {
+            code: 'REMOTE_ERROR',
+            message: vacuumResult.error || 'Unknown remote error',
+          },
+          // @ts-ignore
+          debug: {
+            status: vacuumResult.status
+          },
+          timestamp: new Date(),
+        };
+        res.status(vacuumResult.status || 500).json(response);
+      }
+
+    } catch (error) {
+      logger.error('Vacuum Preview Failed', error);
+      const response: ApiResponse = {
+        success: false,
+        error: {
+          code: 'VACUUM_PREVIEW_ERROR',
+          message: error instanceof Error ? error.message : 'Unknown error',
+        },
+        timestamp: new Date(),
+      };
+      res.status(500).json(response);
+    }
+  });
+
+  /**
+   * Vacuum: Live Generate via Partner Injection
+   * Commits the audience to the Partner Platform to begin file generation
+   */
+  router.post('/audiences/generate', async (req: Request, res: Response) => {
+    try {
+      const payload = req.body; // Expects AudiencePayload structure
+      logger.info('Starting Vacuum Generate...', { accountId: payload.accountId });
+
+      const rawResponse = await VacuumEngine.generate(payload);
+
+      const response: ApiResponse = {
+        success: true,
+        data: {
+          status: 'QUEUED',
+          raw: rawResponse
+        },
+        timestamp: new Date(),
+      };
+
+      res.json(response);
+    } catch (error) {
+      logger.error('Vacuum Generate Failed', error);
+      const response: ApiResponse = {
+        success: false,
+        error: {
+          code: 'VACUUM_GENERATE_ERROR',
+          message: error instanceof Error ? error.message : 'Unknown error',
+        },
+        timestamp: new Date(),
+      };
+      res.status(500).json(response);
+    }
+  });
+
+  /**
+   * Vacuum: Initialize Audience
+   * Initialize audience on Partner Portal (Name -> Create -> Capture ID)
+   */
+  router.post('/vacuum/init', async (req: Request, res: Response) => {
+    try {
+      const { name } = req.body;
+      if (!name) {
+        return res.status(400).json({
+          success: false,
+          error: { code: 'MISSING_NAME', message: 'Audience name is required' }
+        });
+      }
+
+      logger.info(`Received vacuum/init for name: ${name}`);
+      const result = await VacuumEngine.initAudience(name);
+
+      res.status(200).json({
+        success: true,
+        ...result
+      });
+    } catch (error: any) {
+      logger.error('Vacuum Init Error:', error.message);
+      res.status(500).json({
+        success: false,
+        error: {
+          code: 'VACUUM_INIT_ERROR',
+          message: error.message || 'Unknown error'
+        }
+      });
+    }
+  });
+
+  /**
+   * Vacuum: Pre-warm Session
+   * Launches headed browser and performs login to prepare for injection
+   */
+  router.post('/vacuum/prewarm', async (req: Request, res: Response) => {
+    try {
+      logger.info('Pre-warming Vacuum Session...');
+      await VacuumEngine.prewarm();
+      res.json({ success: true, message: 'Vacuum pre-warmed' });
+    } catch (error) {
+      logger.error('Vacuum Pre-warm Failed', error);
+      res.status(500).json({
+        success: false,
+        error: {
+          code: 'VACUUM_PREWARM_ERROR',
+          message: error instanceof Error ? error.message : 'Unknown error',
+        },
+      });
+    }
+  });
+
+  /**
+   * Vacuum: Check Audience Status
+   */
+  router.get('/audiences/:id/status', async (req: Request, res: Response) => {
+    try {
+      const { id } = req.params;
+      const audience = audienceService.getAudience(id);
+
+      if (!audience) {
+        return res.status(404).json({ success: false, error: { message: 'Audience not found in local DB' } });
+      }
+
+      logger.info(`Checking Vacuum status for audience: ${audience.name}`);
+      const result = await VacuumEngine.checkStatus(audience.name);
+
+      res.json({
+        success: true,
+        data: result,
+        timestamp: new Date()
+      });
+    } catch (error: any) {
+      logger.error('Status check failed', error);
+      res.status(500).json({
+        success: false,
+        error: { code: 'STATUS_CHECK_ERROR', message: error.message }
+      });
+    }
+  });
+
+  /**
    * Get audience by ID
    */
   router.get('/audiences/:id', async (req: Request, res: Response) => {
@@ -104,7 +277,7 @@ export function createRouter(
   });
 
   /**
-   * Create a new audience
+   * Create a new audience (Local DB Persistence)
    */
   router.post('/audiences', async (req: Request, res: Response) => {
     try {

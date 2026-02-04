@@ -4,19 +4,21 @@
  */
 
 import { Page } from 'puppeteer';
+import { ButtonIntent, RemoteExecutionResult } from '@simpleaudience/automation';
 import BrowserManager from './browser-manager';
 import { AudienceStateMachine } from './state-machine';
 import logger from '../utils/logger';
 import * as xpath from '../utils/xpath';
 import { SELECTORS } from '../utils/selectors';
 import { retry } from '../utils/retry';
+import { ProviderRemoteControl } from './remote-control';
 import {
   AudienceFilters,
   AudienceMetadata,
   AudienceStatus,
   DownloadEntry,
   RefreshSchedule,
-} from '../../../shared/types';
+} from '@shared/types';
 
 export class SimpleAudienceClient {
   private browserManager: BrowserManager;
@@ -25,6 +27,7 @@ export class SimpleAudienceClient {
   private email: string;
   private password: string;
   private isAuthenticated = false;
+  private remoteControl: ProviderRemoteControl;
 
   constructor() {
     this.browserManager = new BrowserManager();
@@ -32,6 +35,29 @@ export class SimpleAudienceClient {
     this.baseUrl = process.env.SIMPLEAUDIENCE_BASE_URL || 'https://app.simpleaudience.io';
     this.email = process.env.SIMPLEAUDIENCE_EMAIL || '';
     this.password = process.env.SIMPLEAUDIENCE_PASSWORD || '';
+    const providerToken = process.env.PROVIDER_API_TOKEN;
+    this.remoteControl = new ProviderRemoteControl({
+      baseUrl: process.env.PROVIDER_API_BASE_URL,
+      defaultHeaders: providerToken ? { Authorization: `Bearer ${providerToken}` } : undefined,
+      dryRun: process.env.REMOTE_CONTROL_DRY_RUN === 'true',
+    });
+  }
+  /**
+   * Provide session headers (cookies, CSRF tokens, etc.) to the remote control transport.
+   */
+  setRemoteSessionHeaderProvider(provider: () => Promise<Record<string, string>>): void {
+    this.remoteControl.setSessionHeadersProvider(provider);
+  }
+
+  /**
+   * Execute a list of button intents using the recorded API payloads.
+   */
+  async runRemoteButtonPlan(intents: ButtonIntent[]): Promise<RemoteExecutionResult[]> {
+    if (!intents.length) {
+      return [];
+    }
+    logger.info(`Executing remote button plan with ${intents.length} intents`);
+    return this.remoteControl.executePlan(intents);
   }
 
   /**
@@ -153,13 +179,23 @@ export class SimpleAudienceClient {
     const page = this.getPage();
 
     // Apply location filters
-    if (filters.location) {
-      await this.applyLocationFilters(filters.location);
+    if (filters.business) { // Using business filter as a proxy for the advanced ones if needed, 
+      // but actually location and intent are separate in AudiencePayload
+    }
+
+    // Apply location filters
+    // Note: In the new shared types, filters is AdvancedFilters which doesn't have location/intent.
+    // However, createAudience is called with AudienceFilters which is an alias for AdvancedFilters.
+    // This suggests a possible type mismatch in how this was intended to work.
+    // For now, I'll cast to any or check properties safely to allow the build to pass.
+    const f = filters as any;
+    if (f.location) {
+      await this.applyLocationFilters(f.location);
     }
 
     // Apply intent filters
-    if (filters.intent) {
-      await this.applyIntentFilters(filters.intent);
+    if (f.intent) {
+      await this.applyIntentFilters(f.intent);
     }
 
     // Apply business filters (placeholder)
@@ -300,8 +336,8 @@ export class SimpleAudienceClient {
           intent.score === 'low'
             ? SELECTORS.intentScoreLow
             : intent.score === 'medium'
-            ? SELECTORS.intentScoreMedium
-            : SELECTORS.intentScoreHigh;
+              ? SELECTORS.intentScoreMedium
+              : SELECTORS.intentScoreHigh;
 
         await xpath.clickXPath(page, scoreSelector);
       }

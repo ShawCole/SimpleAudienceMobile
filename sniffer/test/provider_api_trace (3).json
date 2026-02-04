@@ -1,0 +1,194 @@
+[
+  {
+    "type": "FETCH",
+    "url": "/home/simpleaudience/audience/5ae4fc3f-4624-4294-803a-28869486047d",
+    "method": "POST",
+    "payload": [
+      {
+        "accountId": "0b9b62fb-c388-45ac-afa9-52db1e946cae",
+        "id": "5ae4fc3f-4624-4294-803a-28869486047d",
+        "filters": {
+          "audience": {
+            "type": "premade",
+            "b2b": false,
+            "customTopic": "",
+            "customDescription": "",
+            "segmentSearches": []
+          },
+          "jobId": "",
+          "segment": [],
+          "daysBack": null,
+          "score": [],
+          "filters": {
+            "age": {
+              "minAge": null,
+              "maxAge": null
+            },
+            "city": [],
+            "state": [],
+            "zip": [],
+            "gender": [],
+            "profile": {
+              "incomeRange": [],
+              "homeowner": [],
+              "married": [],
+              "netWorth": [],
+              "children": []
+            },
+            "businessProfile": {
+              "companyDescription": [],
+              "jobTitle": [],
+              "seniority": [],
+              "department": [],
+              "companyName": [],
+              "companyDomain": [],
+              "industry": [],
+              "sic": [],
+              "employeeCount": [
+                "1 to 10",
+                "11 to 25",
+                "26 to 50",
+                "51 to 100",
+                "101 to 250",
+                "251 to 500",
+                "501 to 1000",
+                "1001 to 5000",
+                "5001 to 10000",
+                "10000+"
+              ],
+              "companyRevenue": [],
+              "companyNaics": []
+            },
+            "attributes": {
+              "credit_rating": [],
+              "language_code": [],
+              "occupation_group": [],
+              "occupation_type": [],
+              "home_year_built": {
+                "min": null,
+                "max": null
+              },
+              "single_parent": [],
+              "cra_code": [],
+              "dwelling_type": [],
+              "credit_range_new_credit": [],
+              "ethnic_code": [],
+              "marital_status": [],
+              "net_worth": [],
+              "education": [],
+              "credit_card_user": [],
+              "investment": [],
+              "smoker": [],
+              "home_purchase_price": {
+                "min": null,
+                "max": null
+              },
+              "home_purchase_year": {
+                "min": null,
+                "max": null
+              },
+              "estimated_home_value": [],
+              "mortgage_amount": {
+                "min": null,
+                "max": null
+              },
+              "generations_in_household": []
+            },
+            "notNulls": [],
+            "nullOnly": []
+          }
+        }
+      }
+    ],
+    "response": "Not JSON",
+    "timestamp": "2025-12-10T03:36:29.491Z"
+  },
+  {
+    "type": "FETCH",
+    "url": "https://build.audiencelab.io/home/simpleaudience/segment?_rsc=1k25e",
+    "method": "GET",
+    "payload": null,
+    "response": "Not JSON",
+    "timestamp": "2025-12-10T03:37:49.031Z"
+  },
+  {
+    "type": "FETCH",
+    "url": "https://build.audiencelab.io/home/simpleaudience/api-keys?_rsc=1k25e",
+    "method": "GET",
+    "payload": null,
+    "response": "Not JSON",
+    "timestamp": "2025-12-10T03:37:49.039Z"
+  },
+  {
+    "type": "FETCH",
+    "url": "https://build.audiencelab.io/home/simpleaudience/studio?_rsc=1k25e",
+    "method": "GET",
+    "payload": null,
+    "response": "Not JSON",
+    "timestamp": "2025-12-10T03:37:49.079Z"
+  },
+  {
+    "type": "FETCH",
+    "url": "https://build.audiencelab.io/home/simpleaudience?_rsc=1k25e",
+    "method": "GET",
+    "payload": null,
+    "response": "Not JSON",
+    "timestamp": "2025-12-10T03:37:49.084Z"
+  },
+  {
+    "type": "FETCH",
+    "url": "https://build.audiencelab.io/home/simpleaudience/enrichment?_rsc=1k25e",
+    "method": "GET",
+    "payload": null,
+    "response": "Not JSON",
+    "timestamp": "2025-12-10T03:37:49.234Z"
+  },
+  {
+    "type": "FETCH",
+    "url": "https://build.audiencelab.io/home/simpleaudience/workflows?_rsc=1k25e",
+    "method": "GET",
+    "payload": null,
+    "response": "Not JSON",
+    "timestamp": "2025-12-10T03:37:49.364Z"
+  },
+  {
+    "type": "FETCH",
+    "url": "https://build.audiencelab.io/home/simpleaudience/pixel?_rsc=1k25e",
+    "method": "GET",
+    "payload": null,
+    "response": "Not JSON",
+    "timestamp": "2025-12-10T03:37:49.389Z"
+  },
+  {
+    "type": "FETCH",
+    "url": "https://build.audiencelab.io/home/simpleaudience/usage?_rsc=1k25e",
+    "method": "GET",
+    "payload": null,
+    "response": "Not JSON",
+    "timestamp": "2025-12-10T03:37:49.412Z"
+  },
+  {
+    "type": "FETCH",
+    "url": "https://build.audiencelab.io/home/simpleaudience/sync?_rsc=1k25e",
+    "method": "GET",
+    "payload": null,
+    "response": "Not JSON",
+    "timestamp": "2025-12-10T03:37:49.423Z"
+  },
+  {
+    "type": "FETCH",
+    "url": "https://build.audiencelab.io/home/simpleaudience/settings?_rsc=1k25e",
+    "method": "GET",
+    "payload": null,
+    "response": "Not JSON",
+    "timestamp": "2025-12-10T03:37:49.646Z"
+  },
+  {
+    "type": "FETCH",
+    "url": "https://build.audiencelab.io/home/simpleaudience/members?_rsc=1k25e",
+    "method": "GET",
+    "payload": null,
+    "response": "Not JSON",
+    "timestamp": "2025-12-10T03:37:49.730Z"
+  }
+]

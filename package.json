@@ -6,7 +6,9 @@
   "workspaces": [
     "backend",
     "mobile",
-    "shared"
+    "shared",
+    "automation",
+    "sniffer/selenium"
   ],
   "scripts": {
     "dev": "concurrently \"npm run dev:backend\" \"npm run dev:mobile\"",
@@ -17,7 +19,8 @@
     "build:mobile": "cd mobile && npm run build",
     "start": "concurrently \"npm run start:backend\" \"npm run start:mobile\"",
     "start:backend": "cd backend && npm run start",
-    "start:mobile": "cd mobile && npm run start"
+    "start:mobile": "cd mobile && npm run start",
+    "workflow:test": "npm run build:map --workspace automation && npm run pipeline:test --workspace backend"
   },
   "devDependencies": {
     "concurrently": "^8.2.2",
@@ -27,6 +30,6 @@
     "node": ">=18.0.0"
   },
   "volta": {
-    "node": "20.19.5"
+    "node": "20.20.0"
   }
 }

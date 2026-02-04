@@ -36,7 +36,7 @@ export default function HomePage() {
             <AlertCircle className="text-red-600" size={48} />
             <p className="mt-4 text-red-600">Failed to load audiences</p>
             <p className="text-sm text-gray-500 mt-2">
-              {error.message || 'Please try again later'}
+              {error || 'Please try again later'}
             </p>
           </div>
         )}

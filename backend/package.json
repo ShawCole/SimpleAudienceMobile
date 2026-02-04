@@ -2,14 +2,17 @@
   "name": "@simpleaudience/backend",
   "version": "1.0.0",
   "description": "Headless automation engine for SimpleAudience",
-  "main": "dist/index.js",
+  "main": "dist/backend/src/index.js",
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "build": "tsc",
-    "start": "node dist/index.js",
-    "test": "jest"
+    "start": "node dist/backend/src/index.js",
+    "test": "jest",
+    "remote:plan": "tsx src/scripts/run-remote-plan.ts",
+    "pipeline:test": "tsx src/scripts/pipeline-smoke.ts"
   },
   "dependencies": {
+    "@simpleaudience/automation": "0.1.0",
     "express": "^4.18.2",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
@@ -36,5 +39,8 @@
     "typescript": "^5.3.3",
     "jest": "^29.7.0",
     "@types/jest": "^29.5.11"
+  },
+  "volta": {
+    "node": "20.20.0"
   }
 }

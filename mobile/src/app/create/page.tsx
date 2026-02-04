@@ -1,6 +1,7 @@
+
 'use client';
 
-import React, { useMemo, useState, useEffect, useRef, useId } from 'react';
+import React, { useMemo, useState, useEffect, useRef, useId, useCallback } from 'react';
 import { FixedSizeList as List } from 'react-window';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
@@ -19,12 +20,15 @@ import {
   ClipboardCheck,
   Sun,
   Moon,
+  X
 } from 'lucide-react';
+import clsx from 'clsx';
 import { Header } from '../../components/layout/header';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { Textarea } from '../../components/ui/textarea';
 import { Card } from '../../components/ui/card';
+import SearchableMultiSelect from '../../components/ui/searchable-multi-select';
 import { apiClient } from '../../services/api-client';
 import {
   AudiencePayload,
@@ -161,6 +165,14 @@ const joinWithAnd = (items: string[]): string => {
   if (items.length === 1) return items[0];
   if (items.length === 2) return `${items[0]} and ${items[1]}`;
   return `${items.slice(0, -1).join(', ')}, and ${items[items.length - 1]}`;
+};
+
+const joinWithOrQuoted = (items: string[]): string => {
+  if (items.length === 0) return '';
+  const quoted = items.map(item => `"${item}"`);
+  if (quoted.length === 1) return quoted[0];
+  if (quoted.length === 2) return `${quoted[0]} or ${quoted[1]}`;
+  return `${quoted.slice(0, -1).join(', ')}, or ${quoted[quoted.length - 1]}`;
 };
 
 const buildNarrativeDescription = (draft: AudiencePayload): string => {
@@ -323,6 +335,60 @@ const buildNarrativeDescription = (draft: AudiencePayload): string => {
     }
   }
 
+  // Job Titles
+  const jobTitles = draft.filters.business?.jobTitles?.map(o => o.label).filter(Boolean) || [];
+  let jobTitlePhrase: string | null = null;
+  if (jobTitles.length > 0) {
+    jobTitlePhrase = `with job titles like ${joinWithAnd(jobTitles)}`;
+  }
+
+  // Company Names
+  const companyNames = draft.filters.business?.companyName?.map(o => o.label).filter(Boolean) || [];
+  let companyPhrase: string | null = null;
+  if (companyNames.length > 0) {
+    const joined = joinWithOrQuoted(companyNames);
+    companyPhrase = `in Companies with ${joined} in the name`;
+  }
+
+  // Company Domains
+  const companyDomains = draft.filters.business?.companyDomain?.map(o => o.label).filter(Boolean) || [];
+  let domainPhrase: string | null = null;
+  if (companyDomains.length > 0) {
+    const joined = joinWithOrQuoted(companyDomains);
+    domainPhrase = `in Companies with a domain of ${joined}`;
+  }
+
+  // SIC Codes
+  const sicCodes = draft.filters.business?.sic?.map(o => o.label).filter(Boolean) || [];
+  let sicPhrase: string | null = null;
+  if (sicCodes.length > 0) {
+    const joined = joinWithOrQuoted(sicCodes);
+    sicPhrase = `in Companies with a SIC code of ${joined}`;
+  }
+
+  // NAICS Codes
+  const naicsCodes = draft.filters.business?.companyNaics?.map(o => o.label).filter(Boolean) || [];
+  let naicsPhrase: string | null = null;
+  if (naicsCodes.length > 0) {
+    const joined = joinWithOrQuoted(naicsCodes);
+    naicsPhrase = `in Companies with a NAICS code of ${joined}`;
+  }
+
+  // B2B Business Keywords (Company Description)
+  const businessKeywords = draft.filters.business?.companyDescription?.map(o => o.label).filter(Boolean) || [];
+  let businessKeywordsPhrase: string | null = null;
+  if (businessKeywords.length > 0) {
+    const joined = joinWithOrQuoted(businessKeywords);
+    businessKeywordsPhrase = `at companies with ${joined} in their description`;
+  }
+
+  // Industries
+  const industries = draft.filters.business?.industries?.map(o => o.label).filter(Boolean) || [];
+  let industryPhrase: string | null = null;
+  if (industries.length > 0) {
+    industryPhrase = `in the ${joinWithAnd(industries)} industries`;
+  }
+
   // Intent (for the narrative – separate from structured line)
   const keywordTopics = draft.intent.keywords || [];
   const premadeTopics = draft.intent.premadeTopics?.map(topic => topic.label) ?? [];
@@ -341,6 +407,13 @@ const buildNarrativeDescription = (draft: AudiencePayload): string => {
   if (netWorthPhrase) descriptiveClauses.push(netWorthPhrase);
   if (educationPhrase) descriptiveClauses.push(educationPhrase);
   if (purchasePhrase) descriptiveClauses.push(purchasePhrase);
+  if (jobTitlePhrase) descriptiveClauses.push(jobTitlePhrase);
+  if (companyPhrase) descriptiveClauses.push(companyPhrase);
+  if (domainPhrase) descriptiveClauses.push(domainPhrase);
+  if (sicPhrase) descriptiveClauses.push(sicPhrase);
+  if (naicsPhrase) descriptiveClauses.push(naicsPhrase);
+  if (businessKeywordsPhrase) descriptiveClauses.push(businessKeywordsPhrase);
+  if (industryPhrase) descriptiveClauses.push(industryPhrase);
 
   const hasLocation = Boolean(locationPhrase);
 
@@ -352,7 +425,12 @@ const buildNarrativeDescription = (draft: AudiencePayload): string => {
     if (hasLocation) {
       sentence += ', ';
     } else {
-      sentence += ' who ';
+      const firstClause = descriptiveClauses[0];
+      if (/^(in|with)\s/i.test(firstClause)) {
+        sentence += ' ';
+      } else {
+        sentence += ' who ';
+      }
     }
     sentence += joinWithAnd(descriptiveClauses);
   }
@@ -431,8 +509,35 @@ const buildFiltersSummary = (draft: AudiencePayload, reviewGroups: ChipGroup[]):
       if (!group.chips.length) return;
 
       lines.push(`${group.label}:`);
+
+      // Group chips by filterLabel to handle special collection types
+      const chipsByLabel = new Map<string, string[]>();
       group.chips.forEach(chip => {
-        lines.push(`- ${chip.filterLabel}: ${chip.valueLabel}`);
+        if (!chipsByLabel.has(chip.filterLabel)) {
+          chipsByLabel.set(chip.filterLabel, []);
+        }
+        chipsByLabel.get(chip.filterLabel)!.push(chip.valueLabel);
+      });
+
+      chipsByLabel.forEach((values, label) => {
+        if (label === 'Company Names') {
+          lines.push(`- Company Name includes: ${joinWithOrQuoted(values)}`);
+        } else if (label === 'Company Domains') {
+          lines.push(`- Company Domain includes: ${joinWithOrQuoted(values)}`);
+        } else if (label === 'Job Titles') {
+          lines.push(`- Job Title includes: ${joinWithOrQuoted(values)}`);
+        } else if (label === 'SIC Codes') {
+          lines.push(`- SIC Code includes: ${joinWithOrQuoted(values)}`);
+        } else if (label === 'NAICS Codes') {
+          lines.push(`- NAICS Code includes: ${joinWithOrQuoted(values)}`);
+        } else if (label === 'B2B Business Keywords') {
+          lines.push(`- Company Description includes: ${joinWithOrQuoted(values)}`);
+        } else {
+          // Default behavior for other filters
+          values.forEach(val => {
+            lines.push(`- ${label}: ${val}`);
+          });
+        }
       });
       lines.push('');
     });
@@ -466,7 +571,7 @@ const resolveLabels = (
   section: SectionKey,
   filter: string,
   items?: IndexedOptionValue[]
-): string[] => mapIndicesToLabels(section, filter, items?.map(item => item.index));
+): string[] => items?.map(item => item.label) || [];
 
 const formatNumericRange = (
   range?: NumericRange,
@@ -607,9 +712,10 @@ const MultiSelectField: React.FC<MultiSelectFieldProps> = ({ label, options, val
   // Compute dynamic height so non-scrollable lists don't leave extra whitespace
   const visibleItemCount = Math.min(filtered.length, 6); // 6 * 32 = 192px max
   const listHeight = visibleItemCount * itemSize;
+  const dropdownWidth = componentRef.current?.offsetWidth;
 
   return (
-    <div ref={componentRef}>
+    <div ref={componentRef} className="relative">
       <Card padding="md" className="space-y-3">
         <div className="flex items-center justify-between">
           <p className="text-sm font-medium text-gray-900 dark:text-white">{label}</p>
@@ -622,6 +728,7 @@ const MultiSelectField: React.FC<MultiSelectFieldProps> = ({ label, options, val
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onFocus={() => setIsOpen(true)}
+            onClear={() => setQuery('')}
           />
         )}
 
@@ -635,23 +742,23 @@ const MultiSelectField: React.FC<MultiSelectFieldProps> = ({ label, options, val
           </button>
         )}
 
-        {isOpen && (
-          <div className="max-h-48">
-            {filtered.length > 0 ? (
-              <List
-                height={listHeight}
-                itemCount={filtered.length}
-                itemSize={itemSize}
-                width="100%"
-              >
+      </Card>
+      {isOpen && (
+        <div
+          className="absolute left-0 z-30 mt-1 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-lg"
+          style={{ width: dropdownWidth }}
+        >
+          {filtered.length > 0 ? (
+            <div className="max-h-48 overflow-y-auto">
+              <List height={listHeight} itemCount={filtered.length} itemSize={itemSize} width="100%">
                 {Row}
               </List>
-            ) : (
-              <p className="text-xs text-gray-500">No options match your search</p>
-            )}
-          </div>
-        )}
-      </Card>
+            </div>
+          ) : (
+            <p className="p-3 text-xs text-gray-500">No options match your search</p>
+          )}
+        </div>
+      )}
     </div>
   );
 };
@@ -672,6 +779,7 @@ const ChipMultiSelect: React.FC<ChipMultiSelectProps> = ({
     () => options.filter(option => !value.some(selected => selected.index === option.index)),
     [options, value]
   );
+  const dropdownWidth = containerRef.current?.offsetWidth;
 
   const handleSelect = (option: IndexedOptionValue) => {
     onChange([...value, option]);
@@ -684,75 +792,298 @@ const ChipMultiSelect: React.FC<ChipMultiSelectProps> = ({
   };
 
   return (
-    <div ref={containerRef} className="relative">
-      <Card padding="md" className="space-y-2">
-        <div className="flex items-center justify-between">
-          <p className="text-sm font-medium text-gray-900 dark:text-white">{label}</p>
-          <span className="text-xs text-gray-500">{value.length} selected</span>
-        </div>
+    <div ref={containerRef} className="relative space-y-2">
+      <div className="flex items-center justify-between px-1">
+        <p className="text-sm font-medium text-gray-900 dark:text-white">{label}</p>
+        <span className="text-xs text-gray-500">{value.length} selected</span>
+      </div>
 
-        <div
-          role="button"
-          tabIndex={0}
-          onClick={() => setIsOpen(prev => !prev)}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-              e.preventDefault();
-              setIsOpen(prev => !prev);
-            }
-          }}
-          className="w-full min-h-[2.5rem] rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-3 py-1 text-left text-sm text-gray-700 dark:text-gray-200 flex flex-wrap items-center gap-2 cursor-pointer"
-        >
-          {value.length === 0 && (
-            <span className="text-gray-400 dark:text-gray-500">{placeholder}</span>
-          )}
-          {value.map(option => (
-            <span
-              key={option.index}
-              className="inline-flex h-[30px] items-center rounded-md bg-gray-100 text-gray-900 pl-3 pr-[6px] text-sm"
+      <div
+        role="button"
+        tabIndex={0}
+        onClick={() => setIsOpen(prev => !prev)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            setIsOpen(prev => !prev);
+          }
+        }}
+        className={clsx(
+          "relative w-full min-h-[2.5rem] border bg-white dark:bg-gray-800 px-3 py-1.5 text-left text-sm text-gray-700 dark:text-gray-200 flex flex-wrap items-center gap-2 cursor-pointer transition-all pr-[39px]",
+          isOpen
+            ? "border-blue-500 ring-2 ring-blue-500/10 rounded-t-lg border-b-transparent z-10"
+            : "border-gray-300 dark:border-gray-600 hover:border-gray-400 rounded-lg"
+        )}
+      >
+        {value.length === 0 && (
+          <span className="text-gray-400 dark:text-gray-500">{placeholder}</span>
+        )}
+        {value.map(option => (
+          <span
+            key={option.index}
+            className="inline-flex h-7 items-center rounded-md bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 pl-2.5 pr-1 text-sm font-medium transition-all"
+          >
+            <span className="mr-1 truncate max-w-[160px]">{option.label}</span>
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleRemove(option);
+              }}
+              className="flex h-3 w-3 items-center justify-center rounded border border-transparent text-gray-400 hover:bg-red-50 hover:text-red-500 hover:border-red-500 dark:hover:bg-red-900/30 dark:hover:text-red-400 transition-all"
+              aria-label={`Remove ${option.label}`}
             >
-              <span className="mr-1 truncate max-w-[160px]">{option.label}</span>
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleRemove(option);
-                }}
-                className="flex h-[14px] w-[14px] min-h-0 min-w-0 flex-shrink-0 items-center justify-center rounded-md text-gray-500 hover:bg-gray-400 hover:text-white focus:outline-none focus:ring-1 focus:ring-gray-500"
-                aria-label={`Remove ${option.label}`}
-              >
-                <span
-                  className="leading-none text-[14px]"
-                  style={{ paddingBottom: 0, marginBottom: 3 }}
-                >
-                  ×
-                </span>
-              </button>
-            </span>
+              <X className="h-3 w-3" />
+            </button>
+          </span>
+        ))}
+        {value.length > 0 && (
+          <div className="absolute right-0 top-0 bottom-0 w-[38px] flex items-center justify-center z-10">
+            <div className="absolute left-0 top-1.5 bottom-1.5 border-l border-gray-200 dark:border-gray-700" />
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onChange([]);
+              }}
+              className="group flex h-6 w-6 items-center justify-center rounded transition-all text-gray-400 hover:text-red-500 hover:bg-red-50 hover:border hover:border-red-500"
+              title="Clear all"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </div>
+        )}
+      </div>
+
+      {isOpen && availableOptions.length > 0 && (
+        <div
+          className="absolute left-0 z-20 rounded-b-lg border border-blue-500 border-t-0 bg-white dark:bg-gray-900 shadow-lg max-h-60 overflow-y-auto !mt-0 -mt-[1px]"
+          style={{ width: dropdownWidth }}
+        >
+          {availableOptions.map(option => (
+            <button
+              key={option.index}
+              type="button"
+              className="w-full px-3 py-2 text-left text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800"
+              onClick={() => handleSelect(option)}
+            >
+              {option.label}
+            </button>
           ))}
         </div>
+      )}
 
-        {isOpen && availableOptions.length > 0 && (
-          <div className="absolute z-20 mt-1 w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-lg max-h-60 overflow-y-auto">
-            {availableOptions.map(option => (
-              <button
-                key={option.index}
-                type="button"
-                className="w-full px-3 py-2 text-left text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800"
-                onClick={() => handleSelect(option)}
-              >
-                {option.label}
-              </button>
+      {isOpen && availableOptions.length === 0 && (
+        <div
+          className="absolute left-0 z-20 mt-1 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-lg px-3 py-2 text-xs text-gray-500"
+          style={{ width: dropdownWidth }}
+        >
+          All options selected
+        </div>
+      )}
+    </div>
+  );
+};
+
+const KeywordChipInput: React.FC<{
+  label: string;
+  placeholder?: string;
+  value: IndexedOptionValue[];
+  onChange: (value: IndexedOptionValue[]) => void;
+  maxItems?: number;
+  validate?: (val: string) => boolean;
+  errorText?: string;
+  beta?: boolean;
+}> = ({ label, placeholder = 'Type and press Enter...', value = [], onChange, maxItems, validate, errorText, beta }) => {
+  const [inputValue, setInputValue] = useState('');
+  const [error, setError] = useState<string | null>(null);
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' || e.key === ',') {
+      e.preventDefault();
+      e.stopPropagation();
+
+      const trimmed = inputValue.trim();
+      if (!trimmed) return;
+
+      if (maxItems && value.length >= maxItems) {
+        setError(`Maximum of ${maxItems} items allowed`);
+        return;
+      }
+
+      if (validate && !validate(trimmed)) {
+        setError(errorText || 'Invalid format');
+        return;
+      }
+
+      if (!value.some(v => v.label.toLowerCase() === trimmed.toLowerCase())) {
+        onChange([...value, { index: Date.now(), label: trimmed }]);
+      }
+      setInputValue('');
+      setError(null);
+    } else if (e.key === 'Backspace' && !inputValue && value.length > 0) {
+      onChange(value.slice(0, -1));
+      setError(null);
+    }
+  };
+
+  const handleRemove = (option: IndexedOptionValue) => {
+    onChange(value.filter(v => v.index !== option.index));
+    setError(null);
+  };
+
+  return (
+    <div className="relative space-y-2">
+      <div className="flex items-center justify-between px-1">
+        <div className="flex items-center gap-2">
+          <p className="text-sm font-medium text-gray-900 dark:text-white">{label}</p>
+          {beta && (
+            <span className="px-1.5 py-0.5 rounded bg-gray-100 text-gray-600 text-[10px] font-bold uppercase tracking-wider">
+              BETA
+            </span>
+          )}
+        </div>
+        <div className="flex flex-col items-end">
+          <span className="text-xs text-gray-500">
+            {value.length}{maxItems ? ` / ${maxItems}` : ''} selected
+          </span>
+        </div>
+      </div>
+
+      <div className={clsx(
+        "relative w-full min-h-[2.5rem] rounded-lg border bg-white dark:bg-gray-800 px-3 py-1.5 text-left text-sm text-gray-700 dark:text-gray-200 flex flex-wrap items-center gap-2 transition-all pr-12",
+        error ? "border-red-500" : "border-gray-300 dark:border-gray-600 hover:border-gray-400 focus-within:ring-2 focus-within:ring-blue-500/10 focus-within:border-blue-500"
+      )}>
+        {value.map(option => (
+          <span
+            key={option.index}
+            className="inline-flex h-7 items-center rounded-md bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 pl-2.5 pr-1 text-sm font-medium transition-all"
+          >
+            <span className="mr-1 truncate max-w-[160px]">{option.label}</span>
+            <button
+              type="button"
+              onClick={() => handleRemove(option)}
+              className="flex h-3 w-3 items-center justify-center rounded border border-transparent text-gray-400 hover:bg-red-50 hover:text-red-500 hover:border-red-500 dark:hover:bg-red-900/30 dark:hover:text-red-400 transition-all"
+            >
+              <X className="h-3 w-3" />
+            </button>
+          </span>
+        ))}
+        <input
+          type="text"
+          className="flex-1 min-w-[120px] bg-transparent border-none outline-none focus:ring-0 p-0 h-7 text-sm placeholder-gray-400 dark:placeholder-gray-500"
+          placeholder={value.length === 0 ? placeholder : ''}
+          value={inputValue}
+          onChange={(e) => {
+            setInputValue(e.target.value);
+            if (error) setError(null);
+          }}
+          onKeyDown={handleKeyDown}
+        />
+
+        {value.length > 0 && (
+          <div className="absolute right-0 top-0 bottom-0 w-[38px] flex items-center justify-center z-10">
+            <div className="absolute left-0 top-1.5 bottom-1.5 border-l border-gray-200 dark:border-gray-700" />
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onChange([]);
+                setInputValue('');
+              }}
+              className="group flex h-6 w-6 items-center justify-center rounded transition-all text-gray-400 hover:text-red-500 hover:bg-red-50 hover:border hover:border-red-500"
+              title="Clear all"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </div>
+        )}
+      </div>
+      {error && <p className="mt-1 text-xs text-red-500 px-1">{error}</p>}
+    </div>
+  );
+};
+
+const PreviewTable: React.FC<{ preview: any[]; totalCount: number | null }> = ({ preview, totalCount }) => {
+  const [page, setPage] = useState(1);
+  const itemsPerPage = 50;
+  const totalPages = Math.ceil(preview.length / itemsPerPage);
+  const currentData = preview.slice((page - 1) * itemsPerPage, page * itemsPerPage);
+
+  const formatList = (val: any) => {
+    if (!val) return '-';
+    if (Array.isArray(val)) return val.join(', ');
+    if (typeof val === 'string' && val.includes(',')) return val; // Already formatted
+    return String(val);
+  };
+
+  return (
+    <div className="overflow-hidden border rounded-lg border-gray-200 dark:border-gray-700">
+      <div className="overflow-x-auto max-h-[400px]">
+        <table className="w-full caption-bottom text-xs">
+          <thead className="bg-[#f8f9fc] dark:bg-gray-800 sticky top-0 z-[1] border-b">
+            <tr className="border-b transition-colors">
+              <th className="px-2 text-left align-middle font-semibold text-gray-600 dark:text-gray-300 h-10 whitespace-nowrap min-w-12">#</th>
+              <th className="px-3 text-left align-middle font-semibold text-gray-600 dark:text-gray-300 h-10 whitespace-nowrap min-w-28">First Name</th>
+              <th className="px-3 text-left align-middle font-semibold text-gray-600 dark:text-gray-300 h-10 whitespace-nowrap min-w-28 border-l border-gray-200 dark:border-gray-700">Last Name</th>
+              <th className="px-3 text-left align-middle font-semibold text-gray-600 dark:text-gray-300 h-10 whitespace-nowrap min-w-48 border-l border-gray-200 dark:border-gray-700">Business Email</th>
+              <th className="px-3 text-left align-middle font-semibold text-gray-600 dark:text-gray-300 h-10 whitespace-nowrap min-w-40 border-l border-gray-200 dark:border-gray-700">Business Phone</th>
+              <th className="px-3 text-left align-middle font-semibold text-gray-600 dark:text-gray-300 h-10 whitespace-nowrap min-w-40 border-l border-gray-200 dark:border-gray-700">Company</th>
+              <th className="px-3 text-left align-middle font-semibold text-gray-600 dark:text-gray-300 h-10 whitespace-nowrap min-w-32 border-l border-gray-200 dark:border-gray-700">Company Domain</th>
+              <th className="px-3 text-left align-middle font-semibold text-gray-600 dark:text-gray-300 h-10 whitespace-nowrap min-w-40 border-l border-gray-200 dark:border-gray-700">Job Title</th>
+              <th className="px-3 text-left align-middle font-semibold text-gray-600 dark:text-gray-300 h-10 whitespace-nowrap min-w-40 border-l border-gray-200 dark:border-gray-700">Personal Phone</th>
+              <th className="px-3 text-left align-middle font-semibold text-gray-600 dark:text-gray-300 h-10 whitespace-nowrap min-w-48 border-l border-gray-200 dark:border-gray-700">Personal Email</th>
+              <th className="px-3 text-left align-middle font-semibold text-gray-600 dark:text-gray-300 h-10 whitespace-nowrap min-w-32 border-l border-gray-200 dark:border-gray-700">Hash</th>
+            </tr>
+          </thead>
+          <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-100 dark:divide-gray-800">
+            {currentData.map((row, i) => (
+              <tr key={i} className="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                <td className="p-2 align-middle text-gray-500 font-medium">{(page - 1) * itemsPerPage + i + 1}</td>
+                <td className="p-2 align-middle text-gray-700 dark:text-gray-200 max-w-40 truncate">{row.first_name || '-'}</td>
+                <td className="p-2 align-middle text-gray-700 dark:text-gray-200 max-w-40 truncate border-l border-gray-100 dark:border-gray-800">{row.last_name || '-'}</td>
+                <td className="p-2 align-middle text-gray-700 dark:text-gray-200 max-w-60 truncate border-l border-gray-100 dark:border-gray-800">{formatList(row.b2b_email)}</td>
+                <td className="p-2 align-middle text-gray-700 dark:text-gray-200 max-w-40 truncate border-l border-gray-100 dark:border-gray-800">{formatList(row.b2b_phone)}</td>
+                <td className="p-2 align-middle text-gray-700 dark:text-gray-200 max-w-60 truncate border-l border-gray-100 dark:border-gray-800">{formatList(row.company)}</td>
+                <td className="p-2 align-middle text-gray-700 dark:text-gray-200 max-w-40 truncate border-l border-gray-100 dark:border-gray-800">{row.company_domain || '-'}</td>
+                <td className="p-2 align-middle text-gray-700 dark:text-gray-200 max-w-40 truncate border-l border-gray-100 dark:border-gray-800">{row.job_title || '-'}</td>
+                <td className="p-2 align-middle text-gray-700 dark:text-gray-200 max-w-40 truncate border-l border-gray-100 dark:border-gray-800">{formatList(row.personal_phone)}</td>
+                <td className="p-2 align-middle text-gray-700 dark:text-gray-200 max-w-60 truncate border-l border-gray-100 dark:border-gray-800">{formatList(row.personal_email)}</td>
+                <td className="p-2 align-middle text-gray-700 dark:text-gray-200 max-w-40 truncate border-l border-gray-100 dark:border-gray-800">{row.sha256 || '-'}</td>
+              </tr>
             ))}
-          </div>
-        )}
+          </tbody>
+        </table>
+      </div>
 
-        {isOpen && availableOptions.length === 0 && (
-          <div className="absolute z-20 mt-1 w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-lg px-3 py-2 text-xs text-gray-500">
-            All options selected
+      <div className="bg-[#fcfdfe] dark:bg-gray-800/50 border-t border-gray-200 dark:border-gray-700 flex items-center justify-between px-4 py-2.5">
+        <div className="text-xs font-medium text-gray-600 dark:text-gray-400">
+          <span className="font-semibold text-gray-900 dark:text-white">
+            {totalCount?.toLocaleString() || '-'}
+          </span> results found
+        </div>
+        <div className="flex items-center gap-3">
+          <div className="text-[10px] font-medium text-gray-500 uppercase tracking-tight mr-2">
+            {page} / {totalPages || 1}
           </div>
-        )}
-      </Card>
+          <Button
+            variant="secondary"
+            className="h-7 text-[11px] px-3 font-semibold"
+            disabled={page === 1}
+            onClick={() => setPage(p => p - 1)}
+          >
+            Previous
+          </Button>
+          <Button
+            variant="secondary"
+            className="h-7 text-[11px] px-3 font-semibold"
+            disabled={page >= totalPages}
+            onClick={() => setPage(p => p + 1)}
+          >
+            Next
+          </Button>
+        </div>
+      </div>
     </div>
   );
 };
@@ -779,6 +1110,19 @@ const ToggleField: React.FC<ToggleFieldProps> = ({ label, value = 'any', onChang
   );
 };
 
+const NavButtonRow: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+  <div className="flex gap-3">
+    {React.Children.map(children, child => {
+      if (!React.isValidElement(child)) {
+        return child;
+      }
+      const existingClassName = child.props.className ?? '';
+      const mergedClassName = ['flex-1', existingClassName].filter(Boolean).join(' ');
+      return React.cloneElement(child, { className: mergedClassName });
+    })}
+  </div>
+);
+
 export default function CreateAudiencePage() {
   const router = useRouter();
   const [draft, setDraft] = useState<AudiencePayload>(defaultPayload);
@@ -789,14 +1133,27 @@ export default function CreateAudiencePage() {
   const [aiDescription, setAiDescription] = useState('');
   const [minAgeTouched, setMinAgeTouched] = useState(false);
   const [zipTouched, setZipTouched] = useState(false);
-  const [previewState, setPreviewState] = useState<{ loading: boolean; count: number | null; status: string }>(
-    { loading: false, count: null, status: 'idle' }
-  );
+  const [previewState, setPreviewState] = useState<{
+    loading: boolean;
+    count: number | null;
+    preview: any[];
+    timestamp: string | null;
+    status: 'idle' | 'pending' | 'ok' | 'error';
+    debug?: any;
+    error?: string;
+  }>({
+    loading: false,
+    count: null,
+    preview: [],
+    timestamp: null,
+    status: 'idle'
+  });
   const [loading, setLoading] = useState(false);
   const keywordsInputId = useId();
   const keywordsErrorId = `${keywordsInputId}-error`;
   const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
+  const [prewarmStatus, setPrewarmStatus] = useState<'idle' | 'loading' | 'ready' | 'error'>('idle');
 
   const mortgageAmount = draft.filters.financial?.mortgageAmount;
   const mortgageInvalid =
@@ -836,7 +1193,7 @@ export default function CreateAudiencePage() {
   const isZipFormatValid =
     zipTokens.length === 0 || zipTokens.every(token => /^\d{5}$/.test(token));
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (currentStep.id === 'name') {
       if (!draft.name.trim()) {
         toast.error('Please enter an audience name.');
@@ -845,6 +1202,22 @@ export default function CreateAudiencePage() {
       if (!draft.clientName?.trim()) {
         toast.error('Please enter a client name.');
         return;
+      }
+
+      // Initialize audience session on Partner Portal if not already done
+      if (!draft.id) {
+        setLoading(true);
+        try {
+          const { accountId, audienceId } = await apiClient.initVacuumAudience(draft.name);
+          setDraft(prev => ({ ...prev, accountId, id: audienceId }));
+          toast.success('Audience session ready');
+        } catch (err) {
+          console.error('Failed to init vacuum:', err);
+          toast.error('Failed to initialize session on Partner Portal');
+          setLoading(false);
+          return;
+        }
+        setLoading(false);
       }
     }
     if (currentStep.id === 'intent') {
@@ -874,6 +1247,31 @@ export default function CreateAudiencePage() {
     setCurrentStepIndex(prev => Math.min(prev + 1, steps.length - 1));
     scrollToTop();
   };
+
+
+  const prewarmInitiated = useRef(false);
+  const handleStartSession = useCallback(async () => {
+    if (prewarmStatus === 'loading') return;
+
+    setPrewarmStatus('loading');
+    prewarmInitiated.current = true;
+
+    try {
+      await apiClient.prewarmVacuum();
+      setPrewarmStatus('ready');
+    } catch (err) {
+      console.warn('Vacuum pre-warm failed:', err);
+      setPrewarmStatus('error');
+      prewarmInitiated.current = false;
+    }
+  }, [prewarmStatus]);
+
+  useEffect(() => {
+    // Pre-warm Vacuum session automatically on mount
+    if (prewarmStatus === 'idle' && !prewarmInitiated.current) {
+      handleStartSession();
+    }
+  }, [prewarmStatus, handleStartSession]);
 
   useEffect(() => {
     if (typeof window === 'undefined') {
@@ -1014,15 +1412,55 @@ export default function CreateAudiencePage() {
 
   const renderBusinessStep = () => (
     <div className="space-y-4">
-      {Object.entries(BUSINESS_FIELD_MAP).map(([label, fieldKey]) => (
-        <ChipMultiSelect
-          key={label}
-          label={label}
-          options={getOptions('Business', label as string)}
-          value={draft.filters.business?.[fieldKey]}
-          onChange={(value) => updateSectionField('business', fieldKey, value)}
-        />
-      ))}
+      {Object.entries(BUSINESS_FIELD_MAP).map(([label, fieldKey]) => {
+        if (label === 'Job Titles' || label === 'Company Names' || label === 'Company Domains' || label === 'B2B Business Keywords') {
+          const isDomain = label === 'Company Domains';
+          const isKeywords = label === 'B2B Business Keywords';
+          return (
+            <KeywordChipInput
+              key={label}
+              label={label}
+              beta={isKeywords}
+              placeholder={
+                label === 'Job Titles'
+                  ? 'e.g. Senior Engineer, CEO...'
+                  : isDomain
+                    ? 'e.g. google.com, apple.com...'
+                    : isKeywords
+                      ? 'e.g. Marketing, Agency...'
+                      : 'e.g. Google, Apple, Tesla...'
+              }
+              value={draft.filters.business?.[fieldKey] || []}
+              onChange={(value) => updateSectionField('business', fieldKey, value)}
+              maxItems={isDomain ? 10 : undefined}
+              validate={isDomain ? (val) => val.includes('.') : undefined}
+              errorText={isDomain ? 'Domains must include a TLD (e.g. .com, .io)' : undefined}
+            />
+          );
+        }
+
+        if (label === 'SIC Codes' || label === 'NAICS Codes' || label === 'Industries') {
+          return (
+            <SearchableMultiSelect
+              key={label}
+              label={label}
+              options={getOptions('Business', label)}
+              value={draft.filters.business?.[fieldKey] || []}
+              onChange={(value) => updateSectionField('business', fieldKey, value)}
+              placeholder={`Search ${label}...`}
+            />
+          );
+        }
+        return (
+          <ChipMultiSelect
+            key={label}
+            label={label}
+            options={getOptions('Business', label as string)}
+            value={draft.filters.business?.[fieldKey]}
+            onChange={(value) => updateSectionField('business', fieldKey, value)}
+          />
+        );
+      })}
     </div>
   );
 
@@ -1073,8 +1511,8 @@ export default function CreateAudiencePage() {
     <div className="space-y-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <div className="flex items-center justify-between">
-            <label className="text-sm font-medium text-gray-900 dark:text-white">Min Age</label>
+          <div className="flex items-center justify-between mb-1">
+            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Min Age</label>
             {showMinAgeError && (
               <span className="text-xs text-red-600">Any minimum age must be 18 or older</span>
             )}
@@ -1093,17 +1531,21 @@ export default function CreateAudiencePage() {
             onBlur={() => setMinAgeTouched(true)}
           />
         </div>
-        <Input
-          label="Max Age"
-          type="number"
-          value={draft.filters.personal?.ageRange?.max?.toString() || ''}
-          onChange={(e) =>
-            updateSectionField('personal', 'ageRange', {
-              ...draft.filters.personal?.ageRange,
-              max: e.target.value ? Number(e.target.value) : undefined,
-            })
-          }
-        />
+        <div>
+          <div className="flex items-center justify-between mb-1">
+            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Max Age</label>
+          </div>
+          <Input
+            type="number"
+            value={draft.filters.personal?.ageRange?.max?.toString() || ''}
+            onChange={(e) =>
+              updateSectionField('personal', 'ageRange', {
+                ...draft.filters.personal?.ageRange,
+                max: e.target.value ? Number(e.target.value) : undefined,
+              })
+            }
+          />
+        </div>
       </div>
       {Object.entries(PERSONAL_FIELD_MAP).map(([label, fieldKey]) => (
         <ChipMultiSelect
@@ -1196,6 +1638,8 @@ export default function CreateAudiencePage() {
         <Input
           label="Purchase Price (Min)"
           type="number"
+          disabled={true}
+          title="⚠️ Under Construction ⚠️"
           value={draft.filters.housing?.purchasePrice?.min?.toString() || ''}
           onChange={(e) =>
             updateSectionField('housing', 'purchasePrice', {
@@ -1421,17 +1865,173 @@ export default function CreateAudiencePage() {
   };
 
   const handlePreview = async () => {
-    setPreviewState({ loading: true, count: null, status: 'pending' });
+    setPreviewState({
+      loading: true,
+      count: null,
+      preview: [],
+      timestamp: null,
+      status: 'pending'
+    });
+
     try {
-      const preview = await apiClient.previewAudience(draft);
-      setPreviewState({
-        loading: false,
-        count: preview.previewSize ?? null,
-        status: 'ok',
-      });
+      // Map local draft to the structure expected by Vacuum (Partner API)
+      const ACCOUNT_ID = draft.accountId || "27e2bf65-59ba-4a31-b754-97a6652fe36d";
+      const AUDIENCE_ID = draft.id || "64d20fc9-7365-4bef-b586-dc4e16ba5f50";
+
+      if (!draft.id) {
+        toast.error('Audience not initialized. Please try starting the session again.');
+        setPreviewState({
+          loading: false,
+          count: null,
+          preview: [],
+          timestamp: null,
+          status: 'error',
+          error: 'Audience not initialized'
+        });
+        return;
+      }
+
+      const formatFilterLabel = (label: string) => {
+        if (label.includes(': ')) {
+          return label.split(': ')[1].trim().toLowerCase();
+        }
+        return label.trim().toLowerCase();
+      };
+
+      const formatCurrencyLabel = (label: string) => {
+        const lower = label.trim().toLowerCase();
+        if (lower.startsWith('$')) return '$' + lower;
+        if (/^\d/.test(lower)) return '$$' + lower;
+        return lower;
+      };
+
+      const mappedPayload = {
+        accountId: ACCOUNT_ID,
+        id: AUDIENCE_ID,
+        filters: {
+          audience: {
+            type: draft.intent.mode === 'premade' ? 'premade' :
+              draft.intent.mode === 'ai' ? 'custom' :
+                draft.intent.mode === 'custom' ? 'custom' : 'premade',
+            b2b: null,
+            customTopic: draft.intent.keywords.join(', '),
+            customDescription: aiDescription || "",
+            segmentSearches: []
+          },
+          jobId: "",
+          segment: [],
+          daysBack: null,
+          score: draft.intent.score ? [draft.intent.score] : [],
+          filters: {
+            age: {
+              minAge: draft.filters.personal?.ageRange?.min ?? null,
+              maxAge: draft.filters.personal?.ageRange?.max ?? null
+            },
+            city: draft.location.cities,
+            state: draft.location.states,
+            zip: draft.location.zipCodes,
+            // Mapping helper for selections (lowercasing is often required by the Partner API)
+            gender: draft.filters.personal?.gender?.map(o => formatFilterLabel(o.label)) || [],
+            profile: {
+              incomeRange: draft.filters.financial?.incomeRange?.map(o => formatCurrencyLabel(o.label)) || [],
+              homeowner: draft.filters.housing?.homeownerStatus?.map(o => formatFilterLabel(o.label)) || [],
+              married: draft.filters.family?.married?.map(o => formatFilterLabel(o.label)) || [],
+              netWorth: draft.filters.financial?.netWorth?.map(o => formatCurrencyLabel(o.label)) || [],
+              children: draft.filters.family?.children?.map(o => formatFilterLabel(o.label)) || []
+            },
+            businessProfile: {
+              companyDescription: draft.filters.business?.companyDescription?.map(o => o.label) || [],
+              jobTitle: draft.filters.business?.jobTitles?.map(o => o.label) || [],
+              seniority: draft.filters.business?.seniority?.map(o => o.label) || [],
+              department: draft.filters.business?.departments?.map(o => o.label) || [],
+              companyName: draft.filters.business?.companyName?.map(o => o.label) || [],
+              companyDomain: draft.filters.business?.companyDomain?.map(o => o.label) || [],
+              industry: draft.filters.business?.industries?.map(o => o.label) || [],
+              sic: draft.filters.business?.sic?.map(o => o.label) || [],
+              employeeCount: draft.filters.business?.employeeCount?.map(o => o.label) || [],
+              companyRevenue: draft.filters.business?.companyRevenue?.map(o => o.label) || [],
+              companyNaics: draft.filters.business?.companyNaics?.map(o => o.label) || []
+            },
+            attributes: {
+              credit_rating: draft.filters.financial?.creditRating?.map(o => formatFilterLabel(o.label)) || [],
+              language_code: draft.filters.personal?.language?.map(o => formatFilterLabel(o.label)) || [],
+              occupation_group: draft.filters.financial?.occupationGroup?.map(o => formatFilterLabel(o.label)) || [],
+              occupation_type: draft.filters.financial?.occupationType?.map(o => formatFilterLabel(o.label)) || [],
+              home_year_built: {
+                min: draft.filters.housing?.yearBuilt?.min ?? null,
+                max: draft.filters.housing?.yearBuilt?.max ?? null
+              },
+              single_parent: draft.filters.family?.singleParent?.map(o => formatFilterLabel(o.label)) || [],
+              cra_code: draft.filters.financial?.craCode?.map(o => formatFilterLabel(o.label)) || [],
+              dwelling_type: draft.filters.housing?.dwellingType?.map(o => formatFilterLabel(o.label)) || [],
+              credit_range_new_credit: draft.filters.financial?.newCreditRange?.map(o => formatFilterLabel(o.label)) || [],
+              ethnic_code: draft.filters.personal?.ethnicity?.map(o => formatFilterLabel(o.label)) || [],
+              marital_status: draft.filters.family?.maritalStatus?.map(o => formatFilterLabel(o.label)) || [],
+              net_worth: [],
+              education: draft.filters.personal?.education?.map(o => formatFilterLabel(o.label)) || [],
+              credit_card_user: draft.filters.financial?.creditCardUser?.map(o => formatFilterLabel(o.label)) || [],
+              investment: draft.filters.financial?.investment?.map(o => formatFilterLabel(o.label)) || [],
+              smoker: draft.filters.personal?.smoker?.map(o => formatFilterLabel(o.label)) || [],
+              home_purchase_price: {
+                min: draft.filters.housing?.purchasePrice?.min ?? null,
+                max: draft.filters.housing?.purchasePrice?.max ?? null
+              },
+              home_purchase_year: {
+                min: draft.filters.housing?.purchaseYear?.min ?? null,
+                max: draft.filters.housing?.purchaseYear?.max ?? null
+              },
+              estimated_home_value: draft.filters.housing?.estimatedHomeValue?.map(o => formatCurrencyLabel(o.label)) || [],
+              mortgage_amount: {
+                min: draft.filters.financial?.mortgageAmount?.min ?? null,
+                max: draft.filters.financial?.mortgageAmount?.max ?? null
+              },
+              generations_in_household: draft.filters.family?.generationsInHousehold?.map(o => formatFilterLabel(o.label)) || []
+            },
+            // Map Contact toggles to the internal Partner Portal keys
+            notNulls: Object.entries(draft.filters.contact || {})
+              .filter(([_, v]) => v === 'on')
+              .map(([key]) => {
+                switch (key) {
+                  case 'verifiedPersonalEmails': return 'PERSONAL_EMAILS_VALIDATION_STATUS';
+                  case 'verifiedBusinessEmails': return 'BUSINESS_EMAILS_VALIDATION_STATUS';
+                  case 'validPhones': return 'VALID_PHONES';
+                  case 'skipTracedWireless': return 'SKIPTRACE_WIRELESS_NUMBERS';
+                  case 'skipTracedWirelessB2B': return 'SKIPTRACE_B2B_PHONE';
+                  default: return key.toUpperCase();
+                }
+              })
+              .filter((k): k is string => k !== null),
+            nullOnly: []
+          }
+        }
+      };
+
+      // @ts-ignore - The types between local draft and partner payload are intentionally decoupled
+      const response = await apiClient.previewAudience(mappedPayload);
+
+      if (response.success && response.data) {
+        setPreviewState({
+          loading: false,
+          count: response.data.count,
+          preview: response.data.preview || [],
+          timestamp: new Date().toISOString(),
+          status: 'ok',
+          debug: response.debug
+        });
+      } else {
+        throw new Error('Remote preview failed');
+      }
+
     } catch (error) {
       console.error('Preview failed', error);
-      setPreviewState({ loading: false, count: null, status: 'error' });
+      setPreviewState({
+        loading: false,
+        count: null,
+        preview: [],
+        timestamp: null,
+        status: 'error',
+        error: error instanceof Error ? error.message : 'Unknown preview error'
+      });
       toast.error('Preview failed. Please try again.');
     }
   };
@@ -1748,24 +2348,6 @@ export default function CreateAudiencePage() {
         </Card>
       )}
 
-      {false && (
-        <Card padding="md" className="space-y-2">
-          <p className="text-sm font-medium text-gray-900 dark:text-white">Preview Audience Size</p>
-          <div className="flex items-center gap-3">
-            <Button variant="secondary" size="sm" loading={previewState.loading} onClick={handlePreview}>
-              Preview Audience
-            </Button>
-            {!previewState.loading && previewState.status !== 'idle' && (
-              <p className="text-sm">
-                {previewState.status === 'ok'
-                  ? `Estimated size: ${previewState.count?.toLocaleString() ?? 'N/A'}`
-                  : 'Preview unavailable'}
-              </p>
-            )}
-          </div>
-        </Card>
-      )}
-
       <Card padding="md" className="space-y-2">
         <div className="flex items-center justify-between gap-3">
           <p className="text-sm font-medium text-gray-900 dark:text-white">Copy Filters</p>
@@ -1781,6 +2363,56 @@ export default function CreateAudiencePage() {
           Copies a shareable summary of the selected intent and filters, grouped by section, for use in briefs, tickets, or notes.
         </p>
       </Card>
+
+      {/* PREVIEW SECTION */}
+      <Card padding="md" className="space-y-4 border-2 border-indigo-50 dark:border-indigo-900/30">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-sm font-medium text-gray-900 dark:text-white">Audience Preview</p>
+            <p className="text-xs text-gray-500">Verify your audience size and sample contacts.</p>
+          </div>
+          <Button variant="secondary" size="sm" loading={previewState.loading} onClick={handlePreview}>
+            {previewState.status === 'idle' ? 'Run Preview' : 'Refresh Preview'}
+          </Button>
+        </div>
+
+        {/* Count Display */}
+        {!previewState.loading && previewState.count !== null && (
+          <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg flex items-center justify-between">
+            <div>
+              <p className="text-xs uppercase text-green-700 dark:text-green-400 font-semibold mb-1">Total Contacts Found</p>
+              <p className="text-3xl font-bold text-green-800 dark:text-green-300">{previewState.count.toLocaleString()}</p>
+            </div>
+            <div className="text-right">
+              <p className="text-xs text-gray-500">Last updated</p>
+              <p className="text-xs font-mono">{new Date().toLocaleTimeString()}</p>
+            </div>
+          </div>
+        )}
+
+        {/* Preview Table */}
+        {!previewState.loading && previewState.preview && previewState.preview.length > 0 && (
+          <PreviewTable preview={previewState.preview} totalCount={previewState.count} />
+        )}
+
+        {/* Debug Panel */}
+        {previewState.debug && (
+          <details className="text-xs border-t pt-2 mt-2">
+            <summary className="cursor-pointer text-gray-500 hover:text-gray-700 font-medium">Debug Details</summary>
+            <div className="mt-2 bg-gray-100 dark:bg-gray-800 p-2 rounded overflow-auto max-h-40 font-mono">
+              <p><strong>Source:</strong> Remote</p>
+              <p className="whitespace-pre-wrap"><strong>Raw Snippet:</strong> {previewState.debug.raw}</p>
+            </div>
+          </details>
+        )}
+
+        {previewState.error && (
+          <div className="bg-red-50 dark:bg-red-900/20 p-3 rounded text-sm text-red-600 dark:text-red-400">
+            Error: {previewState.error}
+          </div>
+        )}
+      </Card>
+
     </div>
   );
 
@@ -1800,6 +2432,7 @@ export default function CreateAudiencePage() {
               placeholder="e.g., Tech Startups in California"
               value={draft.name}
               onChange={(e) => setDraft(prev => ({ ...prev, name: e.target.value }))}
+              onClear={() => setDraft(prev => ({ ...prev, name: '' }))}
               autoFocus
             />
             <Input
@@ -1807,7 +2440,42 @@ export default function CreateAudiencePage() {
               placeholder="e.g., Acme Corp"
               value={draft.clientName || ''}
               onChange={(e) => setDraft(prev => ({ ...prev, clientName: e.target.value }))}
+              onClear={() => setDraft(prev => ({ ...prev, clientName: '' }))}
             />
+
+            {/* Session Status Indicator */}
+            <div className="mt-6 p-3 border rounded-lg flex items-center justify-between"
+              style={{
+                borderColor: prewarmStatus === 'ready' ? '#10b981' : prewarmStatus === 'error' ? '#ef4444' : '#d1d5db',
+                backgroundColor: prewarmStatus === 'ready' ? '#f0fdf4' : prewarmStatus === 'error' ? '#fef2f2' : '#f9fafb'
+              }}>
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full"
+                  style={{
+                    backgroundColor: prewarmStatus === 'ready' ? '#10b981' : prewarmStatus === 'loading' ? '#f59e0b' : prewarmStatus === 'error' ? '#ef4444' : '#9ca3af'
+                  }} />
+                <div>
+                  <p className="text-sm font-medium" style={{ color: '#111827' }}>
+                    {prewarmStatus === 'ready' ? 'Session Ready' :
+                      prewarmStatus === 'loading' ? 'Preparing Session...' :
+                        prewarmStatus === 'error' ? 'Session Failed' : 'Session Idle'}
+                  </p>
+                  <p className="text-xs" style={{ color: '#6b7280' }}>
+                    {prewarmStatus === 'ready' ? 'Browser is logged in and ready' :
+                      prewarmStatus === 'loading' ? 'Logging into Partner Portal...' :
+                        prewarmStatus === 'error' ? 'Click to retry' : 'Waiting to start'}
+                  </p>
+                </div>
+              </div>
+              {(prewarmStatus === 'error' || prewarmStatus === 'idle') && (
+                <Button
+                  size="sm"
+                  onClick={handleStartSession}
+                >
+                  Start Session
+                </Button>
+              )}
+            </div>
           </div>
         );
       case 'location':
@@ -1818,12 +2486,14 @@ export default function CreateAudiencePage() {
               placeholder="San Francisco, New York, Austin"
               value={locationForm.cities}
               onChange={(e) => updateLocation('cities', e.target.value)}
+              onClear={() => updateLocation('cities', '')}
             />
             <Input
               label="States (2-letter codes)"
               placeholder="CA, NY, TX"
               value={locationForm.states}
               onChange={(e) => updateLocation('states', e.target.value)}
+              onClear={() => updateLocation('states', '')}
             />
             <div className="space-y-1">
               <label className="flex items-center justify-between text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -1839,6 +2509,7 @@ export default function CreateAudiencePage() {
                 value={locationForm.zipCodes}
                 className={zipTouched && !isZipFormatValid ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : undefined}
                 onChange={(e) => handleZipChange(e.target.value)}
+                onClear={() => handleZipChange('')}
                 onKeyDown={handleZipKeyDown}
                 onBlur={() => setZipTouched(true)}
               />
@@ -1890,37 +2561,31 @@ export default function CreateAudiencePage() {
         {/* Top navigation buttons, duplicated above the filters card.
             Back is hidden on the first step; Next/Create is also hidden on the first step
             so users advance using the bottom controls only on step 1. */}
-        <div className="flex gap-3 mb-4">
-          {currentStepIndex > 0 && (
-            <Button variant="secondary" size="lg" onClick={handleBack} className="flex items-center">
-              <ArrowLeft size={NAV_ICON_SIZE} className="mr-2" />
-              Back
-            </Button>
-          )}
-
-          {currentStepIndex > 0 && (
-            currentStep.id !== 'review' ? (
-              <Button
-                variant="primary"
-                size="lg"
-                onClick={handleNext}
-                className="flex flex-1 items-center justify-center"
-              >
-                Next
-                <ArrowRight size={NAV_ICON_SIZE} className="ml-2" />
+        {currentStepIndex > 0 && (
+          <div className="mb-4">
+            <NavButtonRow>
+              <Button variant="secondary" size="lg" onClick={handleBack} className="flex items-center">
+                <ArrowLeft size={NAV_ICON_SIZE} className="mr-2" />
+                Back
               </Button>
-            ) : (
-              <Button
-                variant="primary"
-                size="lg"
-                onClick={() => setIsRequestModalOpen(true)}
-                className="flex flex-1 items-center justify-center"
-              >
-                Request Audience
-              </Button>
-            )
-          )}
-        </div>
+              {currentStep.id !== 'review' ? (
+                <Button variant="primary" size="lg" onClick={handleNext} className="flex items-center justify-center">
+                  Next
+                  <ArrowRight size={NAV_ICON_SIZE} className="ml-2" />
+                </Button>
+              ) : (
+                <Button
+                  variant="primary"
+                  size="lg"
+                  onClick={() => setIsRequestModalOpen(true)}
+                  className="flex items-center justify-center"
+                >
+                  Request Audience
+                </Button>
+              )}
+            </NavButtonRow>
+          </div>
+        )}
 
         <Card padding="lg" className="mb-8">
           <div className="flex items-center gap-3 mb-6">
@@ -1933,7 +2598,7 @@ export default function CreateAudiencePage() {
           {renderStepContent()}
         </Card>
 
-        <div className="flex gap-3">
+        <NavButtonRow>
           {currentStepIndex > 0 && (
             <Button variant="secondary" size="lg" onClick={handleBack} className="flex items-center">
               <ArrowLeft size={NAV_ICON_SIZE} className="mr-2" />
@@ -1947,7 +2612,7 @@ export default function CreateAudiencePage() {
               size="lg"
               fullWidth={currentStepIndex === 0}
               onClick={handleNext}
-              className={`flex items-center justify-center ${currentStepIndex > 0 ? 'flex-1' : ''}`}
+              className="flex items-center justify-center"
               disabled={!canProceedFromNameStep}
             >
               Next
@@ -1957,13 +2622,13 @@ export default function CreateAudiencePage() {
             <Button
               variant="primary"
               size="lg"
-              className={`flex items-center justify-center ${currentStepIndex > 0 ? 'flex-1' : ''}`}
+              className="flex items-center justify-center"
               onClick={() => setIsRequestModalOpen(true)}
             >
               Request Audience
             </Button>
           )}
-        </div>
+        </NavButtonRow>
       </main>
       {isRequestModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">

@@ -1,0 +1,196 @@
+[
+  {
+    "type": "FETCH",
+    "url": "/home/simpleaudience/audience/5ae4fc3f-4624-4294-803a-28869486047d",
+    "method": "POST",
+    "payload": [
+      {
+        "accountId": "0b9b62fb-c388-45ac-afa9-52db1e946cae",
+        "id": "5ae4fc3f-4624-4294-803a-28869486047d",
+        "filters": {
+          "audience": {
+            "type": "premade",
+            "b2b": false,
+            "customTopic": "",
+            "customDescription": "",
+            "segmentSearches": []
+          },
+          "jobId": "",
+          "segment": [],
+          "daysBack": null,
+          "score": [],
+          "filters": {
+            "age": {
+              "minAge": null,
+              "maxAge": null
+            },
+            "city": [],
+            "state": [],
+            "zip": [],
+            "gender": [],
+            "profile": {
+              "incomeRange": [],
+              "homeowner": [],
+              "married": [],
+              "netWorth": [],
+              "children": []
+            },
+            "businessProfile": {
+              "companyDescription": [],
+              "jobTitle": [],
+              "seniority": [
+                "cxo",
+                "director",
+                "manager",
+                "staff",
+                "vp"
+              ],
+              "department": [],
+              "companyName": [],
+              "companyDomain": [],
+              "industry": [],
+              "sic": [],
+              "employeeCount": [],
+              "companyRevenue": [],
+              "companyNaics": []
+            },
+            "attributes": {
+              "credit_rating": [],
+              "language_code": [],
+              "occupation_group": [],
+              "occupation_type": [],
+              "home_year_built": {
+                "min": null,
+                "max": null
+              },
+              "single_parent": [],
+              "cra_code": [],
+              "dwelling_type": [],
+              "credit_range_new_credit": [],
+              "ethnic_code": [],
+              "marital_status": [],
+              "net_worth": [],
+              "education": [],
+              "credit_card_user": [],
+              "investment": [],
+              "smoker": [],
+              "home_purchase_price": {
+                "min": null,
+                "max": null
+              },
+              "home_purchase_year": {
+                "min": null,
+                "max": null
+              },
+              "estimated_home_value": [],
+              "mortgage_amount": {
+                "min": null,
+                "max": null
+              },
+              "generations_in_household": []
+            },
+            "notNulls": [],
+            "nullOnly": []
+          }
+        }
+      }
+    ],
+    "response": "Not JSON",
+    "timestamp": "2025-12-10T02:20:02.018Z"
+  },
+  {
+    "type": "FETCH",
+    "url": "/home/simpleaudience/audience/5ae4fc3f-4624-4294-803a-28869486047d",
+    "method": "POST",
+    "payload": [
+      {
+        "accountId": "0b9b62fb-c388-45ac-afa9-52db1e946cae",
+        "id": "5ae4fc3f-4624-4294-803a-28869486047d",
+        "filters": {
+          "audience": {
+            "type": "premade",
+            "b2b": false,
+            "customTopic": "",
+            "customDescription": "",
+            "segmentSearches": []
+          },
+          "jobId": "",
+          "segment": [],
+          "daysBack": null,
+          "score": [],
+          "filters": {
+            "age": {
+              "minAge": null,
+              "maxAge": null
+            },
+            "city": [],
+            "state": [],
+            "zip": [],
+            "gender": [],
+            "profile": {
+              "incomeRange": [],
+              "homeowner": [],
+              "married": [],
+              "netWorth": [],
+              "children": []
+            },
+            "businessProfile": {
+              "companyDescription": [],
+              "jobTitle": [],
+              "seniority": [
+                "cxo"
+              ],
+              "department": [],
+              "companyName": [],
+              "companyDomain": [],
+              "industry": [],
+              "sic": [],
+              "employeeCount": [],
+              "companyRevenue": [],
+              "companyNaics": []
+            },
+            "attributes": {
+              "credit_rating": [],
+              "language_code": [],
+              "occupation_group": [],
+              "occupation_type": [],
+              "home_year_built": {
+                "min": null,
+                "max": null
+              },
+              "single_parent": [],
+              "cra_code": [],
+              "dwelling_type": [],
+              "credit_range_new_credit": [],
+              "ethnic_code": [],
+              "marital_status": [],
+              "net_worth": [],
+              "education": [],
+              "credit_card_user": [],
+              "investment": [],
+              "smoker": [],
+              "home_purchase_price": {
+                "min": null,
+                "max": null
+              },
+              "home_purchase_year": {
+                "min": null,
+                "max": null
+              },
+              "estimated_home_value": [],
+              "mortgage_amount": {
+                "min": null,
+                "max": null
+              },
+              "generations_in_household": []
+            },
+            "notNulls": [],
+            "nullOnly": []
+          }
+        }
+      }
+    ],
+    "response": "Not JSON",
+    "timestamp": "2025-12-10T02:20:33.519Z"
+  }
+]

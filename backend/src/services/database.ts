@@ -7,7 +7,7 @@ import Database from 'better-sqlite3';
 import path from 'path';
 import fs from 'fs';
 import logger from '../utils/logger';
-import { AudienceMetadata, DownloadEntry, Webhook, AudienceFilters } from '../../../shared/types';
+import { AudienceMetadata, DownloadEntry, Webhook, AudienceFilters } from '@shared/types';
 
 export class DatabaseService {
   private db: Database.Database;
@@ -111,7 +111,7 @@ export class DatabaseService {
       audience.lastRefreshed?.toISOString() || null,
       audience.refreshCount,
       audience.nextRefresh?.toISOString() || null,
-      JSON.stringify(audience.filters)
+      JSON.stringify(audience.payload.filters)
     );
 
     logger.debug(`Audience saved: ${audience.id}`);
@@ -270,7 +270,12 @@ export class DatabaseService {
       lastRefreshed: row.last_refreshed ? new Date(row.last_refreshed) : undefined,
       refreshCount: row.refresh_count,
       nextRefresh: row.next_refresh ? new Date(row.next_refresh) : undefined,
-      filters: JSON.parse(row.filters),
+      payload: {
+        name: row.name,
+        location: { cities: [], states: [], zipCodes: [] }, // Reconstruct or fetch if available
+        intent: { mode: 'none', keywords: [] },
+        filters: JSON.parse(row.filters),
+      },
     };
   }
 

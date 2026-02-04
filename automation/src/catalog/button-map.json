@@ -1,0 +1,155 @@
+{
+  "version": 1,
+  "generatedAt": "2025-12-10T09:11:24.602Z",
+  "entries": [
+    {
+      "buttonKey": "business.seniority",
+      "label": "Seniority",
+      "section": "business",
+      "type": "filter",
+      "selectorHint": "SELECTORS.businessFiltersTab",
+      "lastCapturedAt": "2025-12-10T02:20:33.519Z",
+      "requestTemplate": {
+        "method": "POST",
+        "url": "/home/simpleaudience/audience/5ae4fc3f-4624-4294-803a-28869486047d",
+        "headers": {},
+        "body": [
+          {
+            "accountId": "0b9b62fb-c388-45ac-afa9-52db1e946cae",
+            "id": "5ae4fc3f-4624-4294-803a-28869486047d",
+            "filters": {
+              "audience": {
+                "type": "premade",
+                "b2b": false,
+                "customTopic": "",
+                "customDescription": "",
+                "segmentSearches": []
+              },
+              "jobId": "",
+              "segment": [],
+              "daysBack": null,
+              "score": [],
+              "filters": {
+                "age": {
+                  "minAge": null,
+                  "maxAge": null
+                },
+                "city": [],
+                "state": [],
+                "zip": [],
+                "gender": [],
+                "profile": {
+                  "incomeRange": [],
+                  "homeowner": [],
+                  "married": [],
+                  "netWorth": [],
+                  "children": []
+                },
+                "businessProfile": {
+                  "companyDescription": [],
+                  "jobTitle": [],
+                  "seniority": [
+                    "cxo"
+                  ],
+                  "department": [],
+                  "companyName": [],
+                  "companyDomain": [],
+                  "industry": [],
+                  "sic": [],
+                  "employeeCount": [],
+                  "companyRevenue": [],
+                  "companyNaics": []
+                },
+                "attributes": {
+                  "credit_rating": [],
+                  "language_code": [],
+                  "occupation_group": [],
+                  "occupation_type": [],
+                  "home_year_built": {
+                    "min": null,
+                    "max": null
+                  },
+                  "single_parent": [],
+                  "cra_code": [],
+                  "dwelling_type": [],
+                  "credit_range_new_credit": [],
+                  "ethnic_code": [],
+                  "marital_status": [],
+                  "net_worth": [],
+                  "education": [],
+                  "credit_card_user": [],
+                  "investment": [],
+                  "smoker": [],
+                  "home_purchase_price": {
+                    "min": null,
+                    "max": null
+                  },
+                  "home_purchase_year": {
+                    "min": null,
+                    "max": null
+                  },
+                  "estimated_home_value": [],
+                  "mortgage_amount": {
+                    "min": null,
+                    "max": null
+                  },
+                  "generations_in_household": []
+                },
+                "notNulls": [],
+                "nullOnly": []
+              }
+            }
+          }
+        ]
+      },
+      "trace": {
+        "sessionId": "2025-12-10-business",
+        "file": "docs/provider-traces/2025-12-10-business.json",
+        "eventIndex": 1
+      },
+      "responses": [
+        {
+          "bodySample": "Not JSON"
+        }
+      ],
+      "notes": "Cleared all but CXO and clicked Preview"
+    },
+    {
+      "buttonKey": "location.states",
+      "label": "States Input",
+      "section": "location",
+      "type": "filter",
+      "selectorHint": "input[placeholder='Enter states']",
+      "lastCapturedAt": "2025-12-09T21:10:02.000Z",
+      "requestTemplate": {
+        "method": "POST",
+        "url": "https://provider.example.com/api/location/states",
+        "headers": {
+          "content-type": "application/json"
+        },
+        "body": {
+          "query": "CA"
+        }
+      },
+      "trace": {
+        "sessionId": "2025-12-09-location",
+        "file": "docs/provider-traces/sample-location.json",
+        "eventIndex": 0
+      },
+      "responses": [
+        {
+          "status": 200,
+          "bodySample": {
+            "matches": [
+              {
+                "name": "California",
+                "abbreviation": "CA"
+              }
+            ]
+          }
+        }
+      ],
+      "notes": "Typed CA and pressed enter"
+    }
+  ]
+}

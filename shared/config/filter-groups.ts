@@ -25,9 +25,15 @@ export type HousingOptionField =
 export type ContactOptionField = keyof NonNullable<AudienceFilters['contact']>;
 
 export const BUSINESS_FIELD_MAP: Record<string, BusinessOptionField> = {
+  'B2B Business Keywords': 'companyDescription',
+  'Job Titles': 'jobTitles',
   Seniority: 'seniority',
   Departments: 'departments',
+  'Company Names': 'companyName',
+  'Company Domains': 'companyDomain',
   Industries: 'industries',
+  'SIC Codes': 'sic',
+  'NAICS Codes': 'companyNaics',
   'Employee Count': 'employeeCount',
   'Estimated Company Revenue': 'companyRevenue',
 };

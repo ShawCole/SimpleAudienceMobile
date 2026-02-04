@@ -62,8 +62,14 @@ export interface BusinessFilters {
   seniority?: IndexedOptionValue[];
   departments?: IndexedOptionValue[];
   industries?: IndexedOptionValue[];
+  jobTitles?: IndexedOptionValue[];
+  companyName?: IndexedOptionValue[];
+  companyDomain?: IndexedOptionValue[];
+  sic?: IndexedOptionValue[];
+  companyNaics?: IndexedOptionValue[];
   employeeCount?: IndexedOptionValue[];
   companyRevenue?: IndexedOptionValue[];
+  companyDescription?: IndexedOptionValue[];
 }
 
 export interface FinancialFilters {
@@ -124,6 +130,11 @@ export interface AdvancedFilters {
 
 export interface AudiencePayload {
   name: string;
+  /**
+   * IDs from the Partner Platform, captured during pre-warm/init
+   */
+  accountId?: string;
+  id?: string;
   /**
    * Human-friendly client label for this audience
    * Optional for backwards compatibility with existing payloads,

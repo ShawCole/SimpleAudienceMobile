@@ -295,6 +295,11 @@ DATABASE_PATH=./data/simpleaudience.db
 HEADLESS=true
 BROWSER_TIMEOUT=30000
 
+# Remote Control Bridge
+PROVIDER_API_BASE_URL=https://audiencelab.example.com
+PROVIDER_API_TOKEN=replace-me
+REMOTE_CONTROL_DRY_RUN=true
+
 # Google Drive (Optional)
 GOOGLE_CLIENT_ID=your-client-id
 GOOGLE_CLIENT_SECRET=your-client-secret
@@ -306,6 +311,15 @@ GOOGLE_REDIRECT_URI=http://localhost:3001/auth/google/callback
 ```env
 NEXT_PUBLIC_API_URL=http://localhost:3001/api
 ```
+
+### Text-to-Audience Remote Control
+
+- Capture provider traffic with the script described in `docs/provider-traces/README.md`. Save each session JSON inside `docs/provider-traces/`.
+- Regenerate the canonical catalog (button payloads + selectors) by running `npm run build:map --workspace automation`.
+- Inspect roster + catalog data inside `automation/src/catalog/`.
+- Execute the remote control pipeline from free text via `npm run remote:plan --workspace backend -- --prompt "Insurance agencies in CA"`. Add `--dry-run` to avoid hitting the provider.
+- The CLI surfaces which button intents are executable (i.e., captured) and which still need traces.
+- End-to-end smoke test: `npm run workflow:test` (builds the catalog then runs the dry-run pipeline).
 
 ---
 

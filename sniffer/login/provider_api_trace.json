@@ -1,0 +1,475 @@
+[
+  {
+    "type": "FETCH",
+    "url": "https://build.audiencelab.io/home?_rsc=6wv23",
+    "method": "GET",
+    "payload": null,
+    "response": "Not JSON",
+    "timestamp": "2025-12-10T02:10:04.571Z"
+  },
+  {
+    "type": "FETCH",
+    "url": "https://build.audiencelab.io/home/simple-audience?_rsc=192zs",
+    "method": "GET",
+    "payload": null,
+    "response": "Not JSON",
+    "timestamp": "2025-12-10T02:10:05.363Z"
+  },
+  {
+    "type": "FETCH",
+    "url": "https://build.audiencelab.io/home/simpleaudience?_rsc=192zs",
+    "method": "GET",
+    "payload": null,
+    "response": "Not JSON",
+    "timestamp": "2025-12-10T02:10:05.750Z"
+  },
+  {
+    "type": "FETCH",
+    "url": "https://client.crisp.chat/settings/website/6517cb99-e657-430f-9db0-88e9bb65648f/prelude/?2025-11-9-21-10",
+    "method": "GET",
+    "payload": null,
+    "response": {
+      "socket": true,
+      "buster": 1764875620587,
+      "endpoints": {
+        "socket": {
+          "client": "https://client.relay.crisp.chat/w/d5f/",
+          "stream": "https://stream.relay.crisp.chat/w/d5f/"
+        },
+        "rescue": {
+          "socket": {
+            "client": "https://client.relay.rescue.crisp.chat/w/d5f/",
+            "stream": "https://stream.relay.rescue.crisp.chat/w/d5f/"
+          }
+        }
+      }
+    },
+    "timestamp": "2025-12-10T02:10:22.382Z"
+  },
+  {
+    "type": "FETCH",
+    "url": "https://build.audiencelab.io/home/simpleaudience?_rsc=3tvul",
+    "method": "GET",
+    "payload": null,
+    "response": "Not JSON",
+    "timestamp": "2025-12-10T02:10:23.652Z"
+  },
+  {
+    "type": "FETCH",
+    "url": "https://client.crisp.chat/settings/website/6517cb99-e657-430f-9db0-88e9bb65648f/?1764875620587",
+    "method": "GET",
+    "payload": null,
+    "response": {
+      "website": "Audience Lab",
+      "domain": "build.audiencelab.io",
+      "mailer": "support.audiencelab.io",
+      "settings": {
+        "logo": "https://storage.crisp.chat/users/avatar/website/-/1/1/8/f/118ff449d60b4200/artboard-197x_wi7f0v.png",
+        "audit_log": true,
+        "rating": true,
+        "transcript": true,
+        "enrich": true,
+        "junk_filter": false,
+        "tile": "circuit-board",
+        "wait_game": false,
+        "website_logo": false,
+        "last_operator_face": false,
+        "ongoing_operator_face": false,
+        "activity_metrics": true,
+        "operator_privacy": false,
+        "visitor_privacy": false,
+        "availability_tooltip": false,
+        "hide_vacation": false,
+        "hide_on_away": false,
+        "hide_on_mobile": false,
+        "position_reverse": false,
+        "email_visitors": true,
+        "phone_visitors": false,
+        "force_identify": true,
+        "ignore_privacy": true,
+        "visitor_compose": true,
+        "file_transfer": true,
+        "audio_record": true,
+        "overlay_search": true,
+        "overlay_mode": false,
+        "helpdesk_link": true,
+        "helpdesk_only": false,
+        "status_health_dead": true,
+        "check_domain": true,
+        "color_theme": "default",
+        "text_theme": "default",
+        "welcome_message": "4",
+        "locale": "",
+        "allowed_pages": [
+          "build.audiencelab.io/**"
+        ],
+        "blocked_pages": [],
+        "blocked_countries": [],
+        "blocked_locales": [],
+        "blocked_ips": []
+      },
+      "operators": [
+        {
+          "user_id": "d19b9e5b-6157-4cdf-908f-d9016f8f65cd",
+          "avatar": "https://storage.crisp.chat/users/avatar/operator/-/6/3/1/0/6310a2b929061000/alpfp_1qo3pes.jpg",
+          "nickname": "Rohit",
+          "timestamp": 1765311003601
+        },
+        {
+          "user_id": "fb3263b3-60e5-455f-a22c-6ccc192568ad",
+          "avatar": "https://storage.crisp.chat/users/avatar/operator/63e706f8a202b400/img20230614215650479_gb6nv2.jpg",
+          "nickname": "Andrew",
+          "timestamp": 1765311003601
+        },
+        {
+          "user_id": "0fbd8ba7-3705-47d7-a3d7-826d4cadaf5a",
+          "avatar": null,
+          "nickname": "Jonathan",
+          "timestamp": 1765311003601
+        }
+      ],
+      "plugins": {
+        "urn:crisp.im:triggers:0": {
+          "settings": {}
+        },
+        "urn:crisp.im:debranding:0": {
+          "settings": {}
+        },
+        "urn:crisp.im:overlay:0": {
+          "settings": {}
+        },
+        "urn:crisp.im:customization:0": {
+          "settings": {
+            "position": {
+              "chatbox": {
+                "default_button_horizontal": "0"
+              }
+            },
+            "text": {
+              "minimized": {
+                "tooltip_entice_action_helpdesk": "Helpdesk",
+                "tooltip_entice_action_search": "Search",
+                "tooltip_button_open_hint": "Open Chat",
+                "tooltip_button_close_hint": "Close Chat"
+              }
+            }
+          }
+        }
+      },
+      "online": true,
+      "trial": false,
+      "overlay": {},
+      "channels": {
+        "helpdesk": "audiencelab.crisp.help"
+      }
+    },
+    "timestamp": "2025-12-10T02:10:23.710Z"
+  },
+  {
+    "type": "FETCH",
+    "url": "https://client.crisp.chat/static/locales/en.json?6e324a8",
+    "method": "GET",
+    "payload": null,
+    "response": {
+      "_meta": {
+        "locale_name": "English",
+        "locale_code": "en",
+        "locale_direction": "ltr"
+      },
+      "_strings": {
+        "common": {
+          "close": "Close"
+        },
+        "date": {
+          "hour_singular": "An hour ago",
+          "hour_plural": "%1s hours ago",
+          "minute_singular": "A minute ago",
+          "minute_plural": "%1s minutes ago",
+          "second": "A few seconds ago",
+          "now": "Just now"
+        },
+        "duration": {
+          "days": "A few days",
+          "hour_singular": "An hour",
+          "hour_plural": "%1s hours",
+          "minute_singular": "A minute",
+          "minute_plural": "%1s minutes",
+          "second": "A few seconds",
+          "now": "Instantly"
+        },
+        "days": {
+          "monday": "Monday",
+          "tuesday": "Tuesday",
+          "wednesday": "Wednesday",
+          "thursday": "Thursday",
+          "friday": "Friday",
+          "saturday": "Saturday",
+          "sunday": "Sunday"
+        },
+        "months": {
+          "january": "January",
+          "february": "February",
+          "march": "March",
+          "april": "April",
+          "may": "May",
+          "june": "June",
+          "july": "July",
+          "august": "August",
+          "september": "September",
+          "october": "October",
+          "november": "November",
+          "december": "December"
+        },
+        "theme_text": {
+          "default_chat": "Questions? Chat with us!",
+          "1_chat": "Questions? Chat with me!",
+          "2_chat": "Ask us your questions",
+          "3_chat": "Ask me your questions",
+          "4_chat": "Chat with support"
+        },
+        "theme_welcome": {
+          "default_chat": "How can we help with %1s?",
+          "1_chat": "Hey, want to chat with us?",
+          "2_chat": "Anything you want to ask?",
+          "3_chat": "Hello, ask us any question about %1s.",
+          "4_chat": "Hello! How can I help you? :)",
+          "5_chat": "Any question about %1s?"
+        },
+        "minimized": {
+          "unauthorized_pane": "Invalid website",
+          "tooltip_entice_title_search": "Questions? Search for help!",
+          "tooltip_entice_status_online": "Support is online",
+          "tooltip_entice_status_away": "Support is away",
+          "tooltip_entice_action_chat": "Chat with %1s",
+          "tooltip_entice_action_search": "Search",
+          "tooltip_button_open_hint": "Open chat",
+          "tooltip_button_close_hint": "Close chat"
+        },
+        "chat": {
+          "minimized_tooltip_message_compose": "Compose your reply",
+          "minimized_tooltip_message_from": "Message from",
+          "minimized_connect_alert_failure": "Failed to connect. Support may be unavailable at the moment.",
+          "chat_header_mode_chat": "Chat",
+          "chat_header_mode_helpdesk": "Help",
+          "chat_header_mode_search": "Search",
+          "chat_header_initial_avatar_website_tooltip": "And %1s more",
+          "chat_header_ongoing_from": "from",
+          "chat_header_ongoing_status_metrics": "Typically replies under %1s",
+          "chat_header_ongoing_status_last": "Was last active %1s",
+          "chat_header_ongoing_status_online": "Support is online",
+          "chat_header_ongoing_status_away": "Support is away",
+          "chat_header_ongoing_channel_continue": "Continue on %1s",
+          "chat_header_ongoing_channel_continue_email": "Email",
+          "chat_header_ongoing_channel_continue_phone": "Phone",
+          "chat_header_channels": "More channels",
+          "chat_header_helpdesk_curated": "Most Frequently Read Articles",
+          "chat_header_helpdesk_results": "Searched Articles",
+          "chat_alerts_new_messages": "There are new messages below. Click to see.",
+          "chat_alerts_email_invalid": "You mistyped your email, can you check it?",
+          "chat_alerts_wait_reply_online": "Thanks! We should reply in a few moments.",
+          "chat_alerts_wait_reply_away": "We are not online. We will email you back.",
+          "chat_alerts_warn_reply_email_default": "Click to set your email to get notifications.",
+          "chat_alerts_warn_reply_email_force": "Please set your email to continue.",
+          "chat_alerts_warn_reply_phone_default": "Click to set your phone to get notifications.",
+          "chat_alerts_warn_reply_phone_force": "Please set your phone to continue.",
+          "chat_alerts_warn_prompt": "Please fill the form before you continue.",
+          "chat_pickers_selector_smileys": "Smileys",
+          "chat_pickers_selector_gifs": "GIFs",
+          "chat_pickers_gif_search": "Find GIFs...",
+          "chat_pickers_gif_no_results": "No results. Try another search.",
+          "chat_feedback_rate_title": "How did we do?",
+          "chat_feedback_rate_placeholder": "Anything to say?",
+          "chat_feedback_rate_submit": "Send your rating",
+          "chat_message_file_name": "Attached file",
+          "chat_message_tag_automated": "Bot",
+          "chat_message_tag_participant": "Participant",
+          "chat_message_tag_edited": "Edited",
+          "chat_message_tag_translated": "Translated",
+          "chat_message_source_badge": "AI",
+          "chat_message_source_label": "Answer",
+          "chat_message_source_sources": "Sources",
+          "chat_message_event_thinking": "Thinking...",
+          "chat_message_info_read": "Read",
+          "chat_message_info_sending": "Sending",
+          "chat_message_error_retry": "Failed to send. Retry?",
+          "chat_message_error_reason_blocked": "Not allowed to send.",
+          "chat_message_error_reason_spam": "Message is spam.",
+          "chat_message_error_reason_quota": "Quota limit exceeded.",
+          "chat_message_error_reason_signature": "Signature invalid. Reload page.",
+          "chat_message_error_reason_ticket": "Ticket invalid. Reload page.",
+          "chat_message_error_reason_timeout": "Check your network connection.",
+          "chat_message_error_reason_other": "Unknown error cause.",
+          "chat_message_send_abort_warn": "Some messages have not yet been sent. Navigating will prevent them from being sent.",
+          "chat_form_field_message": "Compose your message...",
+          "chat_form_field_disabled": "Messaging is unavailable.",
+          "chat_form_send_hint": "Send",
+          "chat_form_attach_tooltip": "Send a file",
+          "chat_form_attach_wait_preparing": "Preparing",
+          "chat_form_attach_wait_uploading": "Uploading",
+          "chat_form_attach_alert_quota": "Daily file upload quota has been exceeded, or file extension is not allowed.",
+          "chat_form_attach_alert_size": "File too large. Please reduce its size and try again.",
+          "chat_form_attach_alert_error": "An error occurred while uploading the file. Please try again.",
+          "chat_form_attach_abort_warn": "Navigating when a file is being uploaded will stop upload.",
+          "chat_form_attach_confirm_upload": "Upload this pasted file?",
+          "chat_form_smiley_tooltip": "Insert an emoji",
+          "chat_form_speech_tooltip": "Audio message",
+          "chat_form_speech_capture_error": "Could not record audio from your microphone. Did you allow access?",
+          "chat_form_speech_abort_warn": "Navigating before your audio recording is sent will cause it to be lost.",
+          "chat_form_feedback_tooltip": "Rate this chat",
+          "chat_game_controls_stop": "Stop playing",
+          "chat_message_text_identity_main": "Just in case you leave or we reply later:",
+          "chat_message_text_identity_ask": "how do you want us to get back to you?",
+          "chat_message_text_identity_ask_email": "What is your email address?",
+          "chat_message_text_identity_ask_field_email": "Enter your email address...",
+          "chat_message_text_identity_ask_phone": "What is your phone number?",
+          "chat_message_text_identity_ask_field_phone": "Enter your phone number...",
+          "chat_message_text_identity_pick_email": "Email",
+          "chat_message_text_identity_pick_phone": "Phone",
+          "chat_message_text_game_main": "Looks like we are taking time to reply.",
+          "chat_message_text_game_ask": "While you wait, want to play a cool game?",
+          "chat_message_text_game_pick_yes": "Play a game",
+          "chat_message_text_game_pick_no": "No, thanks",
+          "chat_message_text_feedback_main": "Thanks for chatting with us.",
+          "chat_message_text_feedback_ask": "Would you mind rating our support?",
+          "chat_message_text_feedback_pick_rate": "Rate support",
+          "chat_message_text_feedback_pick_ignore": "No, thanks",
+          "chat_message_text_feedback_submitted": "Thank you for your feedback!",
+          "chat_message_text_field_return": "Return to message",
+          "chat_message_audio_play_hit": "Play audio",
+          "chat_message_audio_play_error": "Could not play this audio file. It may have expired.",
+          "chat_frame_previous_tooltip": "Return to messages",
+          "chat_offline_main": "Network offline. Reconnecting...",
+          "chat_offline_inactive": "Offline. You were inactive for some time.",
+          "chat_offline_fail": "Offline. Please reload the page.",
+          "chat_offline_label_frozen": "No messages can be received or sent for now.",
+          "chat_offline_label_resume": "Reconnect now?",
+          "chat_health_main": "Some of our services are not working.",
+          "chat_health_label_link": "See our status page",
+          "chat_health_label_updates": "for more updates.",
+          "chat_helpdesk_search_empty": "No articles found. Try other keywords.",
+          "chat_helpdesk_search_unpopulated": "There are no articles in the help center at the moment.",
+          "chat_helpdesk_search_form_field": "Find help articles...",
+          "chat_helpdesk_viewer_open_tooltip": "View in Helpdesk",
+          "chat_helpdesk_viewer_previous_tooltip": "Return to articles"
+        },
+        "overlay": {
+          "identity_retract_tooltip": "Collapse sidebar",
+          "browse_recent_title": "Recent searches",
+          "browse_frequent_title": "Frequent searches",
+          "browse_frequent_empty": "No frequent searches.",
+          "browse_categories_title": "Categories",
+          "engine_by": "Answers by",
+          "engine_get": "Get yours",
+          "prompt_controls_title": "Questions? Search anything here",
+          "prompt_controls_expand_tooltip": "Expand sidebar",
+          "prompt_controls_magic_label": "Works with",
+          "prompt_controls_magic_runtime": "AI",
+          "prompt_controls_field_placeholder": "What are you looking for?",
+          "prompt_controls_field_submit_large": "Ask our AI",
+          "prompt_controls_field_submit_small": "Ask",
+          "entice_title": "Search %1s",
+          "entice_search": "Try those search queries!",
+          "results_answer_title": "Quick Answer",
+          "results_answer_quickie_title": "I generated this answer for you:",
+          "results_answer_quickie_generated": "AI-generated answer based on found data",
+          "results_answer_quickie_generating": "Your answer is being generated...",
+          "results_answer_quickie_searching": "Looking up for results...",
+          "results_answer_quickie_thinking": "Thinking",
+          "results_answer_quickie_empty": "I could not find any relevant results in any data source. Could you please refine your search?",
+          "results_answer_support_question": "Do you still have questions?",
+          "results_answer_support_contact": "Contact Support",
+          "results_sources_title": "Found Results",
+          "results_sources_result_title_empty": "Document has no title",
+          "results_sources_result_quality": "%1s quality",
+          "results_sources_result_details_origin_answer": "Answer snippet",
+          "results_sources_result_details_origin_webpage": "Web page at %1s",
+          "results_sources_result_details_origin_document": "Document file",
+          "results_sources_result_details_origin_helpdesk": "Helpdesk article",
+          "results_sources_result_details_origin_other": "Other source",
+          "results_sources_result_details_date": "Indexed %1s",
+          "results_sources_result_details_target": "See original",
+          "results_sources_result_details_target_helpdesk": "See article",
+          "results_error_title": "Oops. Our AI is too busy!",
+          "results_error_explain": "We cannot answer your question at the moment. Try again later.",
+          "results_error_retry": "Try asking again?",
+          "navigation_state_to": "to",
+          "navigation_state_of": "of",
+          "navigation_state_results": "results"
+        },
+        "call": {
+          "ring_title_website": "%1s support",
+          "ring_title_label": "%1s is calling you...",
+          "ring_actions_decline": "Decline",
+          "ring_actions_accept": "Accept",
+          "screen_label_audio_muted": "Audio muted",
+          "screen_label_video_muted": "Video muted",
+          "screen_status_connecting": "Connecting...",
+          "screen_status_ongoing": "Ongoing",
+          "screen_action_audio_enabled_tooltip": "Disable audio",
+          "screen_action_audio_disabled_tooltip": "Enable audio",
+          "screen_action_video_enabled_tooltip": "Disable video",
+          "screen_action_video_disabled_tooltip": "Enable video",
+          "screen_action_screensharing_disabled_tooltip": "Share screen",
+          "screen_action_screensharing_enabled_tooltip": "Stop sharing screen",
+          "screen_action_hangup_enabled_tooltip": "End call",
+          "screen_action_hangup_disabled_tooltip": "End call",
+          "screen_action_toggle_enabled_tooltip": "Full screen",
+          "screen_action_toggle_disabled_tooltip": "Exit full screen",
+          "call_abort_warn": "Navigating when a call is ongoing will stop the call."
+        },
+        "browsing": {
+          "assist_mouse_tooltip": "%1s is assisting you"
+        },
+        "magnify": {
+          "tooltip_previous": "Previous",
+          "tooltip_next": "Next",
+          "tooltip_download": "Download"
+        }
+      }
+    },
+    "timestamp": "2025-12-10T02:10:23.751Z"
+  },
+  {
+    "type": "XHR",
+    "url": "https://client.crisp.chat/static/sounds/events/chat-message-receive.oga?6e324a8",
+    "method": "GET",
+    "response": "Not JSON",
+    "timestamp": "2025-12-10T02:10:24.005Z"
+  },
+  {
+    "type": "XHR",
+    "url": "https://client.crisp.chat/static/sounds/events/chat-message-action.oga?6e324a8",
+    "method": "GET",
+    "response": "Not JSON",
+    "timestamp": "2025-12-10T02:10:24.006Z"
+  },
+  {
+    "type": "FETCH",
+    "url": "/home/simpleaudience",
+    "method": "POST",
+    "payload": [
+      {
+        "accountId": "0b9b62fb-c388-45ac-afa9-52db1e946cae",
+        "name": "Test"
+      }
+    ],
+    "response": "Not JSON",
+    "timestamp": "2025-12-10T02:10:49.739Z"
+  },
+  {
+    "type": "FETCH",
+    "url": "https://build.audiencelab.io/home/simpleaudience/audience/5ae4fc3f-4624-4294-803a-28869486047d?_rsc=kygn1",
+    "method": "GET",
+    "payload": null,
+    "response": "Not JSON",
+    "timestamp": "2025-12-10T02:10:50.356Z"
+  },
+  {
+    "type": "FETCH",
+    "url": "https://build.audiencelab.io/home/simpleaudience/audience/5ae4fc3f-4624-4294-803a-28869486047d?_rsc=q4mex",
+    "method": "GET",
+    "payload": null,
+    "response": "Not JSON",
+    "timestamp": "2025-12-10T02:10:50.946Z"
+  }
+]

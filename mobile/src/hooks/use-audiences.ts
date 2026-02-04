@@ -1,45 +1,59 @@
 /**
  * Audiences Hook
- * React hook for fetching and managing audiences with SWR
+ * React hook for fetching and managing audiences with Zustand
  */
 
-import useSWR from 'swr';
-import { apiClient } from '../services/api-client';
-import { AudienceMetadata } from '../../../shared/types';
+import { useEffect } from 'react';
+import { useAudienceStore } from '../store/useAudienceStore';
 
 export function useAudiences(page: number = 1, pageSize: number = 20) {
-  const { data, error, isLoading, mutate } = useSWR(
-    `/audiences?page=${page}&pageSize=${pageSize}`,
-    () => apiClient.getAudiences(page, pageSize),
-    {
-      refreshInterval: 5000, // Refresh every 5 seconds to update status
-      revalidateOnFocus: true,
-    }
-  );
-
-  return {
-    audiences: data?.audiences || [],
-    total: data?.total || 0,
+  const {
+    audiences,
+    totalAudiences,
     isLoading,
     error,
-    mutate,
+    fetchAudiences
+  } = useAudienceStore();
+
+  useEffect(() => {
+    // Initial fetch
+    fetchAudiences(page, pageSize);
+
+    // RESTORE POLLING: Re-fetch every 5 seconds to update "Processing" status
+    const interval = setInterval(() => {
+      fetchAudiences(page, pageSize);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [page, pageSize, fetchAudiences]);
+
+  return {
+    audiences,
+    total: totalAudiences,
+    isLoading,
+    error,
+    mutate: () => fetchAudiences(page, pageSize), // Manual refresh trigger
   };
 }
 
 export function useAudience(id: string | null) {
-  const { data, error, isLoading, mutate } = useSWR(
-    id ? `/audiences/${id}` : null,
-    () => (id ? apiClient.getAudience(id) : null),
-    {
-      refreshInterval: 5000,
-      revalidateOnFocus: true,
-    }
-  );
-
-  return {
-    audience: data,
+  const {
+    currentAudience,
     isLoading,
     error,
-    mutate,
+    fetchAudienceById
+  } = useAudienceStore();
+
+  useEffect(() => {
+    if (id) {
+      fetchAudienceById(id);
+    }
+  }, [id, fetchAudienceById]);
+
+  return {
+    audience: currentAudience,
+    isLoading,
+    error,
+    mutate: () => id && fetchAudienceById(id),
   };
 }

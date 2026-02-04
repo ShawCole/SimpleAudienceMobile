@@ -854,6 +854,20 @@ export declare const FILTER_TAXONOMY: {
                 readonly label: "Greater than 9,999";
             }];
         };
+        readonly "Credit Card User": {
+            readonly type: "options";
+            readonly options: readonly [{
+                readonly index: 0;
+                readonly label: "Yes";
+            }, {
+                readonly index: 1;
+                readonly label: "No";
+            }];
+        };
+        readonly "Mortgage Amount": {
+            readonly type: "dynamic";
+            readonly note: "N/A – Dynamic Input";
+        };
         readonly Investment: {
             readonly type: "options";
             readonly options: readonly [{
@@ -945,8 +959,923 @@ export declare const FILTER_TAXONOMY: {
             }];
         };
         readonly "Occupation Type": {
-            readonly type: "dynamic";
-            readonly note: "N/A – Dynamic Input";
+            readonly type: "options";
+            readonly options: readonly [{
+                readonly index: 0;
+                readonly label: "Professional";
+            }, {
+                readonly index: 1;
+                readonly label: "Architect";
+            }, {
+                readonly index: 2;
+                readonly label: "Chemist";
+            }, {
+                readonly index: 3;
+                readonly label: "Curator";
+            }, {
+                readonly index: 4;
+                readonly label: "Engineer";
+            }, {
+                readonly index: 5;
+                readonly label: "Engineer/Aerospace";
+            }, {
+                readonly index: 6;
+                readonly label: "Engineer/Chemical";
+            }, {
+                readonly index: 7;
+                readonly label: "Engineer/Civil";
+            }, {
+                readonly index: 8;
+                readonly label: "Engineer/Electrical/Electronic";
+            }, {
+                readonly index: 9;
+                readonly label: "Engineer/Field";
+            }, {
+                readonly index: 10;
+                readonly label: "Engineer/Industrial";
+            }, {
+                readonly index: 11;
+                readonly label: "Engineer/Mechanical";
+            }, {
+                readonly index: 12;
+                readonly label: "Geologist";
+            }, {
+                readonly index: 13;
+                readonly label: "Home Economist";
+            }, {
+                readonly index: 14;
+                readonly label: "Legal/Attorney/Lawyer";
+            }, {
+                readonly index: 15;
+                readonly label: "Librarian/Archivist";
+            }, {
+                readonly index: 16;
+                readonly label: "Medical Doctor/Physician";
+            }, {
+                readonly index: 17;
+                readonly label: "Pastor";
+            }, {
+                readonly index: 18;
+                readonly label: "Pilot";
+            }, {
+                readonly index: 19;
+                readonly label: "Scientist";
+            }, {
+                readonly index: 20;
+                readonly label: "Statistician/Actuary";
+            }, {
+                readonly index: 21;
+                readonly label: "Veterinarian";
+            }, {
+                readonly index: 22;
+                readonly label: "Computer";
+            }, {
+                readonly index: 23;
+                readonly label: "Computer Operator";
+            }, {
+                readonly index: 24;
+                readonly label: "Computer Programmer";
+            }, {
+                readonly index: 25;
+                readonly label: "Computer/Systems Analyst";
+            }, {
+                readonly index: 26;
+                readonly label: "Executive/Upper Management";
+            }, {
+                readonly index: 27;
+                readonly label: "Ceo/Cfo/Chairman/Corp Officer";
+            }, {
+                readonly index: 28;
+                readonly label: "Comptroller";
+            }, {
+                readonly index: 29;
+                readonly label: "Politician/Legislator/Diplomat";
+            }, {
+                readonly index: 30;
+                readonly label: "President";
+            }, {
+                readonly index: 31;
+                readonly label: "Treasurer";
+            }, {
+                readonly index: 32;
+                readonly label: "Vice President";
+            }, {
+                readonly index: 33;
+                readonly label: "Middle Management";
+            }, {
+                readonly index: 34;
+                readonly label: "Account Executive";
+            }, {
+                readonly index: 35;
+                readonly label: "Director/Art Director";
+            }, {
+                readonly index: 36;
+                readonly label: "Director/Executive Director";
+            }, {
+                readonly index: 37;
+                readonly label: "Editor";
+            }, {
+                readonly index: 38;
+                readonly label: "Manager";
+            }, {
+                readonly index: 39;
+                readonly label: "Manager/Assistant Manager";
+            }, {
+                readonly index: 40;
+                readonly label: "Manager/Branch Manager";
+            }, {
+                readonly index: 41;
+                readonly label: "Manager/Credit Manager";
+            }, {
+                readonly index: 42;
+                readonly label: "Manager/District Manager";
+            }, {
+                readonly index: 43;
+                readonly label: "Manager/Division Manager";
+            }, {
+                readonly index: 44;
+                readonly label: "Manger/General Manager";
+            }, {
+                readonly index: 45;
+                readonly label: "Manager/Marketing Manager";
+            }, {
+                readonly index: 46;
+                readonly label: "Manager/Office Manager";
+            }, {
+                readonly index: 47;
+                readonly label: "Manager/Plant Manager";
+            }, {
+                readonly index: 48;
+                readonly label: "Manager/Product Manager";
+            }, {
+                readonly index: 49;
+                readonly label: "Manager/Project Manager";
+            }, {
+                readonly index: 50;
+                readonly label: "Manager/Property Manager";
+            }, {
+                readonly index: 51;
+                readonly label: "Manager/Regional Manager";
+            }, {
+                readonly index: 52;
+                readonly label: "Manager/Sales Manager";
+            }, {
+                readonly index: 53;
+                readonly label: "Manager/Store Manager";
+            }, {
+                readonly index: 54;
+                readonly label: "Manager/Traffic Manager";
+            }, {
+                readonly index: 55;
+                readonly label: "Manager/Warehouse Manager";
+            }, {
+                readonly index: 56;
+                readonly label: "Planner";
+            }, {
+                readonly index: 57;
+                readonly label: "Principal/Dean/Educator";
+            }, {
+                readonly index: 58;
+                readonly label: "Superintendent";
+            }, {
+                readonly index: 59;
+                readonly label: "Supervisor";
+            }, {
+                readonly index: 60;
+                readonly label: "White Collar Worker";
+            }, {
+                readonly index: 61;
+                readonly label: "Accounting/Biller/Billing Clerk";
+            }, {
+                readonly index: 62;
+                readonly label: "Actor/Entertainer/Announcer";
+            }, {
+                readonly index: 63;
+                readonly label: "Adjuster";
+            }, {
+                readonly index: 64;
+                readonly label: "Administration/Management";
+            }, {
+                readonly index: 65;
+                readonly label: "Advertising";
+            }, {
+                readonly index: 66;
+                readonly label: "Agent";
+            }, {
+                readonly index: 67;
+                readonly label: "Aide/Assistant";
+            }, {
+                readonly index: 68;
+                readonly label: "Aide/Assistant/Executive";
+            }, {
+                readonly index: 69;
+                readonly label: "Aide/Assistant/Office";
+            }, {
+                readonly index: 70;
+                readonly label: "Aide/Assistant/School";
+            }, {
+                readonly index: 71;
+                readonly label: "Aide/Assistant/Staff";
+            }, {
+                readonly index: 72;
+                readonly label: "Aide/Assistant/Technical";
+            }, {
+                readonly index: 73;
+                readonly label: "Analyst";
+            }, {
+                readonly index: 74;
+                readonly label: "Appraiser";
+            }, {
+                readonly index: 75;
+                readonly label: "Artist";
+            }, {
+                readonly index: 76;
+                readonly label: "Auctioneer";
+            }, {
+                readonly index: 77;
+                readonly label: "Auditor";
+            }, {
+                readonly index: 78;
+                readonly label: "Banker";
+            }, {
+                readonly index: 79;
+                readonly label: "Banker/Loan Office";
+            }, {
+                readonly index: 80;
+                readonly label: "Banker/Loan Processor";
+            }, {
+                readonly index: 81;
+                readonly label: "Bookkeeper";
+            }, {
+                readonly index: 82;
+                readonly label: "Broker";
+            }, {
+                readonly index: 83;
+                readonly label: "Broker/Stock/Trader";
+            }, {
+                readonly index: 84;
+                readonly label: "Buyer";
+            }, {
+                readonly index: 85;
+                readonly label: "Cashier";
+            }, {
+                readonly index: 86;
+                readonly label: "Caterer";
+            }, {
+                readonly index: 87;
+                readonly label: "Checker";
+            }, {
+                readonly index: 88;
+                readonly label: "Claims Examiner/Rep/Adjudicator";
+            }, {
+                readonly index: 89;
+                readonly label: "Clerk";
+            }, {
+                readonly index: 90;
+                readonly label: "Clerk/File";
+            }, {
+                readonly index: 91;
+                readonly label: "Collector";
+            }, {
+                readonly index: 92;
+                readonly label: "Communications";
+            }, {
+                readonly index: 93;
+                readonly label: "Conservation/Environment";
+            }, {
+                readonly index: 94;
+                readonly label: "Consultant/Advisor";
+            }, {
+                readonly index: 95;
+                readonly label: "Coordinator";
+            }, {
+                readonly index: 96;
+                readonly label: "Customer Service/Representative";
+            }, {
+                readonly index: 97;
+                readonly label: "Designer";
+            }, {
+                readonly index: 98;
+                readonly label: "Detective/Investigator";
+            }, {
+                readonly index: 99;
+                readonly label: "Dispatcher";
+            }, {
+                readonly index: 100;
+                readonly label: "Draftsman";
+            }, {
+                readonly index: 101;
+                readonly label: "Estimator";
+            }, {
+                readonly index: 102;
+                readonly label: "Expeditor";
+            }, {
+                readonly index: 103;
+                readonly label: "Finance";
+            }, {
+                readonly index: 104;
+                readonly label: "Flight Attendant/Steward";
+            }, {
+                readonly index: 105;
+                readonly label: "Florist";
+            }, {
+                readonly index: 106;
+                readonly label: "Graphic Designer/Commercial Artist";
+            }, {
+                readonly index: 107;
+                readonly label: "Hostess/Host/Usher";
+            }, {
+                readonly index: 108;
+                readonly label: "Insurance/Agent";
+            }, {
+                readonly index: 109;
+                readonly label: "Insurance/Underwriter";
+            }, {
+                readonly index: 110;
+                readonly label: "Interior Designer";
+            }, {
+                readonly index: 111;
+                readonly label: "Jeweler";
+            }, {
+                readonly index: 112;
+                readonly label: "Marketing";
+            }, {
+                readonly index: 113;
+                readonly label: "Merchandiser";
+            }, {
+                readonly index: 114;
+                readonly label: "Model";
+            }, {
+                readonly index: 115;
+                readonly label: "Musician/Music/Dance";
+            }, {
+                readonly index: 116;
+                readonly label: "Personnel/Recruiter/Interviewer";
+            }, {
+                readonly index: 117;
+                readonly label: "Photography";
+            }, {
+                readonly index: 118;
+                readonly label: "Public Relations";
+            }, {
+                readonly index: 119;
+                readonly label: "Publishing";
+            }, {
+                readonly index: 120;
+                readonly label: "Purchasing";
+            }, {
+                readonly index: 121;
+                readonly label: "Quality Control";
+            }, {
+                readonly index: 122;
+                readonly label: "Real Estate/Realtor";
+            }, {
+                readonly index: 123;
+                readonly label: "Receptionist";
+            }, {
+                readonly index: 124;
+                readonly label: "Reporter";
+            }, {
+                readonly index: 125;
+                readonly label: "Researcher";
+            }, {
+                readonly index: 126;
+                readonly label: "Sales";
+            }, {
+                readonly index: 127;
+                readonly label: "Sales Clerk/Counterman";
+            }, {
+                readonly index: 128;
+                readonly label: "Security";
+            }, {
+                readonly index: 129;
+                readonly label: "Surveyor";
+            }, {
+                readonly index: 130;
+                readonly label: "Technician";
+            }, {
+                readonly index: 131;
+                readonly label: "Telemarketer/Telephone/Operator";
+            }, {
+                readonly index: 132;
+                readonly label: "Teller/Bank Teller";
+            }, {
+                readonly index: 133;
+                readonly label: "Tester";
+            }, {
+                readonly index: 134;
+                readonly label: "Transcripter/Translator";
+            }, {
+                readonly index: 135;
+                readonly label: "Travel Agent";
+            }, {
+                readonly index: 136;
+                readonly label: "Union Member/Rep.";
+            }, {
+                readonly index: 137;
+                readonly label: "Ward Clerk";
+            }, {
+                readonly index: 138;
+                readonly label: "Water Treatment";
+            }, {
+                readonly index: 139;
+                readonly label: "Writer";
+            }, {
+                readonly index: 140;
+                readonly label: "Blue Collar Worker";
+            }, {
+                readonly index: 141;
+                readonly label: "Animal Technician/Groomer";
+            }, {
+                readonly index: 142;
+                readonly label: "Apprentice";
+            }, {
+                readonly index: 143;
+                readonly label: "Assembler";
+            }, {
+                readonly index: 144;
+                readonly label: "Athlete/Professional";
+            }, {
+                readonly index: 145;
+                readonly label: "Attendant";
+            }, {
+                readonly index: 146;
+                readonly label: "Auto Mechanic";
+            }, {
+                readonly index: 147;
+                readonly label: "Baker";
+            }, {
+                readonly index: 148;
+                readonly label: "Barber/Hairstylist/Beautician";
+            }, {
+                readonly index: 149;
+                readonly label: "Bartender";
+            }, {
+                readonly index: 150;
+                readonly label: "Binder";
+            }, {
+                readonly index: 151;
+                readonly label: "Bodyman";
+            }, {
+                readonly index: 152;
+                readonly label: "Brakeman";
+            }, {
+                readonly index: 153;
+                readonly label: "Brewer";
+            }, {
+                readonly index: 154;
+                readonly label: "Butcher/Meat Cutter";
+            }, {
+                readonly index: 155;
+                readonly label: "Carpenter/Furniture/Woodworking";
+            }, {
+                readonly index: 156;
+                readonly label: "Chef/Butler";
+            }, {
+                readonly index: 157;
+                readonly label: "Child Care/Day Care/Babysitter";
+            }, {
+                readonly index: 158;
+                readonly label: "Cleaner/Laundry";
+            }, {
+                readonly index: 159;
+                readonly label: "Clerk/Deli";
+            }, {
+                readonly index: 160;
+                readonly label: "Clerk/Produce";
+            }, {
+                readonly index: 161;
+                readonly label: "Clerk/Stock";
+            }, {
+                readonly index: 162;
+                readonly label: "Conductor";
+            }, {
+                readonly index: 163;
+                readonly label: "Construction";
+            }, {
+                readonly index: 164;
+                readonly label: "Cook";
+            }, {
+                readonly index: 165;
+                readonly label: "Cosmetologist";
+            }, {
+                readonly index: 166;
+                readonly label: "Courier/Delivery/Messenger";
+            }, {
+                readonly index: 167;
+                readonly label: "Crewman";
+            }, {
+                readonly index: 168;
+                readonly label: "Custodian";
+            }, {
+                readonly index: 169;
+                readonly label: "Cutter";
+            }, {
+                readonly index: 170;
+                readonly label: "Dock Worker";
+            }, {
+                readonly index: 171;
+                readonly label: "Driver";
+            }, {
+                readonly index: 172;
+                readonly label: "Driver/Bus Driver";
+            }, {
+                readonly index: 173;
+                readonly label: "Driver/Truck Driver";
+            }, {
+                readonly index: 174;
+                readonly label: "Electrician";
+            }, {
+                readonly index: 175;
+                readonly label: "Fabricator";
+            }, {
+                readonly index: 176;
+                readonly label: "Factory Workman";
+            }, {
+                readonly index: 177;
+                readonly label: "Farmer/Dairyman";
+            }, {
+                readonly index: 178;
+                readonly label: "Finisher";
+            }, {
+                readonly index: 179;
+                readonly label: "Fisherman/Seaman";
+            }, {
+                readonly index: 180;
+                readonly label: "Fitter";
+            }, {
+                readonly index: 181;
+                readonly label: "Food Service";
+            }, {
+                readonly index: 182;
+                readonly label: "Foreman/Crew Leader";
+            }, {
+                readonly index: 183;
+                readonly label: "Foreman/Shop Foreman";
+            }, {
+                readonly index: 184;
+                readonly label: "Forestry";
+            }, {
+                readonly index: 185;
+                readonly label: "Foundry Worker";
+            }, {
+                readonly index: 186;
+                readonly label: "Furrier";
+            }, {
+                readonly index: 187;
+                readonly label: "Gardener/Landscaper";
+            }, {
+                readonly index: 188;
+                readonly label: "Glazier";
+            }, {
+                readonly index: 189;
+                readonly label: "Grinder";
+            }, {
+                readonly index: 190;
+                readonly label: "Grocer";
+            }, {
+                readonly index: 191;
+                readonly label: "Helper";
+            }, {
+                readonly index: 192;
+                readonly label: "Housekeeper/Maid";
+            }, {
+                readonly index: 193;
+                readonly label: "Inspector";
+            }, {
+                readonly index: 194;
+                readonly label: "Installer";
+            }, {
+                readonly index: 195;
+                readonly label: "Ironworker";
+            }, {
+                readonly index: 196;
+                readonly label: "Janitor";
+            }, {
+                readonly index: 197;
+                readonly label: "Journeyman";
+            }, {
+                readonly index: 198;
+                readonly label: "Laborer";
+            }, {
+                readonly index: 199;
+                readonly label: "Lineman";
+            }, {
+                readonly index: 200;
+                readonly label: "Lithographer";
+            }, {
+                readonly index: 201;
+                readonly label: "Loader";
+            }, {
+                readonly index: 202;
+                readonly label: "Locksmith";
+            }, {
+                readonly index: 203;
+                readonly label: "Machinist";
+            }, {
+                readonly index: 204;
+                readonly label: "Maintenance";
+            }, {
+                readonly index: 205;
+                readonly label: "Maintenance/Supervisor";
+            }, {
+                readonly index: 206;
+                readonly label: "Mason/Brick/Etc.";
+            }, {
+                readonly index: 207;
+                readonly label: "Material Handler";
+            }, {
+                readonly index: 208;
+                readonly label: "Mechanic";
+            }, {
+                readonly index: 209;
+                readonly label: "Meter Reader";
+            }, {
+                readonly index: 210;
+                readonly label: "Mill Worker";
+            }, {
+                readonly index: 211;
+                readonly label: "Millwright";
+            }, {
+                readonly index: 212;
+                readonly label: "Miner";
+            }, {
+                readonly index: 213;
+                readonly label: "Mold Maker/Molder/Injection Mold";
+            }, {
+                readonly index: 214;
+                readonly label: "Oil Industry/Driller";
+            }, {
+                readonly index: 215;
+                readonly label: "Operator";
+            }, {
+                readonly index: 216;
+                readonly label: "Operator/Boilermaker";
+            }, {
+                readonly index: 217;
+                readonly label: "Operator/Crane Operator";
+            }, {
+                readonly index: 218;
+                readonly label: "Operator/Forklift Operator";
+            }, {
+                readonly index: 219;
+                readonly label: "Operator/Machine Operator";
+            }, {
+                readonly index: 220;
+                readonly label: "Packer";
+            }, {
+                readonly index: 221;
+                readonly label: "Painter";
+            }, {
+                readonly index: 222;
+                readonly label: "Parts (Auto Etc.)";
+            }, {
+                readonly index: 223;
+                readonly label: "Pipe Fitter";
+            }, {
+                readonly index: 224;
+                readonly label: "Plumber";
+            }, {
+                readonly index: 225;
+                readonly label: "Polisher";
+            }, {
+                readonly index: 226;
+                readonly label: "Porter";
+            }, {
+                readonly index: 227;
+                readonly label: "Press Operator";
+            }, {
+                readonly index: 228;
+                readonly label: "Presser";
+            }, {
+                readonly index: 229;
+                readonly label: "Printer";
+            }, {
+                readonly index: 230;
+                readonly label: "Production";
+            }, {
+                readonly index: 231;
+                readonly label: "Repairman";
+            }, {
+                readonly index: 232;
+                readonly label: "Roofer";
+            }, {
+                readonly index: 233;
+                readonly label: "Sanitation/Exterminator";
+            }, {
+                readonly index: 234;
+                readonly label: "Seamstress/Tailor/Handicraft";
+            }, {
+                readonly index: 235;
+                readonly label: "Setup Man";
+            }, {
+                readonly index: 236;
+                readonly label: "Sheet Metal Worker/Steel Worker";
+            }, {
+                readonly index: 237;
+                readonly label: "Shipping/Import/Export/Custom";
+            }, {
+                readonly index: 238;
+                readonly label: "Sorter";
+            }, {
+                readonly index: 239;
+                readonly label: "Toolmaker";
+            }, {
+                readonly index: 240;
+                readonly label: "Transportation";
+            }, {
+                readonly index: 241;
+                readonly label: "Typesetter";
+            }, {
+                readonly index: 242;
+                readonly label: "Upholstery";
+            }, {
+                readonly index: 243;
+                readonly label: "Utility";
+            }, {
+                readonly index: 244;
+                readonly label: "Waiter/Waitress";
+            }, {
+                readonly index: 245;
+                readonly label: "Welder";
+            }, {
+                readonly index: 246;
+                readonly label: "Health Services";
+            }, {
+                readonly index: 247;
+                readonly label: "Chiropractor";
+            }, {
+                readonly index: 248;
+                readonly label: "Dental Assistant";
+            }, {
+                readonly index: 249;
+                readonly label: "Dental Hygienist";
+            }, {
+                readonly index: 250;
+                readonly label: "Dentist";
+            }, {
+                readonly index: 251;
+                readonly label: "Dietician";
+            }, {
+                readonly index: 252;
+                readonly label: "Health Care";
+            }, {
+                readonly index: 253;
+                readonly label: "Medical Assistant";
+            }, {
+                readonly index: 254;
+                readonly label: "Medical Secretary";
+            }, {
+                readonly index: 255;
+                readonly label: "Medical Technician";
+            }, {
+                readonly index: 256;
+                readonly label: "Medical/Paramedic";
+            }, {
+                readonly index: 257;
+                readonly label: "Nurses Aide/Orderly";
+            }, {
+                readonly index: 258;
+                readonly label: "Optician";
+            }, {
+                readonly index: 259;
+                readonly label: "Optometrist";
+            }, {
+                readonly index: 260;
+                readonly label: "Pharmacist/Pharmacy";
+            }, {
+                readonly index: 261;
+                readonly label: "Psychologist";
+            }, {
+                readonly index: 262;
+                readonly label: "Technician/Lab";
+            }, {
+                readonly index: 263;
+                readonly label: "Technician/X-Ray";
+            }, {
+                readonly index: 264;
+                readonly label: "Therapist";
+            }, {
+                readonly index: 265;
+                readonly label: "Therapists/Physical";
+            }, {
+                readonly index: 266;
+                readonly label: "Nurse";
+            }, {
+                readonly index: 267;
+                readonly label: "Nurse (Registered)";
+            }, {
+                readonly index: 268;
+                readonly label: "Nurse/Lpn";
+            }, {
+                readonly index: 269;
+                readonly label: "Social Worker/Case Worker";
+            }, {
+                readonly index: 270;
+                readonly label: "Legal/Paralegal/Assistant";
+            }, {
+                readonly index: 271;
+                readonly label: "Legal Secretary";
+            }, {
+                readonly index: 272;
+                readonly label: "Secretary";
+            }, {
+                readonly index: 273;
+                readonly label: "Typist";
+            }, {
+                readonly index: 274;
+                readonly label: "Data Entry/Key Punch";
+            }, {
+                readonly index: 275;
+                readonly label: "Homemaker";
+            }, {
+                readonly index: 276;
+                readonly label: "Retired";
+            }, {
+                readonly index: 277;
+                readonly label: "Retired/Pensioner";
+            }, {
+                readonly index: 278;
+                readonly label: "Part Time";
+            }, {
+                readonly index: 279;
+                readonly label: "Student";
+            }, {
+                readonly index: 280;
+                readonly label: "Volunteer";
+            }, {
+                readonly index: 281;
+                readonly label: "Armed Forces";
+            }, {
+                readonly index: 282;
+                readonly label: "Army Credit Union Trades";
+            }, {
+                readonly index: 283;
+                readonly label: "Navy Credit Union Trades";
+            }, {
+                readonly index: 284;
+                readonly label: "Air Force";
+            }, {
+                readonly index: 285;
+                readonly label: "National Guard";
+            }, {
+                readonly index: 286;
+                readonly label: "Coast Guard";
+            }, {
+                readonly index: 287;
+                readonly label: "Marines";
+            }, {
+                readonly index: 288;
+                readonly label: "Coach";
+            }, {
+                readonly index: 289;
+                readonly label: "Counselor";
+            }, {
+                readonly index: 290;
+                readonly label: "Instructor";
+            }, {
+                readonly index: 291;
+                readonly label: "Lecturer";
+            }, {
+                readonly index: 292;
+                readonly label: "Professor";
+            }, {
+                readonly index: 293;
+                readonly label: "Teacher";
+            }, {
+                readonly index: 294;
+                readonly label: "Trainer";
+            }, {
+                readonly index: 295;
+                readonly label: "Civil Service";
+            }, {
+                readonly index: 296;
+                readonly label: "Air Traffic Control";
+            }, {
+                readonly index: 297;
+                readonly label: "Civil Service/Government";
+            }, {
+                readonly index: 298;
+                readonly label: "Corrections/Probation/Parole";
+            }, {
+                readonly index: 299;
+                readonly label: "Court Reporter";
+            }, {
+                readonly index: 300;
+                readonly label: "Firefighter";
+            }, {
+                readonly index: 301;
+                readonly label: "Judge/Referee";
+            }, {
+                readonly index: 302;
+                readonly label: "Mail Carrier/Postal";
+            }, {
+                readonly index: 303;
+                readonly label: "Mail/Postmaster";
+            }, {
+                readonly index: 304;
+                readonly label: "Police/Trooper";
+            }];
         };
     };
     readonly Personal: {

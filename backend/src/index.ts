@@ -14,7 +14,8 @@ import GoogleDriveService from './services/google-drive-service';
 import { createRouter } from './api/routes';
 
 // Load environment variables
-dotenv.config({ path: path.join(__dirname, '../.env') });
+dotenv.config({ path: path.join(process.cwd(), 'backend', '.env') });
+dotenv.config({ path: path.join(process.cwd(), '.env') });
 
 const PORT = process.env.PORT || 3001;
 

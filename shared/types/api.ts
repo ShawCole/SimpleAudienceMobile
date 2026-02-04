@@ -59,9 +59,19 @@ export interface ApiResponse<T = any> {
 }
 
 export interface PreviewResponse {
-  audienceId: string;
-  previewSize: number;
-  estimatedTime?: number;
+  success: boolean;
+  source: 'remote';
+  data?: {
+    count: number;
+    preview: any[];
+    fullCount?: number;
+  };
+  debug?: {
+    raw?: string;
+    payloadSent?: any;
+    parseMethod?: string;
+    remoteStatus?: number;
+  };
 }
 
 export interface GenerateResponse {

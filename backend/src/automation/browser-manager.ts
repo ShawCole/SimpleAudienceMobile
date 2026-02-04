@@ -19,7 +19,7 @@ export class BrowserManager {
   constructor(
     private headless: boolean = process.env.HEADLESS !== 'false',
     private timeout: number = parseInt(process.env.BROWSER_TIMEOUT || '30000')
-  ) {}
+  ) { }
 
   /**
    * Initialize the browser
@@ -49,6 +49,9 @@ export class BrowserManager {
         },
       });
 
+      if (!this.browser) {
+        throw new Error('Browser launch failed');
+      }
       this.page = await this.browser.newPage();
 
       // Set default timeout
