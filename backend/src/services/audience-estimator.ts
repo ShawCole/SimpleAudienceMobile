@@ -149,6 +149,7 @@ const ENRICHMENT_FILTER_KEYS = new Set([
   'profile.incomeRange', 'attributes.credit_rating',
   'profile.netWorth', 'attributes.education',
   'state', // state retention varies by demographics (CA: 0.074→0.146 across anchors)
+  'businessProfile.industry', // VP FinServ=0.11 vs Staff=0.04 (2.5x variance)
 ]);
 
 interface L1Anchor {
@@ -646,7 +647,8 @@ const DEMOGRAPHIC_KEYS = new Set([
 const ANCHOR_MATCHED_KEYS = new Set([
   'profile.incomeRange', 'attributes.credit_rating',
   'profile.netWorth', 'attributes.education',
-  'state', // state retention varies significantly by demographics
+  'state', // CA: 0.074→0.146 across anchors
+  'businessProfile.industry', // VP FinServ=0.11 vs Staff=0.04 (2.5x variance)
 ]);
 
 // ── Devastating cut threshold ───────────────────────────────────────────────
@@ -799,33 +801,7 @@ export function estimateAudienceSize(filters: FilterSpec[]): EstimateResult {
   for (const filter of enrichmentFilters) {
     const { key, values } = filter;
 
-    // Industry uses global retention (no per-anchor variation measured)
-    if (key === 'businessProfile.industry') {
-      let totalRetention = 0;
-      for (const v of values) {
-        const ret = INDUSTRY_RETENTION[v];
-        if (ret == null) {
-          uncalibratedFilters.push(`${key}=${v}`);
-          confidence = 'low';
-          continue;
-        }
-        totalRetention += ret;
-      }
-      if (totalRetention <= 0) continue;
-      totalRetention = Math.min(totalRetention, 1.0);
-      estimate *= totalRetention;
-      appliedRetentions.push({ filter: key, value: values.join(', '), retention: totalRetention });
-      const remaining = Math.round(gridBase * totalRetention);
-      if (totalRetention < DEVASTATING_CUT_THRESHOLD) {
-        warnings.push({
-          filter: key, value: values.join(', '), retention: totalRetention, estimatedRemaining: remaining,
-          message: `This filter retains only ${(totalRetention * 100).toFixed(2)}% of your base audience (${remaining.toLocaleString()} remaining)`,
-        });
-      }
-      continue;
-    }
-
-    // Per-anchor matched filters (enrichment + state)
+    // Per-anchor matched filters (enrichment + state + industry)
     if (ANCHOR_MATCHED_KEYS.has(key)) {
       const { table: retentionTable, matchedAnchor: anchor } = getRetentionTable(key, selectedSeniorities, selectedAges);
       if (anchor && !matchedAnchor) matchedAnchor = anchor;
@@ -833,16 +809,17 @@ export function estimateAudienceSize(filters: FilterSpec[]): EstimateResult {
       let totalRetention = 0;
       for (const v of values) {
         let ret = retentionTable[v];
-        // Fallback: state values may not be in L1 data if anchor didn't sweep that state
+        // Fallback to global tables when L1 anchor doesn't have a specific value
         if (ret == null && key === 'state') ret = STATE_MULTIPLIERS[v] ?? null;
+        if (ret == null && key === 'businessProfile.industry') ret = INDUSTRY_RETENTION[v] ?? null;
         if (ret == null) {
           uncalibratedFilters.push(`${key}=${v}`);
           confidence = 'low';
           continue;
         }
 
-        // Apply renter modifier on top of anchor-matched retention (not for state)
-        if (isRenter && key !== 'state' && RENTER_MODIFIERS[key]) {
+        // Apply renter modifier on top of anchor-matched retention (not for state/industry)
+        if (isRenter && key !== 'state' && key !== 'businessProfile.industry' && RENTER_MODIFIERS[key]) {
           const mod = getRenterModifier(key, v);
           ret *= mod;
           renterModifiersApplied.push({ filter: key, value: v, modifier: mod });
