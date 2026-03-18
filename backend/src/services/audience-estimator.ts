@@ -144,10 +144,11 @@ function lookupGridBase(filters: FilterSpec[]): { count: number; capped: number;
 
 type RetentionTable = Record<string, number>;
 
-// Enrichment filter keys we track per-anchor
+// Filter keys we track per-anchor from L1 sweep data
 const ENRICHMENT_FILTER_KEYS = new Set([
   'profile.incomeRange', 'attributes.credit_rating',
   'profile.netWorth', 'attributes.education',
+  'state', // state retention varies by demographics (CA: 0.074→0.146 across anchors)
 ]);
 
 interface L1Anchor {
@@ -641,10 +642,11 @@ const DEMOGRAPHIC_KEYS = new Set([
   'age',
 ]);
 
-// Filter keys that use per-seniority retention tables
-const SENIORITY_MATCHED_KEYS = new Set([
+// Filter keys that use per-anchor retention tables (matched by seniority+age)
+const ANCHOR_MATCHED_KEYS = new Set([
   'profile.incomeRange', 'attributes.credit_rating',
   'profile.netWorth', 'attributes.education',
+  'state', // state retention varies significantly by demographics
 ]);
 
 // ── Devastating cut threshold ───────────────────────────────────────────────
@@ -797,30 +799,7 @@ export function estimateAudienceSize(filters: FilterSpec[]): EstimateResult {
   for (const filter of enrichmentFilters) {
     const { key, values } = filter;
 
-    if (key === 'state') {
-      // State: sum multipliers for selected states
-      const stateSum = values.reduce((sum, s) => sum + (STATE_MULTIPLIERS[s] ?? 0), 0);
-      const retention = Math.min(stateSum, 1.0);
-      if (retention === 0) {
-        uncalibratedFilters.push(`state=${values.join(',')}`);
-        confidence = 'low';
-        continue;
-      }
-      estimate *= retention;
-      appliedRetentions.push({ filter: key, value: values.join(', '), retention });
-
-      // Warning check
-      const remaining = Math.round(gridBase * retention);
-      if (retention < DEVASTATING_CUT_THRESHOLD) {
-        warnings.push({
-          filter: key, value: values.join(', '), retention, estimatedRemaining: remaining,
-          message: `State filter retains only ${(retention * 100).toFixed(2)}% of your audience (${remaining.toLocaleString()} remaining)`,
-        });
-      }
-      continue;
-    }
-
-    // Industry uses global retention (no per-seniority variation measured)
+    // Industry uses global retention (no per-anchor variation measured)
     if (key === 'businessProfile.industry') {
       let totalRetention = 0;
       for (const v of values) {
@@ -846,22 +825,24 @@ export function estimateAudienceSize(filters: FilterSpec[]): EstimateResult {
       continue;
     }
 
-    // Per-seniority matched enrichment filters
-    if (SENIORITY_MATCHED_KEYS.has(key)) {
+    // Per-anchor matched filters (enrichment + state)
+    if (ANCHOR_MATCHED_KEYS.has(key)) {
       const { table: retentionTable, matchedAnchor: anchor } = getRetentionTable(key, selectedSeniorities, selectedAges);
       if (anchor && !matchedAnchor) matchedAnchor = anchor;
 
       let totalRetention = 0;
       for (const v of values) {
         let ret = retentionTable[v];
+        // Fallback: state values may not be in L1 data if anchor didn't sweep that state
+        if (ret == null && key === 'state') ret = STATE_MULTIPLIERS[v] ?? null;
         if (ret == null) {
           uncalibratedFilters.push(`${key}=${v}`);
           confidence = 'low';
           continue;
         }
 
-        // Apply renter modifier on top of seniority-matched retention
-        if (isRenter && RENTER_MODIFIERS[key]) {
+        // Apply renter modifier on top of anchor-matched retention (not for state)
+        if (isRenter && key !== 'state' && RENTER_MODIFIERS[key]) {
           const mod = getRenterModifier(key, v);
           ret *= mod;
           renterModifiersApplied.push({ filter: key, value: v, modifier: mod });
