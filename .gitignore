@@ -52,3 +52,6 @@ downloads/
 docs/provider-traces/
 backend/data/filter-explorer/
 backend/data/calibration/
+
+# Large export CSVs in tools/captures
+tools/captures/*.csv
