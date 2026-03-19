@@ -1,0 +1,180 @@
+{
+  "audienceId": "2ad169a1-6f29-456f-90a2-08ca24ed4135",
+  "detectedDeploymentId": "dpl_Duc6ZiebsNpxxEiZYrG94quFCJBX",
+  "dplFromSource": "dpl_Duc6ZiebsNpxxEiZYrG94quFCJBX",
+  "dplFromHeaders": null,
+  "actionIdsInPage": [],
+  "knownPreviewFound": false,
+  "knownGenerateFound": false,
+  "ourInjection": {
+    "actionId": "7f2fedc1659914fecb5d57837dc4b06ab5c2e0e744",
+    "deploymentId": "dpl_Duc6ZiebsNpxxEiZYrG94quFCJBX",
+    "payload": [
+      {
+        "accountId": "fceffb3b-552d-413a-9442-e62e9d423aa0",
+        "id": "2ad169a1-6f29-456f-90a2-08ca24ed4135",
+        "filters": {
+          "audience": {
+            "type": "premade",
+            "b2b": null,
+            "customTopic": "",
+            "customDescription": "",
+            "segmentSearches": [
+              "Financial Services > Retirement & College Savings > Wealth Management Services"
+            ]
+          },
+          "jobId": "",
+          "segment": [],
+          "score": [
+            "medium"
+          ],
+          "daysBack": 7,
+          "filters": {
+            "age": {
+              "minAge": null,
+              "maxAge": null
+            },
+            "city": [],
+            "state": [],
+            "zip": [],
+            "gender": [],
+            "profile": {
+              "incomeRange": [],
+              "homeowner": [],
+              "married": [],
+              "netWorth": [
+                "$500,000 to $749,999",
+                "$750,000 to $999,999",
+                "more than $1,000,000"
+              ],
+              "children": []
+            },
+            "businessProfile": {
+              "companyDescription": [],
+              "jobTitle": [],
+              "seniority": [],
+              "department": [],
+              "companyName": [],
+              "companyDomain": [],
+              "industry": [],
+              "sic": [],
+              "employeeCount": [],
+              "companyRevenue": [],
+              "companyNaics": []
+            },
+            "attributes": {
+              "credit_rating": [],
+              "language_code": [],
+              "occupation_group": [],
+              "occupation_type": [],
+              "home_year_built": {
+                "min": null,
+                "max": null
+              },
+              "single_parent": [],
+              "cra_code": [],
+              "dwelling_type": [],
+              "credit_range_new_credit": [],
+              "ethnic_code": [],
+              "marital_status": [],
+              "net_worth": [],
+              "education": [],
+              "credit_card_user": [],
+              "investment": [],
+              "smoker": [],
+              "home_purchase_price": {
+                "min": null,
+                "max": null
+              },
+              "home_purchase_year": {
+                "min": null,
+                "max": null
+              },
+              "home_purchase_month": [],
+              "estimated_home_value": [],
+              "mortgage_amount": {
+                "min": null,
+                "max": null
+              },
+              "generations_in_household": []
+            },
+            "notNulls": [],
+            "nullOnly": []
+          }
+        }
+      }
+    ],
+    "rst": "[\"\",{\"children\":[\"home\",{\"children\":[[\"account\",\"simple-audience\",\"d\"],{\"children\":[\"audience\",{\"children\":[[\"id\",\"2ad169a1-6f29-456f-90a2-08ca24ed4135\",\"d\"],{\"children\":[\"__PAGE__\",{},null,null]},null,null]},null,null]},null,null]},null,null]},null,null,true]",
+    "result": {
+      "status": 500,
+      "ok": false,
+      "text": "0:{\"a\":\"$@1\",\"f\":\"\",\"b\":\"gFOKRt76484VTAthJk0YK\"}\n1:E{\"digest\":\"3584670312\"}\n",
+      "headers": {
+        "cache-control": "no-cache, no-store, max-age=0, must-revalidate",
+        "content-type": "text/x-component",
+        "date": "Mon, 09 Mar 2026 21:28:20 GMT",
+        "server": "Vercel",
+        "strict-transport-security": "max-age=63072000",
+        "vary": "RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch",
+        "x-action-path": "/home/simple-audience/audience/2ad169a1-6f29-456f-90a2-08ca24ed4135",
+        "x-csrf-token": "AAip0oMS2MPLG7lqHpTo7yyOFVsiOzL99bpQ8B2o",
+        "x-matched-path": "/home/[account]/audience/[id]",
+        "x-powered-by": "Next.js",
+        "x-vercel-cache": "MISS",
+        "x-vercel-id": "iad1::iad1::sw6cx-1773091700730-9988497f4e8f"
+      }
+    }
+  },
+  "capturedBrowserRequests": [
+    {
+      "url": "https://app.intentcore.io/home/simple-audience/audience/2ad169a1-6f29-456f-90a2-08ca24ed4135",
+      "actionId": "7f2fedc1659914fecb5d57837dc4b06ab5c2e0e744",
+      "deploymentId": "dpl_Duc6ZiebsNpxxEiZYrG94quFCJBX",
+      "rst": "%5B%22%22%2C%7B%22children%22%3A%5B%22home%22%2C%7B%22children%22%3A%5B%5B%22account%22%2C%22simple-audience%22%2C%22d%22%5D%2C%7B%22children%22%3A%5B%22audience%22%2C%7B%22children%22%3A%5B%5B%22id%22%2C%222ad169a1-6f29-456f-90a2-08ca24ed4135%22%2C%22d%22%5D%2C%7B%22children%22%3A%5B%22__PAGE__%22%2C%7B%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%2Ctrue%5D",
+      "contentType": "text/plain;charset=UTF-8",
+      "accept": "text/x-component",
+      "body": "[{\"accountId\":\"fceffb3b-552d-413a-9442-e62e9d423aa0\",\"id\":\"2ad169a1-6f29-456f-90a2-08ca24ed4135\",\"filters\":{\"audience\":{\"type\":\"premade\",\"b2b\":null,\"customTopic\":\"\",\"customDescription\":\"\",\"segmentSearches\":[\"Financial Services > Retirement & College Savings > Wealth Management Services\"]},\"jobId\":\"\",\"segment\":[],\"score\":[\"medium\"],\"daysBack\":7,\"filters\":{\"age\":{\"minAge\":null,\"maxAge\":null},\"city\":[],\"state\":[],\"zip\":[],\"gender\":[],\"profile\":{\"incomeRange\":[],\"homeowner\":[],\"married\":[],\"netWorth\":[\"$500,000 to $749,999\",\"$750,000 to $999,999\",\"more than $1,000,000\"],\"children\":[]},\"businessProfile\":{\"companyDescription\":[],\"jobTitle\":[],\"seniority\":[],\"department\":[],\"companyName\":[],\"companyDomain\":[],\"industry\":[],\"sic\":[],\"employeeCount\":[],\"companyRevenue\":[],\"companyNaics\":[]},\"attributes\":{\"credit_rating\":[],\"language_code\":[],\"occupation_group\":[],\"occupation_type\":[],\"home_year_built\":{\"min\":null,\"max\":null},\"single_parent\":[],\"cra_code\":[],\"dwelling_type\":[],\"credit_range_new_credit\":[],\"ethnic_code\":[],\"marital_status\":[],\"net_worth\":[],\"education\":[],\"credit_card_user\":[],\"investment\":[],\"smoker\":[],\"home_purchase_price\":{\"min\":null,\"max\":null},\"home_purchase_year\":{\"min\":null,\"max\":null},\"home_purchase_month\":[],\"estimated_home_value\":[],\"mortgage_amount\":{\"min\":null,\"max\":null},\"generations_in_household\":[]},\"notNulls\":[],\"nullOnly\":[]}}}]",
+      "timestamp": "2026-03-09T21:28:20.678Z"
+    },
+    {
+      "url": "https://app.intentcore.io/home/simple-audience/audience/2ad169a1-6f29-456f-90a2-08ca24ed4135",
+      "actionId": "7f2fedc1659914fecb5d57837dc4b06ab5c2e0e744",
+      "deploymentId": "dpl_Duc6ZiebsNpxxEiZYrG94quFCJBX",
+      "rst": "%5B%22%22%2C%7B%22children%22%3A%5B%22home%22%2C%7B%22children%22%3A%5B%5B%22account%22%2C%22simple-audience%22%2C%22d%22%5D%2C%7B%22children%22%3A%5B%22audience%22%2C%7B%22children%22%3A%5B%5B%22id%22%2C%222ad169a1-6f29-456f-90a2-08ca24ed4135%22%2C%22d%22%5D%2C%7B%22children%22%3A%5B%22__PAGE__%22%2C%7B%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%2Ctrue%5D",
+      "contentType": "text/plain;charset=UTF-8",
+      "accept": "text/x-component",
+      "body": "[{\"accountId\":\"fceffb3b-552d-413a-9442-e62e9d423aa0\",\"id\":\"2ad169a1-6f29-456f-90a2-08ca24ed4135\",\"filters\":{\"audience\":{\"type\":\"premade\",\"b2b\":null,\"customTopic\":\"\",\"customDescription\":\"\",\"segmentSearches\":[]},\"jobId\":\"\",\"segment\":[],\"daysBack\":null,\"score\":[],\"filters\":{\"age\":{\"minAge\":null,\"maxAge\":null},\"city\":[],\"state\":[],\"zip\":[],\"gender\":[],\"profile\":{\"incomeRange\":[],\"homeowner\":[],\"married\":[],\"netWorth\":[],\"children\":[]},\"businessProfile\":{\"companyDescription\":[],\"jobTitle\":[],\"seniority\":[],\"department\":[],\"companyName\":[],\"companyDomain\":[],\"industry\":[],\"sic\":[],\"employeeCount\":[],\"companyRevenue\":[],\"companyNaics\":[]},\"attributes\":{\"credit_rating\":[],\"language_code\":[],\"occupation_group\":[],\"occupation_type\":[],\"home_year_built\":{\"min\":null,\"max\":null},\"single_parent\":[],\"cra_code\":[],\"dwelling_type\":[],\"credit_range_new_credit\":[],\"ethnic_code\":[],\"marital_status\":[],\"net_worth\":[],\"education\":[],\"credit_card_user\":[],\"investment\":[],\"smoker\":[],\"home_purchase_price\":{\"min\":null,\"max\":null},\"home_purchase_year\":{\"min\":null,\"max\":null},\"home_purchase_month\":[],\"estimated_home_value\":[],\"mortgage_amount\":{\"min\":null,\"max\":null},\"generations_in_household\":[]},\"notNulls\":[],\"nullOnly\":[]}}}]",
+      "timestamp": "2026-03-09T21:29:33.146Z"
+    },
+    {
+      "url": "https://app.intentcore.io/home/simple-audience/audience/2ad169a1-6f29-456f-90a2-08ca24ed4135",
+      "actionId": "7f1369a2fba16b14f557c055227f6abf09893d96b3",
+      "deploymentId": "dpl_Duc6ZiebsNpxxEiZYrG94quFCJBX",
+      "rst": "%5B%22%22%2C%7B%22children%22%3A%5B%22home%22%2C%7B%22children%22%3A%5B%5B%22account%22%2C%22simple-audience%22%2C%22d%22%5D%2C%7B%22children%22%3A%5B%22audience%22%2C%7B%22children%22%3A%5B%5B%22id%22%2C%222ad169a1-6f29-456f-90a2-08ca24ed4135%22%2C%22d%22%5D%2C%7B%22children%22%3A%5B%22__PAGE__%22%2C%7B%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%2Ctrue%5D",
+      "contentType": "text/plain;charset=UTF-8",
+      "accept": "text/x-component",
+      "body": "[{\"search\":\"wealth management s\",\"b2b\":null}]",
+      "timestamp": "2026-03-09T21:29:56.949Z"
+    },
+    {
+      "url": "https://app.intentcore.io/home/simple-audience/audience/2ad169a1-6f29-456f-90a2-08ca24ed4135",
+      "actionId": "7f1369a2fba16b14f557c055227f6abf09893d96b3",
+      "deploymentId": "dpl_Duc6ZiebsNpxxEiZYrG94quFCJBX",
+      "rst": "%5B%22%22%2C%7B%22children%22%3A%5B%22home%22%2C%7B%22children%22%3A%5B%5B%22account%22%2C%22simple-audience%22%2C%22d%22%5D%2C%7B%22children%22%3A%5B%22audience%22%2C%7B%22children%22%3A%5B%5B%22id%22%2C%222ad169a1-6f29-456f-90a2-08ca24ed4135%22%2C%22d%22%5D%2C%7B%22children%22%3A%5B%22__PAGE__%22%2C%7B%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%2Ctrue%5D",
+      "contentType": "text/plain;charset=UTF-8",
+      "accept": "text/x-component",
+      "body": "[{\"search\":\"wealth management se\",\"b2b\":null}]",
+      "timestamp": "2026-03-09T21:29:57.593Z"
+    },
+    {
+      "url": "https://app.intentcore.io/home/simple-audience/audience/2ad169a1-6f29-456f-90a2-08ca24ed4135",
+      "actionId": "7f1369a2fba16b14f557c055227f6abf09893d96b3",
+      "deploymentId": "dpl_Duc6ZiebsNpxxEiZYrG94quFCJBX",
+      "rst": "%5B%22%22%2C%7B%22children%22%3A%5B%22home%22%2C%7B%22children%22%3A%5B%5B%22account%22%2C%22simple-audience%22%2C%22d%22%5D%2C%7B%22children%22%3A%5B%22audience%22%2C%7B%22children%22%3A%5B%5B%22id%22%2C%222ad169a1-6f29-456f-90a2-08ca24ed4135%22%2C%22d%22%5D%2C%7B%22children%22%3A%5B%22__PAGE__%22%2C%7B%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%2Ctrue%5D",
+      "contentType": "text/plain;charset=UTF-8",
+      "accept": "text/x-component",
+      "body": "[{\"search\":\"wealth management services\",\"b2b\":null}]",
+      "timestamp": "2026-03-09T21:29:58.124Z"
+    }
+  ]
+}

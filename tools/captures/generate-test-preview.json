@@ -1,0 +1,105 @@
+{
+  "type": "preview",
+  "audienceId": "812e48cc-1574-4d7e-917c-96a2045b4771",
+  "payload": [
+    {
+      "accountId": "27e2bf65-59ba-4a31-b754-97a6652fe36d",
+      "id": "812e48cc-1574-4d7e-917c-96a2045b4771",
+      "filters": {
+        "audience": {
+          "type": "premade",
+          "b2b": null,
+          "customTopic": "",
+          "customDescription": "",
+          "segmentSearches": [
+            "Real Estate > Selling a Home > Sell Home for Cash"
+          ]
+        },
+        "jobId": "",
+        "segment": [
+          "4eyes_500089"
+        ],
+        "score": [],
+        "daysBack": 7,
+        "filters": {
+          "age": {
+            "minAge": null,
+            "maxAge": null
+          },
+          "city": [],
+          "state": [
+            "California"
+          ],
+          "zip": [],
+          "gender": [],
+          "profile": {
+            "incomeRange": [],
+            "homeowner": [
+              "homeowner"
+            ],
+            "married": [],
+            "netWorth": [],
+            "children": []
+          },
+          "businessProfile": {
+            "companyDescription": [],
+            "jobTitle": [],
+            "seniority": [],
+            "department": [],
+            "companyName": [],
+            "companyDomain": [],
+            "industry": [],
+            "sic": [],
+            "employeeCount": [],
+            "companyRevenue": [],
+            "companyNaics": []
+          },
+          "attributes": {
+            "credit_rating": [],
+            "language_code": [],
+            "occupation_group": [],
+            "occupation_type": [],
+            "home_year_built": {
+              "min": null,
+              "max": null
+            },
+            "single_parent": [],
+            "cra_code": [],
+            "dwelling_type": [],
+            "credit_range_new_credit": [],
+            "ethnic_code": [],
+            "marital_status": [],
+            "net_worth": [],
+            "education": [],
+            "credit_card_user": [],
+            "investment": [],
+            "smoker": [],
+            "home_purchase_price": {
+              "min": null,
+              "max": null
+            },
+            "home_purchase_year": {
+              "min": null,
+              "max": null
+            },
+            "home_purchase_month": [],
+            "estimated_home_value": [
+              "$$1,000 - $24,999",
+              "$$25,000 - $49,999"
+            ],
+            "mortgage_amount": {
+              "min": null,
+              "max": null
+            },
+            "generations_in_household": []
+          },
+          "notNulls": [],
+          "nullOnly": []
+        }
+      }
+    }
+  ],
+  "status": 200,
+  "ok": true,
+  "response": "0:{\"a\":\"$@1\",\"f\":\"\",\"b\":\"nUWMc2Zm28wjS03COvX9s\"}\n1:{\"result\":[{\"company_domain\":\"jerseyestateplanning.com\",\"job_title\":\"owner\",\"first_name\":\"edward\",\"last_name\":\"medina\",\"b2b_email\":\"edward@jerseyestateplanning.com\",\"b2b_phone\":\"+609818006812302, +19495860123, +16098180068, +19258375038\",\"personal_email\":\"emed112@comcast.net, medinaaristeo59@gmail.com\",\"personal_phone\":\"+17133023562, +16192720503, +12146640240, +18327292100, +12812219149, +12815347129\",\"sha256\":\"f4c2f11545ea7fe892ea6133d91c5bbe0b819feb60285d3f1f2a7b643679a8a4, d2f0c819fd7a8239f7d9ffa892269494f76420ae58d0f140df5d7f2f31f88f02\"},{\"first_name\":\"luke\",\"last_name\":\"dunn\",\"personal_email\":\"lukedunnmusic@yahoo.com\",\"personal_phone\":\"+18059032180, +18055490646, +18054403580\",\"sha256\":\"b653edb7d6f187d0db64b58dbe6ca84e0fdf1bb378fa0de8b7eae36cea5636da\"},{\"first_name\":\"donald\",\"last_name\":\"holmes\",\"personal_email\":\"holmes6513@yahoo.com, holmes508@gmail.com\",\"personal_phone\":\"+19092058359, +19098852374, +19093308460\",\"sha256\":\"d0c4d4aef8a2bf6d307d6f66f800182ccd7c96449e9660f1e74e868312ce74c9, 9f7ba4da73d6a77afa31d07297e238d53628a75d5de516d60be7ac40ce4dc81d\"},{\"company_domain\":\"lausd.net\",\"job_title\":\"parent educator\",\"first_name\":\"yazmin\",\"last_name\":\"suarez\",\"b2b_email\":\"yazmin.suarez@lausd.net\",\"b2b_phone\":\"+12132417000, +1213241700013332\",\"personal_email\":\"yazminarosales00@gmail.com, layazmin@yahoo.com, alayazmin@yahoo.com\",\"personal_phone\":\"+13232291106, +13232687408, +16017747444\",\"sha256\":\"8192146374224f49a296a060df38bba921c04bec75ce2c42c475416d841343c9, cb5dd0732fd149ad2701cc9c48b32137553fc8036e5464b951090c4be05bef49, cbbfb146cc49c99c224b00a65d2b0dea3d399b5b6d2bae4cd024c4d668c99e3f\"},{\"company_domain\":\"insuredatlast.com\",\"first_name\":\"genny\",\"last_name\":\"lourenco\",\"personal_email\":\"lourpaula@aol.com\",\"personal_phone\":\"+12093583810, +12093588549\",\"sha256\":\"fd404186a0d551f76f30317e7042e812e12c9168fe7394b55ee404e7ebd973cc\"},{\"company_domain\":\"saint-gobain.com\",\"first_name\":\"toshanna\",\"last_name\":\"jeffers\",\"b2b_email\":\"lee.congleton@saint-gobain.com\",\"b2b_phone\":\"+33188540000\",\"personal_email\":\"toshanna1@hotmail.com\",\"personal_phone\":\"+13085393358, +13085323240\",\"sha256\":\"df12f7c660ad156af8eb145170c33cb958dfd3c307a64e924f87016121f6f85b\"},{\"company_domain\":\"jefcoed.com\",\"first_name\":\"nancy\",\"last_name\":\"glover\",\"b2b_phone\":\"+12053792000\",\"personal_email\":\"nancyglover@gmail.com, nglover101@bellsouth.net\",\"personal_phone\":\"+12054011808, +15415561822, +12059374558, +17346731208\",\"sha256\":\"41475933bfe2dc23251cad7c996735b0599a00021e0763615c1889fb1e74372c, 5ce112615dfa1ce1beeadd50748a6a359d263c6121ea0dabbc9472c7bd715deb\"},{\"first_name\":\"dona\",\"last_name\":\"shepherd\",\"personal_email\":\"ndshep@citlink.net\",\"personal_phone\":\"+15302578700\",\"sha256\":\"1bfb4b6b53cae0574ac4a60d1fe08e6e02fd58bf84fc295f69154e3be253ef32\"},{\"company_domain\":\"localnet.com\",\"first_name\":\"robert\",\"last_name\":\"ross\",\"b2b_email\":\"robertross1928@localnet.com\",\"b2b_phone\":\"+17166321133, +716632113313252, +18884887265\",\"personal_email\":\"rkbellamy55@outlook.com, mduboisdefiance@gmail.com, robertross33@hotmail.com\",\"personal_phone\":\"+13143022687, +18128999140, +18124133070, +12097471619, +12093695509\",\"sha256\":\"cb3b00d3a8fe16bf05b27fa45525a69f968a5e118475e858e19462bac0c3389a, 56cc7c0806b18c579a9e6eb5f0a03e786ea9441a01b123b8741a2443a499addd, a84d5e43753c3c59ae5e5dfaf6bcaf11078adb2e2898562cfc7794d5e4015f21\"},{\"company_domain\":\"cainer.com\",\"first_name\":\"alma\",\"last_name\":\"cosio\",\"b2b_phone\":\"+441904677785\",\"personal_email\":\"almacosio@gmail.com, almacosio@aim.com, antoniocosiojr@gmail.com, almacosio766@gmail.com\",\"personal_phone\":\"+19564557765, +19568324441, +18052400868, +19565187979\",\"sha256\":\"42f49ccfd19e4986895f9a34c6313d8cdb26837748f117cb226b4ba607bec992, 9b2e5d6b562a0c499a718529123a3433bba11762c99f0e25c1b6b89dd1a23b44, d88f4f7f1d099ecca92b5e04bea401588cca24c4d59b683e09c9254d03449691, 63e0545be9cf990f9e1c421708743c7c182a41a08e6d74b838e2e63c2cc801fd\"},{\"company_domain\":\"target.com\",\"job_title\":\"chargeback specialist\",\"first_name\":\"veronica\",\"last_name\":\"mcgrew\",\"b2b_email\":\"mcgrew@integrits.com, veronica.mcgrew@target.com\",\"b2b_phone\":\"+16123380085, +1612338008519002\",\"personal_email\":\"goofonkers@gmail.com, mrs.collins74@yahoo.com, veronica.mcgrew@hotmail.com\",\"personal_phone\":\"+13074314053, +12518432194, +12516544731, +16023545059, +16198905199, +13308439762\",\"sha256\":\"9cb8cdf17ba08e8d9cc1cabf25c0a79428cd696140e26fe834903014979b67eb, 2449eb994de811f50503dbf6dc959a1dc872ff471fed5584cbfc38430fa5edac, 10d2cba723b8ff2ca87b2e6759bf88a6732993649e808433f7ae7f0da91d90df\"},{\"company_domain\":\"gskattorneys.com\",\"job_title\":\"manager\",\"first_name\":\"jeanne\",\"last_name\":\"welker\",\"b2b_phone\":\"+12399367200\",\"personal_email\":\"jlwelker40@yahoo.com, weiner49@sbcglobal.net\",\"personal_phone\":\"+17079744069, +12394628977\",\"sha256\":\"b855f4ed722310392392c41996e1386520fa1872784b4a943bd15954068f51cd, 793a1dd3cfba6fec9f6148f4740adde0002ee747d5ef8e4da566a15a89d41b33\"},{\"company_domain\":\"eliteeducationsociety.com\",\"first_name\":\""
+}

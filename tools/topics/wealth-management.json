@@ -1,0 +1,16 @@
+{
+  "topicPath": "Financial Services > Retirement & College Savings > Wealth Management Services",
+  "topicSlug": "wealth-management-services",
+  "fourEyesId": 101950,
+  "tiers": ["high", "medium", "low"],
+  "daysBack": 7,
+  "filters": {
+    "profile": {
+      "netWorth": ["$$500,000 to $749,999", "$$750,000 to $999,999", "more than $1,000,000"]
+    }
+  },
+  "existingAudiences": {
+    "high": "5126c098-ec93-41bb-81ee-b40e24402050",
+    "medium": "fea95853-96ce-4454-bed1-0d2580b49d0f"
+  }
+}

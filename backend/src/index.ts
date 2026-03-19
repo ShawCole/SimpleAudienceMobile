@@ -3,10 +3,11 @@
  * Express API server with automation layer
  */
 
-import express, { Application } from 'express';
+import express, { Application, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import path from 'path';
+import fs from 'fs';
 import logger from './utils/logger';
 import DatabaseService from './services/database';
 import AudienceService from './services/audience-service';
@@ -17,7 +18,7 @@ import { createRouter } from './api/routes';
 dotenv.config({ path: path.join(process.cwd(), 'backend', '.env') });
 dotenv.config({ path: path.join(process.cwd(), '.env') });
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 8001;
 
 class Server {
   private app: Application;
@@ -53,12 +54,46 @@ class Server {
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
 
-    // Request logging
+    // Request logging (Winston)
     this.app.use((req, res, next) => {
       logger.info(`${req.method} ${req.path}`, {
         query: req.query,
         ip: req.ip,
       });
+      next();
+    });
+
+    // Network logging — captures all Express traffic to JSONL for Claude Code
+    const logsDir = path.resolve(process.cwd(), 'logs');
+    if (!fs.existsSync(logsDir)) fs.mkdirSync(logsDir, { recursive: true });
+    const netLog = fs.createWriteStream(path.join(logsDir, 'backend-network.jsonl'), { flags: 'a' });
+
+    this.app.use((req: Request, res: Response, next: NextFunction) => {
+      const start = Date.now();
+
+      netLog.write(JSON.stringify({
+        t: new Date().toISOString(),
+        d: '>>',
+        method: req.method,
+        url: req.originalUrl,
+        body: req.body && Object.keys(req.body).length > 0 ? req.body : null,
+        query: Object.keys(req.query).length > 0 ? req.query : null
+      }) + '\n');
+
+      // Capture the response
+      const originalJson = res.json.bind(res);
+      res.json = function (body: any) {
+        netLog.write(JSON.stringify({
+          t: new Date().toISOString(),
+          d: '<<',
+          status: res.statusCode,
+          url: req.originalUrl,
+          ms: Date.now() - start,
+          body: typeof body === 'object' ? body : null
+        }) + '\n');
+        return originalJson(body);
+      };
+
       next();
     });
   }

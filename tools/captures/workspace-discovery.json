@@ -1,0 +1,792 @@
+{
+  "timestamp": "2026-03-06T01:23:48.553Z",
+  "workspace": {
+    "slug": "simple-audience",
+    "accountId": "fceffb3b-552d-413a-9442-e62e9d423aa0",
+    "loginEmail": "shaw@strategysimple.com",
+    "baseUrl": "https://app.intentcore.io"
+  },
+  "audienceTopic": {
+    "path": "Financial Services > Retirement & College Savings > Wealth Management Services",
+    "segmentId": "4eyes_101950",
+    "netWorthFilter": [
+      "$$500,000 to $749,999",
+      "$$750,000 to $999,999",
+      "more than $1,000,000"
+    ]
+  },
+  "targetAudiences": [
+    {
+      "name": "Wealth Management - High Intent",
+      "score": [
+        "high"
+      ],
+      "expectedCount": "~14,770"
+    },
+    {
+      "name": "Wealth Management - Intent",
+      "score": [],
+      "expectedCount": "~23,370"
+    },
+    {
+      "name": "Wealth Management - Low Intent",
+      "score": [
+        "low"
+      ],
+      "expectedCount": "~499,853"
+    }
+  ],
+  "existingAudience": {
+    "id": "6310db26-d0fa-4036-a4d5-36b33a17eb8e",
+    "info": {
+      "url": "https://app.intentcore.io/home/simple-audience/audience/6310db26-d0fa-4036-a4d5-36b33a17eb8e",
+      "headings": [
+        "Wealth management Test 2 Audience Filters",
+        "Preview Your Audience"
+      ],
+      "count": null,
+      "status": null,
+      "score": null,
+      "bodyPreview": "simple|AUDIENCE\nAudience\nAudience Lists\nStudio\nSegments\nEnrichment\nIntegrations\nPixel\nSync\nWorkflows\nWhite-label\nCredits\nTeams\nBranding\nSettings\nUsage\nSettings\nMembers\nAPI Keys\nS\nshaw\nshaw@strategysimple.com\nToggle Sidebar\nHome\nSimple Audience\nAudience\nFilters\nWealth management Test 2 Audience Filters\nPreview\nUpdate Audience\nIntent\n(1 applied)\nDate\n(1 applied)\nBusiness\nFinancial\n(3 applied)\nPersonal\nFamily\nHousing\nLocation\n(1 applied)\nContact\nPreview Your Audience\n\nCustomize your filters to build your audience. Get started by building your core target audience.\n\nGet Preview"
+    }
+  },
+  "existingSegments": {
+    "tableRows": [
+      {
+        "cellTexts": [
+          "ACG TikTok",
+          "ACG Mental Perf KW NEW VECTOR",
+          "Audience",
+          "186666",
+          "Mar 5 2026, 11:27 AM"
+        ],
+        "links": [
+          {
+            "text": "",
+            "href": "https://app.intentcore.io/home/simple-audience/studio?segment=96622645-af06-4cbe-8a07-237ba0a6f141"
+          }
+        ]
+      },
+      {
+        "cellTexts": [
+          "Luson Govt Intent Segment",
+          "Fed Employees Mil USPS FEMA LUSON INTENT",
+          "Audience",
+          "7581",
+          "Mar 2 2026, 3:26 PM"
+        ],
+        "links": [
+          {
+            "text": "",
+            "href": "https://app.intentcore.io/home/simple-audience/studio?segment=38ecb40f-0797-42f2-ab02-dfd83d7a701d"
+          }
+        ]
+      },
+      {
+        "cellTexts": [
+          "Qualfon V3 Pixel data",
+          "Qualfon superPIXEL V3",
+          "Pixel",
+          "7461",
+          "Mar 2 2026, 12:20 PM"
+        ],
+        "links": [
+          {
+            "text": "",
+            "href": "https://app.intentcore.io/home/simple-audience/studio?segment=5cf15176-33e5-4b2d-bab1-88efc6eb305b"
+          }
+        ]
+      },
+      {
+        "cellTexts": [
+          "Last 2 Days - Strategy_Simple_V4",
+          "Strategy Simple V4",
+          "Pixel",
+          "4",
+          "Mar 1 2026, 4:33 PM"
+        ],
+        "links": [
+          {
+            "text": "",
+            "href": "https://app.intentcore.io/home/simple-audience/studio?segment=8d8c305a-2d78-4ed7-b58d-36970b785a8b"
+          }
+        ]
+      },
+      {
+        "cellTexts": [
+          "Sample Data List Minimal",
+          "Residential Doors - Residential GC and Builders Re",
+          "Audience",
+          "34837",
+          "Feb 27 2026, 12:24 PM"
+        ],
+        "links": [
+          {
+            "text": "",
+            "href": "https://app.intentcore.io/home/simple-audience/studio?segment=68e6c5ed-a617-4463-aba7-6b4c8b99c55e"
+          }
+        ]
+      },
+      {
+        "cellTexts": [
+          "test",
+          "Strategy Simple V4",
+          "Pixel",
+          "40",
+          "Feb 26 2026, 6:50 PM"
+        ],
+        "links": [
+          {
+            "text": "",
+            "href": "https://app.intentcore.io/home/simple-audience/studio?segment=0e526d49-f9ec-48e7-bebf-5472f58c30e1"
+          }
+        ]
+      },
+      {
+        "cellTexts": [
+          "LinkedIn targeting",
+          "SS Lead Generation and Growth",
+          "Audience",
+          "504",
+          "Feb 21 2026, 4:41 PM"
+        ],
+        "links": [
+          {
+            "text": "",
+            "href": "https://app.intentcore.io/home/simple-audience/studio?segment=27d820e5-33e2-4872-b897-370789391abc"
+          }
+        ]
+      },
+      {
+        "cellTexts": [
+          "ACG Visitors Info",
+          "ACG Schedule a Call Pixel",
+          "Pixel",
+          "57",
+          "Feb 18 2026, 11:04 AM"
+        ],
+        "links": [
+          {
+            "text": "",
+            "href": "https://app.intentcore.io/home/simple-audience/studio?segment=95e5add0-2ec1-4c24-9b83-c7a07aea9f3c"
+          }
+        ]
+      },
+      {
+        "cellTexts": [
+          "CXO Dors sort",
+          "Residential Doors",
+          "Audience",
+          "1973",
+          "Feb 16 2026, 11:25 PM"
+        ],
+        "links": [
+          {
+            "text": "",
+            "href": "https://app.intentcore.io/home/simple-audience/studio?segment=e59ead5c-3dcd-476e-8077-6395dd729a5f"
+          }
+        ]
+      },
+      {
+        "cellTexts": [
+          "CXO Doors",
+          "Residential Doors",
+          "Audience",
+          "1973",
+          "Feb 16 2026, 11:21 PM"
+        ],
+        "links": [
+          {
+            "text": "",
+            "href": "https://app.intentcore.io/home/simple-audience/studio?segment=e36067bb-f2b9-49da-a6d7-a459bdc42e6a"
+          }
+        ]
+      }
+    ],
+    "studioLinks": [
+      {
+        "text": "Create",
+        "href": "https://app.intentcore.io/home/simple-audience/studio"
+      },
+      {
+        "text": "",
+        "href": "https://app.intentcore.io/home/simple-audience/studio?segment=96622645-af06-4cbe-8a07-237ba0a6f141"
+      },
+      {
+        "text": "",
+        "href": "https://app.intentcore.io/home/simple-audience/studio?segment=38ecb40f-0797-42f2-ab02-dfd83d7a701d"
+      },
+      {
+        "text": "",
+        "href": "https://app.intentcore.io/home/simple-audience/studio?segment=5cf15176-33e5-4b2d-bab1-88efc6eb305b"
+      },
+      {
+        "text": "",
+        "href": "https://app.intentcore.io/home/simple-audience/studio?segment=8d8c305a-2d78-4ed7-b58d-36970b785a8b"
+      },
+      {
+        "text": "",
+        "href": "https://app.intentcore.io/home/simple-audience/studio?segment=68e6c5ed-a617-4463-aba7-6b4c8b99c55e"
+      },
+      {
+        "text": "",
+        "href": "https://app.intentcore.io/home/simple-audience/studio?segment=0e526d49-f9ec-48e7-bebf-5472f58c30e1"
+      },
+      {
+        "text": "",
+        "href": "https://app.intentcore.io/home/simple-audience/studio?segment=27d820e5-33e2-4872-b897-370789391abc"
+      },
+      {
+        "text": "",
+        "href": "https://app.intentcore.io/home/simple-audience/studio?segment=95e5add0-2ec1-4c24-9b83-c7a07aea9f3c"
+      },
+      {
+        "text": "",
+        "href": "https://app.intentcore.io/home/simple-audience/studio?segment=e59ead5c-3dcd-476e-8077-6395dd729a5f"
+      },
+      {
+        "text": "",
+        "href": "https://app.intentcore.io/home/simple-audience/studio?segment=e36067bb-f2b9-49da-a6d7-a459bdc42e6a"
+      }
+    ]
+  },
+  "syncPage": {
+    "bodyPreview": "Home\nSimple Audience\nSync\nSync Data\nNew\nSource Name\n\t\nSource\n\t\nConnection\n\t\nStatus\n\t\nCreated\n\t\nNext Sync\n\t\n\nC12 Execs\tSegment\t\nGoogle Sheets\n\tCompleted\tFeb 3 2026, 6:23 PM\tFeb 4 2026, 3:00 AM\t\n\nQualfon test\tSegment\t\nGoogle Sheets\n\tProcessing\tFeb 3 2026, 6:19 PM\tFeb 4 2026, 3:00 AM\t\n\nTruPlan Sort Contacts simple\tSegment\t\nGoogle Sheets\n\tCompleted\tFeb 2 2026, 11:54 AM\tFeb 3 2026, 3:00 AM\t\n\nQualfon 3PL Targets Premade\tAudience\t\nGoogle Sheets\n\tFailed\tFeb 2 2026, 11:28 AM\tMar 6 2026, 3:00 AM\t\n\nJayce Recruiting with States\tAudience\t\nGoogle Sheets\n\tFailed\tJan 19 2026, 2:59 PM\tMar 8 2026, 3:00 AM\t\n\nJayce Recruiting w/ Income & States Medium Intent\tAudience\t\nGoogle Sheets\n\tFailed\tJan 19 2026, 2:58 PM\tMar 8 2026, 3:00 AM\t\n\nJayce Recruiting with Income & States High Intent\tAudience\t\nGoogle Sheets\n\tFailed\tJan 19 2026, 2:56 PM\tMar 8 2026, 3:00 AM\t\n\nFanblood Daytona 500 KW\tAudience\t\nFacebook Ads\n\tCompleted\tJan 16 2026, 4:58 PM\tMar 6 2026, 3:00 AM\t\n\nNASCAR Premade\tAudience\t\nFacebook Ads\n\tCompleted\tJan 16 2026, 4:57 PM\tMar 6 2026, 3:00 AM\t\n\nACG Performance New Vector KW intent\tAudience\t\nFacebook Ads\n\tCompleted\tJan 15 2026, 4:31 PM\tMar 6 2026, 3:00 AM\t\nPage 1 of 6\nShowing 1 to 10 of 55 rows",
+    "links": [
+      {
+        "text": "Home",
+        "href": "https://app.intentcore.io/home"
+      },
+      {
+        "text": "simple audience",
+        "href": "https://app.intentcore.io/home/simple-audience"
+      },
+      {
+        "text": "New",
+        "href": "https://app.intentcore.io/home/simple-audience/sync/new"
+      }
+    ],
+    "buttons": [
+      "Toggle Sidebar"
+    ]
+  },
+  "discoveredAudiences": {
+    "tableRows": [
+      {
+        "name": "calibration-grid-test",
+        "status": "Completed",
+        "count": "Mar 4 2026, 8:31 PM",
+        "created": "Mar 4 2026, 9:00 PM",
+        "audienceId": "872891b6-188c-43e2-8aab-3bb3b39487f6",
+        "cellTexts": [
+          "calibration-grid-test",
+          "Completed",
+          "Mar 4 2026, 8:31 PM",
+          "Mar 4 2026, 9:00 PM",
+          "500000",
+          "0"
+        ]
+      },
+      {
+        "name": "Wealth management Test 2",
+        "status": "Completed",
+        "count": "Mar 2 2026, 11:57 PM",
+        "created": "Mar 3 2026, 12:08 AM",
+        "audienceId": "6310db26-d0fa-4036-a4d5-36b33a17eb8e",
+        "cellTexts": [
+          "Wealth management Test 2",
+          "Completed",
+          "Mar 2 2026, 11:57 PM",
+          "Mar 3 2026, 12:08 AM",
+          "15939",
+          "2"
+        ]
+      },
+      {
+        "name": "Residential Doors - Residential GC and Builders Re",
+        "status": "Completed",
+        "count": "Feb 27 2026, 11:25 AM",
+        "created": "Feb 27 2026, 11:27 AM",
+        "audienceId": "7887ef9e-9d8a-4424-ae46-97b1fc18709f",
+        "cellTexts": [
+          "Residential Doors - Residential GC and Builders Re",
+          "Completed",
+          "Feb 27 2026, 11:25 AM",
+          "Feb 27 2026, 11:27 AM",
+          "44116",
+          "0"
+        ]
+      },
+      {
+        "name": "Wealth Management - Test",
+        "status": "Completed",
+        "count": "Feb 26 2026, 11:29 AM",
+        "created": "Feb 26 2026, 11:38 AM",
+        "audienceId": "eadf8738-a519-4436-a5d6-0612cc4bcb48",
+        "cellTexts": [
+          "Wealth Management - Test",
+          "Completed",
+          "Feb 26 2026, 11:29 AM",
+          "Feb 26 2026, 11:38 AM",
+          "341",
+          "0"
+        ]
+      },
+      {
+        "name": "solarpros.io",
+        "status": "Completed",
+        "count": "Feb 24 2026, 6:25 PM",
+        "created": "Feb 24 2026, 6:31 PM",
+        "audienceId": "80c16f3e-8352-41db-b379-676a0e6359fd",
+        "cellTexts": [
+          "solarpros.io",
+          "Completed",
+          "Feb 24 2026, 6:25 PM",
+          "Feb 24 2026, 6:31 PM",
+          "1303",
+          "1"
+        ]
+      },
+      {
+        "name": "Residential Doors - Industry Code",
+        "status": "Completed",
+        "count": "Feb 16 2026, 10:50 PM",
+        "created": "Feb 23 2026, 10:42 PM",
+        "audienceId": "32fd700e-f2ee-40a9-8d71-a4050a425b12",
+        "cellTexts": [
+          "Residential Doors - Industry Code",
+          "Completed",
+          "Feb 16 2026, 10:50 PM",
+          "Feb 23 2026, 10:42 PM",
+          "8467",
+          "3"
+        ]
+      },
+      {
+        "name": "Residential Doors",
+        "status": "Completed",
+        "count": "Feb 16 2026, 10:33 PM",
+        "created": "Feb 16 2026, 11:04 PM",
+        "audienceId": "e976022b-f9f8-4c13-ae45-4a1e5e7c58e8",
+        "cellTexts": [
+          "Residential Doors",
+          "Completed",
+          "Feb 16 2026, 10:33 PM",
+          "Feb 16 2026, 11:04 PM",
+          "9213",
+          "4"
+        ]
+      },
+      {
+        "name": "Insurance Marketplace All Lead Gen PM",
+        "status": "Completed",
+        "count": "Feb 11 2026, 3:54 PM",
+        "created": "Feb 11 2026, 3:58 PM",
+        "audienceId": "d8a02e46-7606-4490-af71-6428b9426a35",
+        "cellTexts": [
+          "Insurance Marketplace All Lead Gen PM",
+          "Completed",
+          "Feb 11 2026, 3:54 PM",
+          "Feb 11 2026, 3:58 PM",
+          "8",
+          "0"
+        ]
+      },
+      {
+        "name": "Fed Employees Mil USPS FEMA LUSON INTENT",
+        "status": "Completed",
+        "count": "Feb 9 2026, 12:06 PM",
+        "created": "Mar 2 2026, 3:22 PM",
+        "audienceId": "b2360765-91db-455e-b6ea-5a4105671b3a",
+        "cellTexts": [
+          "Fed Employees Mil USPS FEMA LUSON INTENT",
+          "Completed",
+          "Feb 9 2026, 12:06 PM",
+          "Mar 2 2026, 3:22 PM",
+          "7581",
+          "4"
+        ]
+      },
+      {
+        "name": "Fed Employees Mil USPS FEMA LUSON",
+        "status": "Completed",
+        "count": "Feb 6 2026, 12:10 PM",
+        "created": "Feb 6 2026, 12:15 PM",
+        "audienceId": "386b7e24-869f-46a1-8d4e-f839356ae049",
+        "cellTexts": [
+          "Fed Employees Mil USPS FEMA LUSON",
+          "Completed",
+          "Feb 6 2026, 12:10 PM",
+          "Feb 6 2026, 12:15 PM",
+          "49834",
+          "1"
+        ]
+      }
+    ],
+    "headings": [
+      "Audience Lists"
+    ],
+    "audienceLinks": [
+      {
+        "text": "",
+        "href": "https://app.intentcore.io/home/simple-audience/audience/872891b6-188c-43e2-8aab-3bb3b39487f6",
+        "audienceId": "872891b6-188c-43e2-8aab-3bb3b39487f6"
+      },
+      {
+        "text": "",
+        "href": "https://app.intentcore.io/home/simple-audience/audience/6310db26-d0fa-4036-a4d5-36b33a17eb8e",
+        "audienceId": "6310db26-d0fa-4036-a4d5-36b33a17eb8e"
+      },
+      {
+        "text": "",
+        "href": "https://app.intentcore.io/home/simple-audience/audience/7887ef9e-9d8a-4424-ae46-97b1fc18709f",
+        "audienceId": "7887ef9e-9d8a-4424-ae46-97b1fc18709f"
+      },
+      {
+        "text": "",
+        "href": "https://app.intentcore.io/home/simple-audience/audience/eadf8738-a519-4436-a5d6-0612cc4bcb48",
+        "audienceId": "eadf8738-a519-4436-a5d6-0612cc4bcb48"
+      },
+      {
+        "text": "",
+        "href": "https://app.intentcore.io/home/simple-audience/audience/80c16f3e-8352-41db-b379-676a0e6359fd",
+        "audienceId": "80c16f3e-8352-41db-b379-676a0e6359fd"
+      },
+      {
+        "text": "",
+        "href": "https://app.intentcore.io/home/simple-audience/audience/32fd700e-f2ee-40a9-8d71-a4050a425b12",
+        "audienceId": "32fd700e-f2ee-40a9-8d71-a4050a425b12"
+      },
+      {
+        "text": "",
+        "href": "https://app.intentcore.io/home/simple-audience/audience/e976022b-f9f8-4c13-ae45-4a1e5e7c58e8",
+        "audienceId": "e976022b-f9f8-4c13-ae45-4a1e5e7c58e8"
+      },
+      {
+        "text": "",
+        "href": "https://app.intentcore.io/home/simple-audience/audience/d8a02e46-7606-4490-af71-6428b9426a35",
+        "audienceId": "d8a02e46-7606-4490-af71-6428b9426a35"
+      },
+      {
+        "text": "",
+        "href": "https://app.intentcore.io/home/simple-audience/audience/b2360765-91db-455e-b6ea-5a4105671b3a",
+        "audienceId": "b2360765-91db-455e-b6ea-5a4105671b3a"
+      },
+      {
+        "text": "",
+        "href": "https://app.intentcore.io/home/simple-audience/audience/386b7e24-869f-46a1-8d4e-f839356ae049",
+        "audienceId": "386b7e24-869f-46a1-8d4e-f839356ae049"
+      }
+    ],
+    "buttons": [
+      "simple|AUDIENCE",
+      "0",
+      "sshawshaw@strategysimple.com",
+      "Toggle Sidebar",
+      "Create"
+    ],
+    "bodyTextPreview": "simple|AUDIENCE\nAudience\nAudience Lists\nStudio\nSegments\nEnrichment\nIntegrations\nPixel\nSync\nWorkflows\nWhite-label\nCredits\nTeams\nBranding\nSettings\nUsage\nSettings\nMembers\nAPI Keys\nS\nshaw\nshaw@strategysimple.com\nToggle Sidebar\nHome\nSimple Audience\nAudience Lists\nCreate\nName\n\t\nStatus\n\t\nCreated\n\t\nLast Refreshed\n\t\nAudience Size\n\t\nRefresh Count\n\t\nNext Refresh\n\t\n\ncalibration-grid-test\tCompleted\tMar 4 2026, 8:31 PM\tMar 4 2026, 9:00 PM\t500000\t0\t\t\n\nWealth management Test 2\tCompleted\tMar 2 2026, 11:57 PM\tMar 3 2026, 12:08 AM\t15939\t2\t\t\n\nResidential Doors - Residential GC and Builders Re\tCompleted\tFeb 27 2026, 11:25 AM\tFeb 27 2026, 11:27 AM\t44116\t0\t\t\n\nWealth Management - Test\tCompleted\tFeb 26 2026, 11:29 AM\tFeb 26 2026, 11:38 AM\t341\t0\t\t\n\nsolarpros.io\tCompleted\tFeb 24 2026, 6:25 PM\tFeb 24 2026, 6:31 PM\t1303\t1\t\t\n\nResidential Doors - Industry Code\tCompleted\tFeb 16 2026, 10:50 PM\tFeb 23 2026, 10:42 PM\t8467\t3\t\t\n\nResidential Doors\tCompleted\tFeb 16 2026, 10:33 PM\tFeb 16 2026, 11:04 PM\t9213\t4\t\t\n\nInsurance Marketplace All Lead Gen PM\tCompleted\tFeb 11 2026, 3:54 PM\tFeb 11 2026, 3:58 PM\t8\t0\t\t\n\nFed Employees Mil USPS FEMA LUSON INTENT\tCompleted\tFeb 9 2026, 12:06 PM\tMar 2 2026, 3:22 PM\t7581\t4\t\t\n\nFed Employees Mil USPS FEMA LUSON\tCompleted\tFeb 6 2026, 12:10 PM\tFeb 6 2026, 12:15 PM\t49834\t1\t\t\nPage 1 of 28\nShowing 1 to 10 of 273 rows"
+  },
+  "networkLog": [
+    {
+      "timestamp": "2026-03-06T01:23:30.149Z",
+      "status": 200,
+      "url": "https://app.intentcore.io/home/simple-audience",
+      "method": "POST"
+    },
+    {
+      "timestamp": "2026-03-06T01:23:30.674Z",
+      "status": 200,
+      "url": "https://app.intentcore.io/home/simple-audience",
+      "method": "POST"
+    },
+    {
+      "timestamp": "2026-03-06T01:23:31.160Z",
+      "status": 200,
+      "url": "https://app.intentcore.io/home/simple-audience",
+      "method": "POST"
+    },
+    {
+      "timestamp": "2026-03-06T01:23:31.659Z",
+      "status": 200,
+      "url": "https://app.intentcore.io/home/simple-audience",
+      "method": "POST"
+    },
+    {
+      "timestamp": "2026-03-06T01:23:32.811Z",
+      "status": 200,
+      "url": "https://app.intentcore.io/home/simple-audience/audience/6310db26-d0fa-4036-a4d5-36b33a17eb8e",
+      "method": "GET"
+    },
+    {
+      "timestamp": "2026-03-06T01:23:32.812Z",
+      "status": 200,
+      "url": "https://app.intentcore.io/home/simple-audience",
+      "method": "POST"
+    },
+    {
+      "timestamp": "2026-03-06T01:23:32.833Z",
+      "status": 200,
+      "url": "https://app.intentcore.io/_next/static/media/e4af272ccee01ff0-s.p.woff2?dpl=dpl_9cFrMNRqDM2AorX4o5sGU3X9uo8S",
+      "method": "GET"
+    },
+    {
+      "timestamp": "2026-03-06T01:23:32.845Z",
+      "status": 200,
+      "url": "https://app.intentcore.io/_next/static/media/e4af272ccee01ff0-s.p.woff2",
+      "method": "GET"
+    },
+    {
+      "timestamp": "2026-03-06T01:23:33.358Z",
+      "status": 200,
+      "url": "https://app.intentcore.io/home/simple-audience?_rsc=1tp2y",
+      "method": "GET"
+    },
+    {
+      "timestamp": "2026-03-06T01:23:33.385Z",
+      "status": 200,
+      "url": "https://app.intentcore.io/home/simple-audience/enrichment?_rsc=1tp2y",
+      "method": "GET"
+    },
+    {
+      "timestamp": "2026-03-06T01:23:33.387Z",
+      "status": 200,
+      "url": "https://app.intentcore.io/home/simple-audience/studio?_rsc=1tp2y",
+      "method": "GET"
+    },
+    {
+      "timestamp": "2026-03-06T01:23:33.447Z",
+      "status": 200,
+      "url": "https://app.intentcore.io/home/simple-audience/segment?_rsc=1tp2y",
+      "method": "GET"
+    },
+    {
+      "timestamp": "2026-03-06T01:23:33.452Z",
+      "status": 200,
+      "url": "https://app.intentcore.io/home/simple-audience/pixel?_rsc=1tp2y",
+      "method": "GET"
+    },
+    {
+      "timestamp": "2026-03-06T01:23:33.612Z",
+      "status": 200,
+      "url": "https://app.intentcore.io/home/simple-audience/sync?_rsc=1tp2y",
+      "method": "GET"
+    },
+    {
+      "timestamp": "2026-03-06T01:23:33.626Z",
+      "status": 200,
+      "url": "https://app.intentcore.io/home/simple-audience/workflows?_rsc=1tp2y",
+      "method": "GET"
+    },
+    {
+      "timestamp": "2026-03-06T01:23:33.656Z",
+      "status": 200,
+      "url": "https://app.intentcore.io/home/simple-audience/white-label?_rsc=1tp2y",
+      "method": "GET"
+    },
+    {
+      "timestamp": "2026-03-06T01:23:33.692Z",
+      "status": 200,
+      "url": "https://app.intentcore.io/home/simple-audience/white-label/teams?_rsc=1tp2y",
+      "method": "GET"
+    },
+    {
+      "timestamp": "2026-03-06T01:23:33.727Z",
+      "status": 200,
+      "url": "https://app.intentcore.io/home/simple-audience/white-label/branding?_rsc=1tp2y",
+      "method": "GET"
+    },
+    {
+      "timestamp": "2026-03-06T01:23:33.824Z",
+      "status": 200,
+      "url": "https://app.intentcore.io/home/simple-audience/usage?_rsc=1tp2y",
+      "method": "GET"
+    },
+    {
+      "timestamp": "2026-03-06T01:23:33.880Z",
+      "status": 200,
+      "url": "https://app.intentcore.io/home/simple-audience/members?_rsc=1tp2y",
+      "method": "GET"
+    },
+    {
+      "timestamp": "2026-03-06T01:23:33.890Z",
+      "status": 200,
+      "url": "https://app.intentcore.io/home/simple-audience/settings?_rsc=1tp2y",
+      "method": "GET"
+    },
+    {
+      "timestamp": "2026-03-06T01:23:33.931Z",
+      "status": 200,
+      "url": "https://app.intentcore.io/home/simple-audience/api-keys?_rsc=1tp2y",
+      "method": "GET"
+    },
+    {
+      "timestamp": "2026-03-06T01:23:38.774Z",
+      "status": 200,
+      "url": "https://app.intentcore.io/home/simple-audience/segment",
+      "method": "GET"
+    },
+    {
+      "timestamp": "2026-03-06T01:23:38.782Z",
+      "status": 200,
+      "url": "https://app.intentcore.io/_next/static/media/e4af272ccee01ff0-s.p.woff2?dpl=dpl_9cFrMNRqDM2AorX4o5sGU3X9uo8S",
+      "method": "GET"
+    },
+    {
+      "timestamp": "2026-03-06T01:23:38.788Z",
+      "status": 200,
+      "url": "https://app.intentcore.io/_next/static/media/e4af272ccee01ff0-s.p.woff2",
+      "method": "GET"
+    },
+    {
+      "timestamp": "2026-03-06T01:23:39.308Z",
+      "status": 200,
+      "url": "https://app.intentcore.io/home/simple-audience?_rsc=1t37e",
+      "method": "GET"
+    },
+    {
+      "timestamp": "2026-03-06T01:23:39.347Z",
+      "status": 200,
+      "url": "https://app.intentcore.io/home/simple-audience/studio?_rsc=1t37e",
+      "method": "GET"
+    },
+    {
+      "timestamp": "2026-03-06T01:23:39.364Z",
+      "status": 200,
+      "url": "https://app.intentcore.io/home/simple-audience/sync?_rsc=1t37e",
+      "method": "GET"
+    },
+    {
+      "timestamp": "2026-03-06T01:23:39.368Z",
+      "status": 200,
+      "url": "https://app.intentcore.io/home/simple-audience/pixel?_rsc=1t37e",
+      "method": "GET"
+    },
+    {
+      "timestamp": "2026-03-06T01:23:39.532Z",
+      "status": 200,
+      "url": "https://app.intentcore.io/home/simple-audience/enrichment?_rsc=1t37e",
+      "method": "GET"
+    },
+    {
+      "timestamp": "2026-03-06T01:23:39.555Z",
+      "status": 200,
+      "url": "https://app.intentcore.io/home/simple-audience/workflows?_rsc=1t37e",
+      "method": "GET"
+    },
+    {
+      "timestamp": "2026-03-06T01:23:39.571Z",
+      "status": 200,
+      "url": "https://app.intentcore.io/home/simple-audience/white-label?_rsc=1t37e",
+      "method": "GET"
+    },
+    {
+      "timestamp": "2026-03-06T01:23:39.626Z",
+      "status": 200,
+      "url": "https://app.intentcore.io/home/simple-audience/white-label/branding?_rsc=1t37e",
+      "method": "GET"
+    },
+    {
+      "timestamp": "2026-03-06T01:23:39.739Z",
+      "status": 200,
+      "url": "https://app.intentcore.io/home/simple-audience/white-label/teams?_rsc=1t37e",
+      "method": "GET"
+    },
+    {
+      "timestamp": "2026-03-06T01:23:39.775Z",
+      "status": 200,
+      "url": "https://app.intentcore.io/home/simple-audience/usage?_rsc=1t37e",
+      "method": "GET"
+    },
+    {
+      "timestamp": "2026-03-06T01:23:39.794Z",
+      "status": 200,
+      "url": "https://app.intentcore.io/home/simple-audience/settings?_rsc=1t37e",
+      "method": "GET"
+    },
+    {
+      "timestamp": "2026-03-06T01:23:39.846Z",
+      "status": 200,
+      "url": "https://app.intentcore.io/home/simple-audience/members?_rsc=1t37e",
+      "method": "GET"
+    },
+    {
+      "timestamp": "2026-03-06T01:23:39.850Z",
+      "status": 200,
+      "url": "https://app.intentcore.io/home/simple-audience/api-keys?_rsc=1t37e",
+      "method": "GET"
+    },
+    {
+      "timestamp": "2026-03-06T01:23:40.416Z",
+      "status": 307,
+      "url": "https://app.intentcore.io/?_rsc=1t37e",
+      "method": "GET"
+    },
+    {
+      "timestamp": "2026-03-06T01:23:40.768Z",
+      "status": 307,
+      "url": "https://app.intentcore.io/auth/sign-in",
+      "method": "GET"
+    },
+    {
+      "timestamp": "2026-03-06T01:23:41.034Z",
+      "status": 200,
+      "url": "https://app.intentcore.io/home",
+      "method": "GET"
+    },
+    {
+      "timestamp": "2026-03-06T01:23:44.098Z",
+      "status": 200,
+      "url": "https://app.intentcore.io/home/simple-audience/sync",
+      "method": "GET"
+    },
+    {
+      "timestamp": "2026-03-06T01:23:44.125Z",
+      "status": 200,
+      "url": "https://app.intentcore.io/_next/static/media/e4af272ccee01ff0-s.p.woff2?dpl=dpl_9cFrMNRqDM2AorX4o5sGU3X9uo8S",
+      "method": "GET"
+    },
+    {
+      "timestamp": "2026-03-06T01:23:44.145Z",
+      "status": 200,
+      "url": "https://app.intentcore.io/_next/static/media/e4af272ccee01ff0-s.p.woff2",
+      "method": "GET"
+    },
+    {
+      "timestamp": "2026-03-06T01:23:44.603Z",
+      "status": 307,
+      "url": "https://app.intentcore.io/?_rsc=k9ols",
+      "method": "GET"
+    },
+    {
+      "timestamp": "2026-03-06T01:23:44.717Z",
+      "status": 200,
+      "url": "https://app.intentcore.io/home/simple-audience/sync/new?_rsc=k9ols",
+      "method": "GET"
+    },
+    {
+      "timestamp": "2026-03-06T01:23:44.792Z",
+      "status": 307,
+      "url": "https://app.intentcore.io/auth/sign-in",
+      "method": "GET"
+    },
+    {
+      "timestamp": "2026-03-06T01:23:44.808Z",
+      "status": 200,
+      "url": "https://app.intentcore.io/home/simple-audience/sync",
+      "method": "POST"
+    },
+    {
+      "timestamp": "2026-03-06T01:23:45.048Z",
+      "status": 200,
+      "url": "https://app.intentcore.io/home",
+      "method": "GET"
+    },
+    {
+      "timestamp": "2026-03-06T01:23:45.205Z",
+      "status": 200,
+      "url": "https://app.intentcore.io/home/simple-audience/sync",
+      "method": "POST"
+    }
+  ]
+}

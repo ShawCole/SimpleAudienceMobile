@@ -1,0 +1,29 @@
+{
+  "audienceId": "2ad169a1-6f29-456f-90a2-08ca24ed4135",
+  "name": null,
+  "score": [
+    "medium"
+  ],
+  "deploymentId": "dpl_Duc6ZiebsNpxxEiZYrG94quFCJBX",
+  "preview": {
+    "status": 500,
+    "ok": false,
+    "text": "0:{\"a\":\"$@1\",\"f\":\"\",\"b\":\"gFOKRt76484VTAthJk0YK\"}\n1:E{\"digest\":\"1996686292\"}\n",
+    "headers": {
+      "cache-control": "no-cache, no-store, max-age=0, must-revalidate",
+      "content-type": "text/x-component",
+      "date": "Mon, 09 Mar 2026 21:44:02 GMT",
+      "server": "Vercel",
+      "strict-transport-security": "max-age=63072000",
+      "vary": "RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch",
+      "x-action-path": "/home/simple-audience/audience/2ad169a1-6f29-456f-90a2-08ca24ed4135",
+      "x-action-revalidated": "[[],0,0]",
+      "x-csrf-token": "AAj9hXs5iFqmORbsHdtBL/a/hgJdQVq7FRFmOgkV",
+      "x-matched-path": "/home/[account]/audience/[id]",
+      "x-powered-by": "Next.js",
+      "x-vercel-cache": "MISS",
+      "x-vercel-id": "iad1::iad1::mjwh7-1773092641932-422e933bf414"
+    }
+  },
+  "generate": "skipped"
+}

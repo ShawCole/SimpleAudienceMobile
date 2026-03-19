@@ -18,6 +18,7 @@ import {
   Home,
   Phone,
   ClipboardCheck,
+  ChevronDown,
   Sun,
   Moon,
   X
@@ -1028,8 +1029,7 @@ const PreviewTable: React.FC<{ preview: any[]; totalCount: number | null }> = ({
               <th className="px-3 text-left align-middle font-semibold text-gray-600 dark:text-gray-300 h-10 whitespace-nowrap min-w-28 border-l border-gray-200 dark:border-gray-700">Last Name</th>
               <th className="px-3 text-left align-middle font-semibold text-gray-600 dark:text-gray-300 h-10 whitespace-nowrap min-w-48 border-l border-gray-200 dark:border-gray-700">Business Email</th>
               <th className="px-3 text-left align-middle font-semibold text-gray-600 dark:text-gray-300 h-10 whitespace-nowrap min-w-40 border-l border-gray-200 dark:border-gray-700">Business Phone</th>
-              <th className="px-3 text-left align-middle font-semibold text-gray-600 dark:text-gray-300 h-10 whitespace-nowrap min-w-40 border-l border-gray-200 dark:border-gray-700">Company</th>
-              <th className="px-3 text-left align-middle font-semibold text-gray-600 dark:text-gray-300 h-10 whitespace-nowrap min-w-32 border-l border-gray-200 dark:border-gray-700">Company Domain</th>
+              <th className="px-3 text-left align-middle font-semibold text-gray-600 dark:text-gray-300 h-10 whitespace-nowrap min-w-40 border-l border-gray-200 dark:border-gray-700">Company Domain</th>
               <th className="px-3 text-left align-middle font-semibold text-gray-600 dark:text-gray-300 h-10 whitespace-nowrap min-w-40 border-l border-gray-200 dark:border-gray-700">Job Title</th>
               <th className="px-3 text-left align-middle font-semibold text-gray-600 dark:text-gray-300 h-10 whitespace-nowrap min-w-40 border-l border-gray-200 dark:border-gray-700">Personal Phone</th>
               <th className="px-3 text-left align-middle font-semibold text-gray-600 dark:text-gray-300 h-10 whitespace-nowrap min-w-48 border-l border-gray-200 dark:border-gray-700">Personal Email</th>
@@ -1044,7 +1044,6 @@ const PreviewTable: React.FC<{ preview: any[]; totalCount: number | null }> = ({
                 <td className="p-2 align-middle text-gray-700 dark:text-gray-200 max-w-40 truncate border-l border-gray-100 dark:border-gray-800">{row.last_name || '-'}</td>
                 <td className="p-2 align-middle text-gray-700 dark:text-gray-200 max-w-60 truncate border-l border-gray-100 dark:border-gray-800">{formatList(row.b2b_email)}</td>
                 <td className="p-2 align-middle text-gray-700 dark:text-gray-200 max-w-40 truncate border-l border-gray-100 dark:border-gray-800">{formatList(row.b2b_phone)}</td>
-                <td className="p-2 align-middle text-gray-700 dark:text-gray-200 max-w-60 truncate border-l border-gray-100 dark:border-gray-800">{formatList(row.company)}</td>
                 <td className="p-2 align-middle text-gray-700 dark:text-gray-200 max-w-40 truncate border-l border-gray-100 dark:border-gray-800">{row.company_domain || '-'}</td>
                 <td className="p-2 align-middle text-gray-700 dark:text-gray-200 max-w-40 truncate border-l border-gray-100 dark:border-gray-800">{row.job_title || '-'}</td>
                 <td className="p-2 align-middle text-gray-700 dark:text-gray-200 max-w-40 truncate border-l border-gray-100 dark:border-gray-800">{formatList(row.personal_phone)}</td>
@@ -1127,6 +1126,7 @@ export default function CreateAudiencePage() {
   const router = useRouter();
   const [draft, setDraft] = useState<AudiencePayload>(defaultPayload);
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
+  const [filtersSummaryCollapsed, setFiltersSummaryCollapsed] = useState(false);
   const [locationForm, setLocationForm] = useState({ cities: '', states: '', zipCodes: '' });
   const [customKeywords, setCustomKeywords] = useState('');
   const [showKeywordError, setShowKeywordError] = useState(false);
@@ -1964,7 +1964,7 @@ export default function CreateAudiencePage() {
               single_parent: draft.filters.family?.singleParent?.map(o => formatFilterLabel(o.label)) || [],
               cra_code: draft.filters.financial?.craCode?.map(o => formatFilterLabel(o.label)) || [],
               dwelling_type: draft.filters.housing?.dwellingType?.map(o => formatFilterLabel(o.label)) || [],
-              credit_range_new_credit: draft.filters.financial?.newCreditRange?.map(o => formatFilterLabel(o.label)) || [],
+              credit_range_new_credit: draft.filters.financial?.newCreditRange?.map(o => o.label) || [],
               ethnic_code: draft.filters.personal?.ethnicity?.map(o => formatFilterLabel(o.label)) || [],
               marital_status: draft.filters.family?.maritalStatus?.map(o => formatFilterLabel(o.label)) || [],
               net_worth: [],
@@ -2315,36 +2315,53 @@ export default function CreateAudiencePage() {
 
       {reviewGroups.length > 0 && (
         <Card padding="md">
-          <div className="space-y-4">
-            {reviewGroups.map(group => (
-              <div key={group.id}>
-                <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-sm font-semibold text-slate-600 dark:text-slate-200">
-                    {group.label}
-                  </h3>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => goToStep(REVIEW_GROUP_STEP_MAP[group.id] ?? 'review')}
-                  >
-                    Change
-                  </Button>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {group.chips.map(chip => (
-                    <span
-                      key={chip.key}
-                      className="inline-flex h-[30px] items-center rounded-md border border-gray-200 bg-gray-100 pl-3 pr-[6px] text-sm text-gray-900 max-w-[240px]"
-                      title={`${chip.filterLabel}: ${chip.valueLabel}`}
-                    >
-                      <span className="font-medium mr-1 whitespace-nowrap">{chip.filterLabel}:</span>
-                      <span className="truncate">{chip.valueLabel}</span>
-                    </span>
-                  ))}
-                </div>
-              </div>
-            ))}
+          <div
+            className="flex items-center justify-between cursor-pointer select-none"
+            onClick={() => setFiltersSummaryCollapsed(prev => !prev)}
+          >
+            <h3 className="text-sm font-semibold text-slate-600 dark:text-slate-200">
+              Selected Filters ({reviewGroups.reduce((n, g) => n + g.chips.length, 0)})
+            </h3>
+            <ChevronDown
+              size={18}
+              className={clsx(
+                'text-gray-400 transition-transform duration-200',
+                filtersSummaryCollapsed && '-rotate-90'
+              )}
+            />
           </div>
+          {!filtersSummaryCollapsed && (
+            <div className="space-y-4 mt-3">
+              {reviewGroups.map(group => (
+                <div key={group.id}>
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="text-sm font-semibold text-slate-600 dark:text-slate-200">
+                      {group.label}
+                    </h3>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => goToStep(REVIEW_GROUP_STEP_MAP[group.id] ?? 'review')}
+                    >
+                      Change
+                    </Button>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {group.chips.map(chip => (
+                      <span
+                        key={chip.key}
+                        className="inline-flex h-[30px] items-center rounded-md border border-gray-200 bg-gray-100 pl-3 pr-[6px] text-sm text-gray-900 max-w-[240px]"
+                        title={`${chip.filterLabel}: ${chip.valueLabel}`}
+                      >
+                        <span className="font-medium mr-1 whitespace-nowrap">{chip.filterLabel}:</span>
+                        <span className="truncate">{chip.valueLabel}</span>
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </Card>
       )}
 

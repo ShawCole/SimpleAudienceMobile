@@ -1,0 +1,12 @@
+{
+  "audienceId": "6b3275c1-d00f-49ab-b6f5-e543732f32db",
+  "topic": "wealth-management-services",
+  "intent": "medium",
+  "segmentName": null,
+  "records": 5829,
+  "inserted": 3122,
+  "skipped": 2707,
+  "csvUrl": "https://storage.googleapis.com/v3-audiencelab-export-segment/6b3275c1-d00f-49ab-b6f5-e543732f32db/20260312_061247_6b3275c1-d00f-49ab-b6f5-e543732f32db.csv",
+  "csvFile": "/Users/ShawCole/SimpleAudienceMobile/tools/captures/export-6b3275c1-d00f-49ab-b6f5-e543732f32db-1773295979753.csv",
+  "timestamp": "2026-03-12T06:13:26.429Z"
+}

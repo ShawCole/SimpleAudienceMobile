@@ -45,27 +45,61 @@ export async function ensureLoggedIn(driver: WebDriver, options: LoginOptions = 
 }
 
 async function openAudienceBuilder(driver: WebDriver): Promise<void> {
+  // Step 1: Click the first workspace card (link containing /home/)
   logger.info('Opening workspace card...');
-  await clickXPath(driver, "/html/body/div[2]/div/div[2]/div[2]/div[2]/div/div/a[1]", 20000);
+  const workspaceClicked = await driver.executeScript<boolean>(`
+    // Try the original absolute XPath first
+    let el = document.evaluate("/html/body/div[2]/div/div[2]/div[2]/div[2]/div/div/a[1]", document, null, 9, null).singleNodeValue;
+    if (el) { el.click(); return true; }
+    // Fallback: find first anchor that links to a workspace
+    const links = Array.from(document.querySelectorAll('a[href*="/home/"]'));
+    const card = links.find(a => a.offsetParent !== null);
+    if (card) { card.click(); return true; }
+    return false;
+  `);
+  if (!workspaceClicked) {
+    // Last resort: try original XPath via Selenium
+    await clickXPath(driver, "/html/body/div[2]/div/div[2]/div[2]/div[2]/div/div/a[1]", 20000);
+  }
 
+  // Wait for workspace page to load
+  await driver.sleep(3000);
+
+  // Step 2: Click "Create" button (text-based, resilient to DOM changes)
   logger.info('Clicking Create button...');
-  await clickXPath(driver, "/html/body/div[2]/div/div[2]/div[2]/div[3]/div/div[1]/button", 20000);
+  const createClicked = await driver.executeScript<boolean>(`
+    // Try original absolute XPath
+    let el = document.evaluate("/html/body/div[2]/div/div[2]/div[2]/div[3]/div/div[1]/button", document, null, 9, null).singleNodeValue;
+    if (el && el.offsetParent !== null) { el.click(); return true; }
+    // Fallback: find a visible button whose text includes "Create"
+    const buttons = Array.from(document.querySelectorAll('button'));
+    const target = buttons.find(btn => {
+      const text = (btn.textContent || '').trim().toLowerCase();
+      return btn.offsetParent !== null && !btn.disabled && (text.includes('create') || text.includes('new audience'));
+    });
+    if (target) { target.scrollIntoView({ block: 'center' }); target.click(); return true; }
+    return false;
+  `);
+  if (!createClicked) {
+    await clickXPath(driver, "//button[contains(normalize-space(.), 'Create')]", 20000);
+  }
 
   logger.info('Waiting for modal dialog...');
-  const dialog = await driver.wait(until.elementLocated(By.css('div[role="dialog"]')), 10000);
+  const dialog = await driver.wait(until.elementLocated(By.css('div[role="dialog"]')), 15000);
   await driver.wait(until.elementIsVisible(dialog), 5000);
 
   logger.info('Typing audience name...');
   const nameInput = await dialog.findElement(By.css('input'));
   await nameInput.clear();
-  await nameInput.sendKeys('test');
+  const testName = `sniffer-generate-${Date.now()}`;
+  await nameInput.sendKeys(testName);
 
   logger.info('Clicking modal Create button...');
   const createBtn = await dialog.findElement(By.xpath(".//button[contains(normalize-space(.), 'Create')][last()]"));
   await createBtn.click();
 
   logger.info('Waiting for audience builder to load...');
-  await driver.wait(until.urlContains('/audience/'), 20000);
+  await driver.wait(until.urlContains('/audience/'), 30000);
   logger.info('Audience builder opened.');
 }
 

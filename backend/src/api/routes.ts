@@ -8,6 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 import AudienceService from '../services/audience-service';
 import GoogleDriveService from '../services/google-drive-service';
 import { VacuumEngine } from '../automation/vacuum'; // Vacuum Integration
+import { estimateAudienceSize } from '../services/audience-estimator';
 import logger from '../utils/logger';
 import {
   CreateAudienceRequest,
@@ -56,6 +57,38 @@ export function createRouter(
         error: {
           code: 'GET_AUDIENCES_ERROR',
           message: error instanceof Error ? error.message : 'Unknown error',
+        },
+        timestamp: new Date(),
+      };
+      res.status(500).json(response);
+    }
+  });
+
+  /**
+   * Audience Size Estimator — instant local prediction (no Puppeteer needed)
+   * Uses calibrated retention multipliers from probe grids + Layer 1 sweeps
+   */
+  router.post('/audiences/estimate', async (req: Request, res: Response) => {
+    try {
+      const { filters } = req.body; // Array of FilterSpec objects
+      if (!Array.isArray(filters)) {
+        res.status(400).json({ success: false, error: { code: 'BAD_REQUEST', message: 'filters must be an array' } });
+        return;
+      }
+
+      const result = estimateAudienceSize(filters);
+      const response: ApiResponse = {
+        success: true,
+        data: result,
+        timestamp: new Date(),
+      };
+      res.json(response);
+    } catch (error: any) {
+      const response: ApiResponse = {
+        success: false,
+        error: {
+          code: 'ESTIMATE_ERROR',
+          message: error.message || 'Estimation failed',
         },
         timestamp: new Date(),
       };
@@ -203,6 +236,49 @@ export function createRouter(
           message: error instanceof Error ? error.message : 'Unknown error',
         },
       });
+    }
+  });
+
+  /**
+   * Vacuum: Navigate to audience edit page by name (read-only, safe)
+   */
+  router.post('/vacuum/navigate', async (req: Request, res: Response) => {
+    try {
+      const { name } = req.body;
+      if (!name) return res.status(400).json({ success: false, error: { message: 'name is required' } });
+      logger.info(`Navigating to audience: ${name}`);
+      const result = await VacuumEngine.navigateToAudience(name);
+      res.json(result);
+    } catch (error: any) {
+      logger.error('Navigate failed', error);
+      res.status(500).json({ success: false, error: { code: 'NAVIGATE_ERROR', message: error.message } });
+    }
+  });
+
+  /**
+   * Vacuum: Take a screenshot of current browser state
+   */
+  router.post('/vacuum/screenshot', async (req: Request, res: Response) => {
+    try {
+      const { filename } = req.body || {};
+      const result = await VacuumEngine.screenshot(filename);
+      res.json(result);
+    } catch (error: any) {
+      logger.error('Screenshot failed', error);
+      res.status(500).json({ success: false, error: { code: 'SCREENSHOT_ERROR', message: error.message } });
+    }
+  });
+
+  /**
+   * Vacuum: Get page DOM snapshot (buttons, links, inputs, tabs, etc.)
+   */
+  router.get('/vacuum/snapshot', async (req: Request, res: Response) => {
+    try {
+      const snapshot = await VacuumEngine.getPageSnapshot();
+      res.json({ success: true, data: snapshot });
+    } catch (error: any) {
+      logger.error('Snapshot failed', error);
+      res.status(500).json({ success: false, error: { code: 'SNAPSHOT_ERROR', message: error.message } });
     }
   });
 

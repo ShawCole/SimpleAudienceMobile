@@ -9,7 +9,10 @@
     "start": "node dist/backend/src/index.js",
     "test": "jest",
     "remote:plan": "tsx src/scripts/run-remote-plan.ts",
-    "pipeline:test": "tsx src/scripts/pipeline-smoke.ts"
+    "pipeline:test": "tsx src/scripts/pipeline-smoke.ts",
+    "explore:filters": "tsx src/scripts/filter-explorer.ts",
+    "explore:analyze": "tsx src/scripts/filter-explorer/analyzer.ts",
+    "explore:singles": "npx tsx src/scripts/filter-explorer/runner.ts --singles-only"
   },
   "dependencies": {
     "@simpleaudience/automation": "0.1.0",

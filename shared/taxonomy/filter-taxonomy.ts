@@ -11237,7 +11237,7 @@ export const FILTER_TAXONOMY = {
         { "index": 4, "label": "$1,001 - $3,000" },
         { "index": 5, "label": "$3,001 - $5,000" },
         { "index": 6, "label": "$5,001 - $9,999" },
-        { "index": 7, "label": "Greater Than $9,999" }
+        { "index": 7, "label": "Greater than $9,999" }
       ]
     },
     "Credit Card User": {

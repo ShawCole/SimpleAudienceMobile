@@ -12,8 +12,11 @@ export interface SnifferEntry {
   type: 'FETCH' | 'XHR';
   url: string;
   method: string;
+  requestHeaders: Record<string, string>;
   payload: unknown;
   response: unknown;
+  responseRaw?: string | null;
+  responseHeaders?: Record<string, string>;
   status?: number;
   timestamp: string;
 }

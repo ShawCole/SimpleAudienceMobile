@@ -1,0 +1,53 @@
+{
+  "result1": {
+    "status": 500,
+    "ok": false,
+    "text": "0:{\"a\":\"$@1\",\"f\":\"\",\"b\":\"TpFioBrCUtwA39neIHcHC\"}\n1:E{\"digest\":\"3584670312\"}\n",
+    "headers": {
+      "cache-control": "no-cache, no-store, max-age=0, must-revalidate",
+      "content-type": "text/x-component",
+      "date": "Fri, 06 Mar 2026 04:07:09 GMT",
+      "server": "Vercel",
+      "strict-transport-security": "max-age=63072000",
+      "vary": "RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch",
+      "x-action-path": "/home/simple-audience/audience/a4666209-caa6-4a93-80db-dea6abf7470f",
+      "x-csrf-token": "AAhaMKpUS/hn+OcDToiLtb//NQ+ENALZ03Tswd2O",
+      "x-matched-path": "/home/[account]/audience/[id]",
+      "x-powered-by": "Next.js",
+      "x-vercel-cache": "MISS",
+      "x-vercel-id": "sfo1::iad1::8rl9x-1772770029729-1a5ea6c6841f"
+    }
+  },
+  "result2": {
+    "status": 500,
+    "ok": false,
+    "text": "0:{\"a\":\"$@1\",\"f\":\"\",\"b\":\"TpFioBrCUtwA39neIHcHC\"}\n1:E{\"digest\":\"3584670312\"}\n",
+    "headers": {
+      "cache-control": "no-cache, no-store, max-age=0, must-revalidate",
+      "content-type": "text/x-component",
+      "date": "Fri, 06 Mar 2026 04:07:15 GMT",
+      "server": "Vercel",
+      "strict-transport-security": "max-age=63072000",
+      "vary": "RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch",
+      "x-action-path": "/home/simple-audience/audience/9496f7af-d945-4d6e-a64c-6bd26b5da18e",
+      "x-csrf-token": "AAhk3U0mh/BsIpUzEosdtyyV95jtXPEHj0AAnJZu",
+      "x-matched-path": "/home/[account]/audience/[id]",
+      "x-powered-by": "Next.js",
+      "x-vercel-cache": "MISS",
+      "x-vercel-id": "sfo1::iad1::l7knp-1772770035051-753abe7e29e7"
+    }
+  },
+  "result3": {
+    "status": 500,
+    "ok": false,
+    "text": "0:{\"a\":\"$@1\",\"f\":\"\",\"b\":\"TpFioBrCUtwA39neIHcHC\"}\n1:E{\"digest\":\"3584670312\"}\n"
+  },
+  "pageCheck1": {
+    "bodyText": "simple|AUDIENCE\nAudience\nAudience Lists\nStudio\nSegments\nEnrichment\nIntegrations\nPixel\nSync\nWorkflows\nWhite-label\nCredits\nTeams\nBranding\nSettings\nUsage\nSettings\nMembers\nAPI Keys\nS\nshaw\nshaw@strategysimple.com\nToggle Sidebar\nHome\nSimple Audience\nAudience\nFilters\ntest Audience Filters\nPreview\nUpdate Audience\nIntent\n(3 applied)\nDate\n(1 applied)\nBusiness\nFinancial\n(3 applied)\nPersonal\nFamily\nHousing\nLocation\nContact\nPreview Your Audience\n\nCustomize your filters to build your audience. Get started by ",
+    "hasError": false
+  },
+  "pageCheck2": {
+    "bodyText": "Ouch! :|\nSorry, something went wrong.\n\nApologies, an error occurred while processing your request. Please contact us if the issue persists.\n\nGo Back\nContact Us",
+    "hasError": false
+  }
+}

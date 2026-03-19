@@ -1,0 +1,520 @@
+[
+  {
+    "gridIndex": 1,
+    "name": "Age Range",
+    "dataType": "string",
+    "hasOnlyFirst": false,
+    "onlyFirstChecked": false
+  },
+  {
+    "gridIndex": 2,
+    "name": "Business Email",
+    "dataType": "string[]",
+    "hasOnlyFirst": true,
+    "onlyFirstChecked": false
+  },
+  {
+    "gridIndex": 3,
+    "name": "Children",
+    "dataType": "string",
+    "hasOnlyFirst": false,
+    "onlyFirstChecked": false
+  },
+  {
+    "gridIndex": 4,
+    "name": "Company Address",
+    "dataType": "string",
+    "hasOnlyFirst": false,
+    "onlyFirstChecked": false
+  },
+  {
+    "gridIndex": 5,
+    "name": "Company City",
+    "dataType": "string",
+    "hasOnlyFirst": false,
+    "onlyFirstChecked": false
+  },
+  {
+    "gridIndex": 6,
+    "name": "Company Description",
+    "dataType": "string",
+    "hasOnlyFirst": false,
+    "onlyFirstChecked": false
+  },
+  {
+    "gridIndex": 7,
+    "name": "Company Domain",
+    "dataType": "string",
+    "hasOnlyFirst": false,
+    "onlyFirstChecked": false
+  },
+  {
+    "gridIndex": 8,
+    "name": "Company Employee Count",
+    "dataType": "string",
+    "hasOnlyFirst": false,
+    "onlyFirstChecked": false
+  },
+  {
+    "gridIndex": 9,
+    "name": "Company Industry",
+    "dataType": "string",
+    "hasOnlyFirst": false,
+    "onlyFirstChecked": false
+  },
+  {
+    "gridIndex": 10,
+    "name": "Company NAICS",
+    "dataType": "string",
+    "hasOnlyFirst": false,
+    "onlyFirstChecked": false
+  },
+  {
+    "gridIndex": 11,
+    "name": "Company Name",
+    "dataType": "string",
+    "hasOnlyFirst": false,
+    "onlyFirstChecked": false
+  },
+  {
+    "gridIndex": 12,
+    "name": "Company Name History",
+    "dataType": "string[]",
+    "hasOnlyFirst": true,
+    "onlyFirstChecked": false
+  },
+  {
+    "gridIndex": 13,
+    "name": "Company Phone",
+    "dataType": "string[]",
+    "hasOnlyFirst": true,
+    "onlyFirstChecked": false
+  },
+  {
+    "gridIndex": 14,
+    "name": "Company Revenue",
+    "dataType": "string",
+    "hasOnlyFirst": false,
+    "onlyFirstChecked": false
+  },
+  {
+    "gridIndex": 15,
+    "name": "Company SIC",
+    "dataType": "string[]",
+    "hasOnlyFirst": true,
+    "onlyFirstChecked": false
+  },
+  {
+    "gridIndex": 16,
+    "name": "Company State",
+    "dataType": "string",
+    "hasOnlyFirst": false,
+    "onlyFirstChecked": false
+  },
+  {
+    "gridIndex": 17,
+    "name": "Company ZIP",
+    "dataType": "string",
+    "hasOnlyFirst": false,
+    "onlyFirstChecked": false
+  },
+  {
+    "gridIndex": 18,
+    "name": "Company LinkedIn URL",
+    "dataType": "string",
+    "hasOnlyFirst": false,
+    "onlyFirstChecked": false
+  },
+  {
+    "gridIndex": 19,
+    "name": "Personal Verified Emails",
+    "dataType": "string[]",
+    "hasOnlyFirst": true,
+    "onlyFirstChecked": false
+  },
+  {
+    "gridIndex": 20,
+    "name": "Business Verified Emails",
+    "dataType": "string[]",
+    "hasOnlyFirst": true,
+    "onlyFirstChecked": false
+  },
+  {
+    "gridIndex": 21,
+    "name": "Department",
+    "dataType": "string",
+    "hasOnlyFirst": false,
+    "onlyFirstChecked": false
+  },
+  {
+    "gridIndex": 22,
+    "name": "Direct Number",
+    "dataType": "string[]",
+    "hasOnlyFirst": true,
+    "onlyFirstChecked": false
+  },
+  {
+    "gridIndex": 23,
+    "name": "Direct Number DNC",
+    "dataType": "string[]",
+    "hasOnlyFirst": true,
+    "onlyFirstChecked": false
+  },
+  {
+    "gridIndex": 24,
+    "name": "Education History",
+    "dataType": "json",
+    "hasOnlyFirst": false,
+    "onlyFirstChecked": false
+  },
+  {
+    "gridIndex": 25,
+    "name": "Facebook URL",
+    "dataType": "string",
+    "hasOnlyFirst": false,
+    "onlyFirstChecked": false
+  },
+  {
+    "gridIndex": 26,
+    "name": "Twitter URL",
+    "dataType": "string",
+    "hasOnlyFirst": false,
+    "onlyFirstChecked": false
+  },
+  {
+    "gridIndex": 27,
+    "name": "First Name",
+    "dataType": "string",
+    "hasOnlyFirst": false,
+    "onlyFirstChecked": false
+  },
+  {
+    "gridIndex": 28,
+    "name": "Gender",
+    "dataType": "string",
+    "hasOnlyFirst": false,
+    "onlyFirstChecked": false
+  },
+  {
+    "gridIndex": 29,
+    "name": "Headline",
+    "dataType": "string",
+    "hasOnlyFirst": false,
+    "onlyFirstChecked": false
+  },
+  {
+    "gridIndex": 30,
+    "name": "Homeowner",
+    "dataType": "string",
+    "hasOnlyFirst": false,
+    "onlyFirstChecked": false
+  },
+  {
+    "gridIndex": 31,
+    "name": "Income Range",
+    "dataType": "string",
+    "hasOnlyFirst": false,
+    "onlyFirstChecked": false
+  },
+  {
+    "gridIndex": 32,
+    "name": "Inferred Years Experience",
+    "dataType": "string",
+    "hasOnlyFirst": false,
+    "onlyFirstChecked": false
+  },
+  {
+    "gridIndex": 33,
+    "name": "Interests",
+    "dataType": "string[]",
+    "hasOnlyFirst": true,
+    "onlyFirstChecked": false
+  },
+  {
+    "gridIndex": 34,
+    "name": "Job Title",
+    "dataType": "string",
+    "hasOnlyFirst": false,
+    "onlyFirstChecked": false
+  },
+  {
+    "gridIndex": 35,
+    "name": "Job Title History",
+    "dataType": "string[]",
+    "hasOnlyFirst": true,
+    "onlyFirstChecked": false
+  },
+  {
+    "gridIndex": 36,
+    "name": "Last Name",
+    "dataType": "string",
+    "hasOnlyFirst": false,
+    "onlyFirstChecked": false
+  },
+  {
+    "gridIndex": 37,
+    "name": "LinkedIn URL",
+    "dataType": "string",
+    "hasOnlyFirst": false,
+    "onlyFirstChecked": false
+  },
+  {
+    "gridIndex": 38,
+    "name": "Married",
+    "dataType": "string",
+    "hasOnlyFirst": false,
+    "onlyFirstChecked": false
+  },
+  {
+    "gridIndex": 39,
+    "name": "Mobile Phone",
+    "dataType": "string[]",
+    "hasOnlyFirst": true,
+    "onlyFirstChecked": false
+  },
+  {
+    "gridIndex": 40,
+    "name": "Mobile Phone DNC",
+    "dataType": "string[]",
+    "hasOnlyFirst": true,
+    "onlyFirstChecked": false
+  },
+  {
+    "gridIndex": 41,
+    "name": "Net Worth",
+    "dataType": "string",
+    "hasOnlyFirst": false,
+    "onlyFirstChecked": false
+  },
+  {
+    "gridIndex": 42,
+    "name": "Personal Address",
+    "dataType": "string",
+    "hasOnlyFirst": false,
+    "onlyFirstChecked": false
+  },
+  {
+    "gridIndex": 43,
+    "name": "Personal City",
+    "dataType": "string",
+    "hasOnlyFirst": false,
+    "onlyFirstChecked": false
+  },
+  {
+    "gridIndex": 44,
+    "name": "Personal Emails",
+    "dataType": "string[]",
+    "hasOnlyFirst": true,
+    "onlyFirstChecked": false
+  },
+  {
+    "gridIndex": 45,
+    "name": "Personal Phone",
+    "dataType": "string[]",
+    "hasOnlyFirst": true,
+    "onlyFirstChecked": false
+  },
+  {
+    "gridIndex": 46,
+    "name": "Personal Phone DNC",
+    "dataType": "string[]",
+    "hasOnlyFirst": true,
+    "onlyFirstChecked": false
+  },
+  {
+    "gridIndex": 47,
+    "name": "Personal State",
+    "dataType": "string",
+    "hasOnlyFirst": false,
+    "onlyFirstChecked": false
+  },
+  {
+    "gridIndex": 48,
+    "name": "Personal ZIP",
+    "dataType": "string",
+    "hasOnlyFirst": false,
+    "onlyFirstChecked": false
+  },
+  {
+    "gridIndex": 49,
+    "name": "Personal ZIP4",
+    "dataType": "string",
+    "hasOnlyFirst": false,
+    "onlyFirstChecked": false
+  },
+  {
+    "gridIndex": 50,
+    "name": "Seniority Level",
+    "dataType": "string",
+    "hasOnlyFirst": false,
+    "onlyFirstChecked": false
+  },
+  {
+    "gridIndex": 51,
+    "name": "SHA256 Business Email",
+    "dataType": "string[]",
+    "hasOnlyFirst": true,
+    "onlyFirstChecked": false
+  },
+  {
+    "gridIndex": 52,
+    "name": "SHA256 Personal Email",
+    "dataType": "string[]",
+    "hasOnlyFirst": true,
+    "onlyFirstChecked": false
+  },
+  {
+    "gridIndex": 53,
+    "name": "Skills",
+    "dataType": "string[]",
+    "hasOnlyFirst": true,
+    "onlyFirstChecked": false
+  },
+  {
+    "gridIndex": 54,
+    "name": "Skiptrace Address",
+    "dataType": "string",
+    "hasOnlyFirst": false,
+    "onlyFirstChecked": false
+  },
+  {
+    "gridIndex": 55,
+    "name": "Skiptrace B2B Address",
+    "dataType": "string",
+    "hasOnlyFirst": false,
+    "onlyFirstChecked": false
+  },
+  {
+    "gridIndex": 56,
+    "name": "Skiptrace B2B Phone",
+    "dataType": "string",
+    "hasOnlyFirst": false,
+    "onlyFirstChecked": false
+  },
+  {
+    "gridIndex": 57,
+    "name": "Skiptrace B2B Source",
+    "dataType": "string",
+    "hasOnlyFirst": false,
+    "onlyFirstChecked": false
+  },
+  {
+    "gridIndex": 58,
+    "name": "Skiptrace B2B Website",
+    "dataType": "string",
+    "hasOnlyFirst": false,
+    "onlyFirstChecked": false
+  },
+  {
+    "gridIndex": 59,
+    "name": "Skiptrace City",
+    "dataType": "string",
+    "hasOnlyFirst": false,
+    "onlyFirstChecked": false
+  },
+  {
+    "gridIndex": 60,
+    "name": "Skiptrace Credit Rating",
+    "dataType": "string",
+    "hasOnlyFirst": false,
+    "onlyFirstChecked": false
+  },
+  {
+    "gridIndex": 61,
+    "name": "Skiptrace DNC",
+    "dataType": "string",
+    "hasOnlyFirst": false,
+    "onlyFirstChecked": false
+  },
+  {
+    "gridIndex": 62,
+    "name": "Skiptrace Ethnic Code",
+    "dataType": "string",
+    "hasOnlyFirst": false,
+    "onlyFirstChecked": false
+  },
+  {
+    "gridIndex": 63,
+    "name": "Skiptrace Exact Age",
+    "dataType": "number",
+    "hasOnlyFirst": false,
+    "onlyFirstChecked": false
+  },
+  {
+    "gridIndex": 64,
+    "name": "Skiptrace IP",
+    "dataType": "string",
+    "hasOnlyFirst": false,
+    "onlyFirstChecked": false
+  },
+  {
+    "gridIndex": 65,
+    "name": "Skiptrace Landline Numbers",
+    "dataType": "string",
+    "hasOnlyFirst": false,
+    "onlyFirstChecked": false
+  },
+  {
+    "gridIndex": 66,
+    "name": "Skiptrace Language Code",
+    "dataType": "string",
+    "hasOnlyFirst": false,
+    "onlyFirstChecked": false
+  },
+  {
+    "gridIndex": 67,
+    "name": "Skiptrace Match Score",
+    "dataType": "number",
+    "hasOnlyFirst": false,
+    "onlyFirstChecked": false
+  },
+  {
+    "gridIndex": 68,
+    "name": "Skiptrace Name",
+    "dataType": "string",
+    "hasOnlyFirst": false,
+    "onlyFirstChecked": false
+  },
+  {
+    "gridIndex": 69,
+    "name": "Skiptrace State",
+    "dataType": "string",
+    "hasOnlyFirst": false,
+    "onlyFirstChecked": false
+  },
+  {
+    "gridIndex": 70,
+    "name": "Skiptrace Wireless Numbers",
+    "dataType": "string",
+    "hasOnlyFirst": false,
+    "onlyFirstChecked": false
+  },
+  {
+    "gridIndex": 71,
+    "name": "Skiptrace ZIP",
+    "dataType": "string",
+    "hasOnlyFirst": false,
+    "onlyFirstChecked": false
+  },
+  {
+    "gridIndex": 72,
+    "name": "Social Connections",
+    "dataType": "string",
+    "hasOnlyFirst": false,
+    "onlyFirstChecked": false
+  },
+  {
+    "gridIndex": 73,
+    "name": "UUID",
+    "dataType": "string",
+    "hasOnlyFirst": false,
+    "onlyFirstChecked": false
+  },
+  {
+    "gridIndex": 74,
+    "name": "Valid Phones",
+    "dataType": "string[]",
+    "hasOnlyFirst": true,
+    "onlyFirstChecked": false
+  }
+]

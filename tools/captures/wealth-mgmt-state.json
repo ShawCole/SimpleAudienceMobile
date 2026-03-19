@@ -1,0 +1,38 @@
+{
+  "audiences": {
+    "high": {
+      "id": "5126c098-ec93-41bb-81ee-b40e24402050",
+      "name": "new 2",
+      "status": "generated",
+      "note": "Shaw created + generated manually 2026-03-06. High intent WM $500k+."
+    },
+    "medium": {
+      "id": "fea95853-96ce-4454-bed1-0d2580b49d0f",
+      "name": "new",
+      "status": "needs-regenerate",
+      "note": "Shaw created + generated manually 2026-03-06 with high intent. Needs re-generate as medium-only via script."
+    },
+    "low": {
+      "id": null,
+      "name": "WM HNW - Low Intent",
+      "status": "not created",
+      "note": "Skip for now — 500k too large for client-side"
+    }
+  },
+  "segments": {},
+  "syncs": {},
+  "actionIds": {
+    "deployment": "dpl_3Jq2xYTjAQXwfkA9Pv9W1ZB2Sj27",
+    "capturedAt": "2026-03-06",
+    "PREVIEW": "7f2fedc1659914fecb5d57837dc4b06ab5c2e0e744",
+    "GENERATE": "7f437ee100a328c3149f7f41b6ef0aa67929d43bcc",
+    "note": "Action IDs survived deployment change (dpl_9cFr -> dpl_3Jq2). Don't assume they change every deploy."
+  },
+  "learnings": {
+    "segment_field": "Server-side audience state, read-only to client. Always safe to send []. Server assigns stable per-topic 4eyes_ IDs after generate (e.g. 4eyes_101950=WM Services, 4eyes_122122=Mgmt Consulting, 4eyes_121448=Computer Telephony). Client echoes back whatever server stored from last generate, but server doesn't validate it.",
+    "netWorth_prefix": "Single $ (e.g. '$500,000 to $749,999'). Verified from Shaw's browser capture on fresh audience. The $$ in some chat messages is markdown LaTeX rendering eating one $.",
+    "router_state_tree": "MUST be encodeURIComponent()'d before setting as header value.",
+    "audience_reuse": "Can re-generate existing audience with new filters. Button changes to 'Update Audience'. Same Generate action ID.",
+    "action_ids_stable": "Action IDs don't always change with deployments. Only re-capture if getting 404."
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "audienceId": "5d37ce57-e11e-4788-b5b4-d2825ce86eb6",
+  "name": "Wealth Management Test",
+  "score": [
+    "medium"
+  ],
+  "deploymentId": "dpl_Duc6ZiebsNpxxEiZYrG94quFCJBX",
+  "preview": {
+    "status": 500,
+    "ok": false,
+    "text": "0:{\"a\":\"$@1\",\"f\":\"\",\"b\":\"gFOKRt76484VTAthJk0YK\"}\n1:E{\"digest\":\"3584670312\"}\n",
+    "headers": {
+      "cache-control": "no-cache, no-store, max-age=0, must-revalidate",
+      "content-type": "text/x-component",
+      "date": "Mon, 09 Mar 2026 21:35:24 GMT",
+      "server": "Vercel",
+      "strict-transport-security": "max-age=63072000",
+      "vary": "RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch",
+      "x-action-path": "/home/simple-audience/audience/5d37ce57-e11e-4788-b5b4-d2825ce86eb6",
+      "x-csrf-token": "AAipSS4b1L6714bTB29xFyz/XgWf4UgX2u/axHus",
+      "x-matched-path": "/home/[account]/audience/[id]",
+      "x-powered-by": "Next.js",
+      "x-vercel-cache": "MISS",
+      "x-vercel-id": "iad1::iad1::875tj-1773092124192-e0e020d10b30"
+    }
+  },
+  "generate": "skipped"
+}

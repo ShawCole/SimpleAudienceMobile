@@ -47,3 +47,8 @@ downloads/
 # Database
 *.sqlite
 *.db
+
+# Sensitive provider trace data and large local datasets
+docs/provider-traces/
+backend/data/filter-explorer/
+backend/data/calibration/

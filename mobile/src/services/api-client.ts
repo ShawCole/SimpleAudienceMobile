@@ -21,7 +21,7 @@ class ApiClient {
 
   constructor() {
     // Ensure baseURL always ends with /api
-    const envUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+    const envUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8001';
     const baseURL = envUrl.endsWith('/api') ? envUrl : `${envUrl.replace(/\/$/, '')}/api`;
 
     console.log('[ApiClient] Initializing with baseURL:', baseURL);

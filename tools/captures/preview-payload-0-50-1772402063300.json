@@ -1,0 +1,107 @@
+{
+  "capturedAt": "2026-03-01T21:54:23.300Z",
+  "searchTerm": "0-50",
+  "audienceUrl": "https://app.intentcore.io/home/bizypro/audience/2127142f-a63e-4a60-8c0c-8c540b95af6e",
+  "request": {
+    "url": "https://app.intentcore.io/home/bizypro/audience/2127142f-a63e-4a60-8c0c-8c540b95af6e",
+    "nextAction": "7f1518b4f7ad169f2fdcc2d2a52581b6c08649c230",
+    "body": [
+      {
+        "accountId": "27e2bf65-59ba-4a31-b754-97a6652fe36d",
+        "id": "2127142f-a63e-4a60-8c0c-8c540b95af6e",
+        "filters": {
+          "audience": {
+            "type": "premade",
+            "b2b": null,
+            "customTopic": "",
+            "customDescription": "",
+            "segmentSearches": [
+              "Real Estate > Selling a Home > Sell Home for Cash"
+            ]
+          },
+          "jobId": "",
+          "segment": [
+            "4eyes_500089"
+          ],
+          "score": [],
+          "daysBack": 7,
+          "filters": {
+            "age": {
+              "minAge": null,
+              "maxAge": null
+            },
+            "city": [],
+            "state": [
+              "California"
+            ],
+            "zip": [],
+            "gender": [],
+            "profile": {
+              "incomeRange": [],
+              "homeowner": [
+                "homeowner"
+              ],
+              "married": [],
+              "netWorth": [],
+              "children": []
+            },
+            "businessProfile": {
+              "companyDescription": [],
+              "jobTitle": [],
+              "seniority": [],
+              "department": [],
+              "companyName": [],
+              "companyDomain": [],
+              "industry": [],
+              "sic": [],
+              "employeeCount": [],
+              "companyRevenue": [],
+              "companyNaics": []
+            },
+            "attributes": {
+              "credit_rating": [],
+              "language_code": [],
+              "occupation_group": [],
+              "occupation_type": [],
+              "home_year_built": {
+                "min": null,
+                "max": null
+              },
+              "single_parent": [],
+              "cra_code": [],
+              "dwelling_type": [],
+              "credit_range_new_credit": [],
+              "ethnic_code": [],
+              "marital_status": [],
+              "net_worth": [],
+              "education": [],
+              "credit_card_user": [],
+              "investment": [],
+              "smoker": [],
+              "home_purchase_price": {
+                "min": null,
+                "max": null
+              },
+              "home_purchase_year": {
+                "min": null,
+                "max": null
+              },
+              "home_purchase_month": [],
+              "estimated_home_value": [
+                "$$1,000 - $24,999",
+                "$$25,000 - $49,999"
+              ],
+              "mortgage_amount": {
+                "min": null,
+                "max": null
+              },
+              "generations_in_household": []
+            },
+            "notNulls": [],
+            "nullOnly": []
+          }
+        }
+      }
+    ]
+  }
+}
