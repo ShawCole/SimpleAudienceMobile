@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 import AudienceService from '../services/audience-service';
 import GoogleDriveService from '../services/google-drive-service';
 import { VacuumEngine } from '../automation/vacuum'; // Vacuum Integration
-import { estimateAudienceSize } from '../services/audience-estimator';
+import { estimateAudienceSize, getFilterImpacts } from '../services/audience-estimator';
 import logger from '../utils/logger';
 import {
   CreateAudienceRequest,
@@ -89,6 +89,39 @@ export function createRouter(
         error: {
           code: 'ESTIMATE_ERROR',
           message: error.message || 'Estimation failed',
+        },
+        timestamp: new Date(),
+      };
+      res.status(500).json(response);
+    }
+  });
+
+  /**
+   * Filter Impact Analysis — predict how each available filter would affect audience size
+   * Given current filters, returns retention predictions for all remaining filter options.
+   * Powers real-time "this filter will reduce your audience by X%" UI guidance.
+   */
+  router.post('/audiences/filter-impact', async (req: Request, res: Response) => {
+    try {
+      const { filters } = req.body;
+      if (!Array.isArray(filters)) {
+        res.status(400).json({ success: false, error: { code: 'BAD_REQUEST', message: 'filters must be an array' } });
+        return;
+      }
+
+      const result = getFilterImpacts(filters);
+      const response: ApiResponse = {
+        success: true,
+        data: result,
+        timestamp: new Date(),
+      };
+      res.json(response);
+    } catch (error: any) {
+      const response: ApiResponse = {
+        success: false,
+        error: {
+          code: 'FILTER_IMPACT_ERROR',
+          message: error.message || 'Filter impact analysis failed',
         },
         timestamp: new Date(),
       };
@@ -307,6 +340,130 @@ export function createRouter(
       res.status(500).json({
         success: false,
         error: { code: 'STATUS_CHECK_ERROR', message: error.message }
+      });
+    }
+  });
+
+  /**
+   * Poll audience status until terminal state (Completed/Failed)
+   * Uses audience name to find the correct row in IntentCore's dashboard table.
+   */
+  router.post('/audiences/:id/poll', async (req: Request, res: Response) => {
+    try {
+      const { id } = req.params;
+      const audience = audienceService.getAudience(id);
+
+      if (!audience) {
+        return res.status(404).json({ success: false, error: { message: 'Audience not found in local DB' } });
+      }
+
+      const timeoutMs = req.body?.timeoutMs || 600000;  // 10 min default
+      const pollIntervalMs = req.body?.pollIntervalMs || 5000;
+
+      logger.info(`Polling status for audience: "${audience.name}" (timeout: ${timeoutMs / 1000}s)`);
+      const result = await VacuumEngine.pollUntilComplete(audience.name, timeoutMs, pollIntervalMs);
+
+      res.json({
+        success: true,
+        data: result,
+        timestamp: new Date()
+      });
+    } catch (error: any) {
+      logger.error('Status poll failed', error);
+      res.status(500).json({
+        success: false,
+        error: { code: 'STATUS_POLL_ERROR', message: error.message }
+      });
+    }
+  });
+
+  /**
+   * Export audience CSV from IntentCore Studio (direct Studio navigation).
+   */
+  router.post('/audiences/export', async (req: Request, res: Response) => {
+    try {
+      const { intentcore_id } = req.body;
+
+      if (!intentcore_id) {
+        return res.status(400).json({
+          success: false,
+          error: { message: 'intentcore_id is required (the IntentCore audience UUID)' }
+        });
+      }
+
+      logger.info(`Exporting audience CSV: ${intentcore_id}`);
+      const result = await VacuumEngine.exportAudience(intentcore_id);
+
+      if (!result.success) {
+        return res.status(500).json({
+          success: false,
+          error: { code: 'EXPORT_FAILED', message: result.error }
+        });
+      }
+
+      res.json({
+        success: true,
+        data: { csvUrl: result.csvUrl },
+        timestamp: new Date()
+      });
+    } catch (error: any) {
+      logger.error('Export failed', error);
+      res.status(500).json({
+        success: false,
+        error: { code: 'EXPORT_ERROR', message: error.message }
+      });
+    }
+  });
+
+  /**
+   * FULL POST-GENERATION RETRIEVAL
+   *
+   * After an audience has been generated, this endpoint:
+   * 1. Navigates to the audience list page
+   * 2. Finds the audience row by name
+   * 3. Polls status until "Completed"
+   * 4. Refreshes the page (required for download modal)
+   * 5. Navigates to Studio
+   * 6. Exports CSV via server action
+   * 7. Returns the GCS download URL
+   *
+   * Body: { audience_name: string, intentcore_id: string, timeout_ms?: number }
+   */
+  router.post('/audiences/retrieve-csv', async (req: Request, res: Response) => {
+    try {
+      const { audience_name, intentcore_id, timeout_ms } = req.body;
+
+      if (!audience_name || !intentcore_id) {
+        return res.status(400).json({
+          success: false,
+          error: { message: 'audience_name and intentcore_id are required' }
+        });
+      }
+
+      logger.info(`[Retrieve CSV] Starting for "${audience_name}" (${intentcore_id})`);
+      const result = await VacuumEngine.retrieveGeneratedCSV(
+        audience_name,
+        intentcore_id,
+        timeout_ms || 600000
+      );
+
+      if (!result.success) {
+        return res.status(500).json({
+          success: false,
+          error: { code: 'RETRIEVE_FAILED', message: result.error, status: result.status }
+        });
+      }
+
+      res.json({
+        success: true,
+        data: { csvUrl: result.csvUrl, status: result.status },
+        timestamp: new Date()
+      });
+    } catch (error: any) {
+      logger.error('Retrieve CSV failed', error);
+      res.status(500).json({
+        success: false,
+        error: { code: 'RETRIEVE_ERROR', message: error.message }
       });
     }
   });
