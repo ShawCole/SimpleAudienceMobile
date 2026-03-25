@@ -1851,8 +1851,48 @@ export class VacuumEngine {
 
                 if (result.ok) break;
 
-                if (result.status === 404) {
-                    return { success: false, error: 'Export action ID stale (404). Need to re-capture.' };
+                if (result.status === 404 && attempt === 1) {
+                    // Auto-discover fresh export action ID by clicking Download button
+                    console.log('[Retrieve] Export action ID stale (404). Auto-discovering...');
+                    try {
+                        await page.setRequestInterception(true);
+                        let capturedActionId: string | null = null;
+
+                        const interceptor = (req: any) => {
+                            const headers = req.headers();
+                            if (headers['next-action'] && req.url().includes('/studio')) {
+                                capturedActionId = headers['next-action'];
+                                console.log(`[Retrieve] Captured fresh export action ID: ${capturedActionId}`);
+                            }
+                            req.continue();
+                        };
+                        page.on('request', interceptor);
+
+                        // Click the Download Export button via XPath
+                        const [downloadBtn] = await page.$x('//button[contains(., "Download") or contains(., "Export")]');
+                        if (downloadBtn) {
+                            await (downloadBtn as any).click();
+                            await new Promise(r => setTimeout(r, 3000));
+                        } else {
+                            console.log('[Retrieve] No Download/Export button found on page');
+                        }
+
+                        page.off('request', interceptor);
+                        await page.setRequestInterception(false);
+
+                        if (capturedActionId) {
+                            // Update the constant for this session
+                            (ACTION_IDS as any).EXPORT_CSV = capturedActionId;
+                            console.log(`[Retrieve] Updated EXPORT_CSV action ID to: ${capturedActionId}`);
+                            continue; // Retry with new action ID
+                        }
+                    } catch (discErr: any) {
+                        console.log(`[Retrieve] Auto-discovery failed: ${discErr.message}`);
+                        try { await page.setRequestInterception(false); } catch {}
+                    }
+                    return { success: false, error: 'Export action ID stale (404) and auto-discovery failed.' };
+                } else if (result.status === 404) {
+                    return { success: false, error: 'Export action ID stale (404). Auto-discovery already attempted.' };
                 }
 
                 if (attempt < maxRetries) {
