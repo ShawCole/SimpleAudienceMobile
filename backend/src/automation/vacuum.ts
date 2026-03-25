@@ -1852,47 +1852,74 @@ export class VacuumEngine {
                 if (result.ok) break;
 
                 if (result.status === 404 && attempt === 1) {
-                    // Auto-discover fresh export action ID by clicking Download button
-                    console.log('[Retrieve] Export action ID stale (404). Auto-discovering...');
+                    // Auto-discover fresh export action ID by scanning page JS for action IDs
+                    console.log('[Retrieve] Export action ID stale (404). Scanning page source for action IDs...');
                     try {
-                        await page.setRequestInterception(true);
-                        let capturedActionId: string | null = null;
-
-                        const interceptor = (req: any) => {
-                            const headers = req.headers();
-                            if (headers['next-action'] && req.url().includes('/studio')) {
-                                capturedActionId = headers['next-action'];
-                                console.log(`[Retrieve] Captured fresh export action ID: ${capturedActionId}`);
+                        // Scan all script elements and inline JS for 7f-prefixed hex strings (action IDs)
+                        const candidates = await page.evaluate(() => {
+                            const ids = new Set<string>();
+                            // Scan all script tags
+                            document.querySelectorAll('script').forEach(s => {
+                                const text = s.textContent || '';
+                                const matches = text.matchAll(/["']?(7f[0-9a-f]{38,48})["']?/g);
+                                for (const m of matches) ids.add(m[1]);
+                            });
+                            // Also scan __next_f data
+                            if ((window as any).__next_f) {
+                                const nf = JSON.stringify((window as any).__next_f);
+                                const matches = nf.matchAll(/7f[0-9a-f]{38,48}/g);
+                                for (const m of matches) ids.add(m[0]);
                             }
-                            req.continue();
-                        };
-                        page.on('request', interceptor);
+                            return [...ids];
+                        });
 
-                        // Click the Download Export button via XPath
-                        const [downloadBtn] = await page.$x('//button[contains(., "Download") or contains(., "Export")]');
-                        if (downloadBtn) {
-                            await (downloadBtn as any).click();
-                            await new Promise(r => setTimeout(r, 3000));
-                        } else {
-                            console.log('[Retrieve] No Download/Export button found on page');
+                        console.log(`[Retrieve] Found ${candidates.length} candidate action IDs: ${candidates.join(', ')}`);
+
+                        // Filter out known IDs (preview, generate, create) — remaining ones are likely export/segment
+                        const knownIds = new Set([ACTION_IDS.PREVIEW, ACTION_IDS.GENERATE, ACTION_IDS.CREATE_AUDIENCE, ACTION_IDS.SAVE_SEGMENT]);
+                        const unknownIds = candidates.filter(id => !knownIds.has(id));
+                        console.log(`[Retrieve] Unknown action IDs (potential export): ${unknownIds.join(', ')}`);
+
+                        // Try each unknown ID
+                        for (const candidateId of unknownIds) {
+                            console.log(`[Retrieve] Trying candidate: ${candidateId}`);
+                            const tryResult = await page.evaluate(
+                                async (pn: string, actionId: string, payload: any, depId: string) => {
+                                    try {
+                                        const res = await fetch(pn, {
+                                            method: 'POST',
+                                            headers: {
+                                                'accept': 'text/x-component',
+                                                'content-type': 'text/plain;charset=UTF-8',
+                                                'next-action': actionId,
+                                                'x-deployment-id': depId,
+                                            },
+                                            body: JSON.stringify(payload),
+                                        });
+                                        return { status: res.status, ok: res.ok, text: (await res.text()).substring(0, 200) };
+                                    } catch (e: any) { return { error: e.message }; }
+                                },
+                                pathname, candidateId, exportPayload, deploymentId
+                            );
+
+                            if (tryResult.ok || (tryResult.status && tryResult.status < 404)) {
+                                console.log(`[Retrieve] Found working export action ID: ${candidateId}`);
+                                (ACTION_IDS as any).EXPORT_CSV = candidateId;
+                                lastResult = tryResult;
+                                break;
+                            }
+                            console.log(`[Retrieve] Candidate ${candidateId} returned ${tryResult.status}`);
                         }
 
-                        page.off('request', interceptor);
-                        await page.setRequestInterception(false);
-
-                        if (capturedActionId) {
-                            // Update the constant for this session
-                            (ACTION_IDS as any).EXPORT_CSV = capturedActionId;
-                            console.log(`[Retrieve] Updated EXPORT_CSV action ID to: ${capturedActionId}`);
-                            continue; // Retry with new action ID
-                        }
+                        if (lastResult?.ok) break; // Exit retry loop with success
                     } catch (discErr: any) {
                         console.log(`[Retrieve] Auto-discovery failed: ${discErr.message}`);
-                        try { await page.setRequestInterception(false); } catch {}
                     }
-                    return { success: false, error: 'Export action ID stale (404) and auto-discovery failed.' };
+                    if (!lastResult?.ok) {
+                        return { success: false, error: 'Export action ID stale (404) and auto-discovery failed.' };
+                    }
                 } else if (result.status === 404) {
-                    return { success: false, error: 'Export action ID stale (404). Auto-discovery already attempted.' };
+                    return { success: false, error: 'Export action ID stale (404).' };
                 }
 
                 if (attempt < maxRetries) {
