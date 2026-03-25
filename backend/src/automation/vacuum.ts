@@ -13,7 +13,9 @@ puppeteer.use(StealthPlugin());
 const ACTION_IDS = {
     PREVIEW: "7f2fedc1659914fecb5d57837dc4b06ab5c2e0e744",
     GENERATE: "7f437ee100a328c3149f7f41b6ef0aa67929d43bcc",
-    CREATE_AUDIENCE: "7f6511f2963792b67a0b1696484be2bc032e617be0"
+    CREATE_AUDIENCE: "7f6511f2963792b67a0b1696484be2bc032e617be0",
+    EXPORT_CSV: "7f363cd62fa8f404dea17c964a943548c33f48d96f",
+    SAVE_SEGMENT: "7f69e0fb84999ede7adb06dab9a09fe86476d84abe"
 };
 
 // Phase Definitions
@@ -160,12 +162,20 @@ export class VacuumEngine {
     private static async getSession() {
         // Check if browser is disconnected or null
         if (!this.browser || !this.browser.isConnected()) {
-            logger.info(`[Vacuum] 🛠️ Launching Headed Browser...`);
+            const isHeadless = process.env.HEADLESS === 'true';
+            const execPath = process.env.PUPPETEER_EXECUTABLE_PATH
+                || (process.platform === 'darwin'
+                    ? '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
+                    : '/usr/bin/chromium');
+            logger.info(`[Vacuum] 🛠️ Launching ${isHeadless ? 'Headless' : 'Headed'} Browser (${execPath})...`);
             this.browser = await puppeteer.launch({
-                executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
-                headless: false, // Always headed for visibility and debugging
-                args: ['--no-sandbox', '--disable-setuid-sandbox', '--window-size=1280,1024'],
-                defaultViewport: null
+                executablePath: execPath,
+                headless: isHeadless,
+                args: [
+                    '--no-sandbox', '--disable-setuid-sandbox', '--window-size=1280,1024',
+                    ...(isHeadless ? ['--disable-gpu', '--disable-dev-shm-usage'] : [])
+                ],
+                defaultViewport: isHeadless ? { width: 1280, height: 1024 } : null
             });
 
             this.browser.on('disconnected', () => {
@@ -394,6 +404,19 @@ export class VacuumEngine {
                         await page.reload({ waitUntil: 'load' });
                     }
                 }
+
+                // Extract accountId if not already in context (critical for injection)
+                if (!this.currentContext?.accountId) {
+                    logStep('Extracting accountId from page after direct jump...');
+                    const accountId = await this.getAccountUuidFromPage(page) || await this.extractAccountIdFromUrl(page);
+                    if (accountId) {
+                        this.currentContext = { ...this.currentContext, accountId, audienceId: context.id };
+                        logStep(`Captured accountId: ${accountId}`);
+                    } else {
+                        logStep('⚠️ Could not extract accountId from page');
+                    }
+                }
+
                 current = VacuumPhase.AUDIENCE_FILTERS;
             } else if (context.name) {
                 if (current === VacuumPhase.NAMING_MODAL_OPEN) {
@@ -1396,11 +1419,13 @@ export class VacuumEngine {
                     if (!row) return 'NOT_FOUND';
 
                     const text = row.innerText;
+                    if (text.includes('Hydrating')) return 'HYDRATING';
                     if (text.includes('Processing')) return 'PROCESSING';
                     if (text.includes('Completed')) return 'COMPLETED';
                     if (text.includes('Failed')) return 'FAILED';
                     if (text.includes('Active')) return 'ACTIVE';
                     if (text.includes('Queued')) return 'QUEUED';
+                    if (text.includes('Generating')) return 'GENERATING';
 
                     return 'UNKNOWN';
                 } catch (e) { return 'ERROR'; }
@@ -1411,6 +1436,451 @@ export class VacuumEngine {
         } catch (err: any) {
             console.error('[Vacuum] Status check failed:', err.message);
             throw err;
+        }
+    }
+
+    /**
+     * Poll status for a specific audience by name until it reaches a terminal state.
+     * Handles the IntentCore lifecycle: Generating → Hydrating → Completed
+     */
+    static async pollUntilComplete(audienceName: string, timeoutMs: number = 600000, pollIntervalMs: number = 5000): Promise<{ status: string }> {
+        const start = Date.now();
+        const terminalStates = ['COMPLETED', 'FAILED', 'ACTIVE', 'ERROR'];
+
+        while (Date.now() - start < timeoutMs) {
+            try {
+                const result = await this.checkStatus(audienceName);
+                console.log(`[Vacuum] Poll: ${audienceName} → ${result.status} (${Math.round((Date.now() - start) / 1000)}s)`);
+
+                if (terminalStates.includes(result.status)) {
+                    return result;
+                }
+            } catch (err: any) {
+                console.error(`[Vacuum] Poll error (will retry): ${err.message}`);
+            }
+
+            await new Promise(r => setTimeout(r, pollIntervalMs));
+        }
+
+        throw new Error(`Timed out waiting for audience "${audienceName}" after ${timeoutMs / 1000}s`);
+    }
+
+    /**
+     * Export a generated audience as CSV from IntentCore Studio.
+     *
+     * CRITICAL FLOW:
+     * 1. Audience must already be "Completed" on IntentCore
+     * 2. Page MUST be reloaded after Completed status (download modal not available otherwise)
+     * 3. Navigate to Studio with audience UUID
+     * 4. Wait for data to load
+     * 5. Fire EXPORT_CSV server action
+     * 6. Parse GCS URL from RSC response
+     * 7. Return the download URL
+     */
+    static async exportAudience(audienceId: string): Promise<{ success: boolean; csvUrl?: string; error?: string }> {
+        const { page } = await this.getSession();
+        const ACCOUNT_ID = 'fceffb3b-552d-413a-9442-e62e9d423aa0';
+
+        const SELECTED_FIELDS = [
+            "AGE_RANGE", "BUSINESS_EMAIL", "CHILDREN", "COMPANY_ADDRESS", "COMPANY_CITY",
+            "COMPANY_DESCRIPTION", "COMPANY_DOMAIN", "COMPANY_EMPLOYEE_COUNT", "COMPANY_INDUSTRY",
+            "COMPANY_NAICS", "COMPANY_NAME", "COMPANY_NAME_HISTORY", "COMPANY_PHONE",
+            "COMPANY_REVENUE", "COMPANY_SIC", "COMPANY_STATE", "COMPANY_ZIP", "COMPANY_LINKEDIN_URL",
+            "PERSONAL_VERIFIED_EMAILS", "BUSINESS_VERIFIED_EMAILS", "DEPARTMENT", "DIRECT_NUMBER",
+            "DIRECT_NUMBER_DNC", "EDUCATION_HISTORY", "FACEBOOK_URL", "TWITTER_URL", "FIRST_NAME",
+            "GENDER", "HEADLINE", "HOMEOWNER", "INCOME_RANGE", "INFERRED_YEARS_EXPERIENCE",
+            "INTERESTS", "JOB_TITLE", "JOB_TITLE_HISTORY", "LAST_NAME", "LINKEDIN_URL", "MARRIED",
+            "MOBILE_PHONE", "MOBILE_PHONE_DNC", "NET_WORTH", "PERSONAL_ADDRESS", "PERSONAL_CITY",
+            "PERSONAL_EMAILS", "PERSONAL_PHONE", "PERSONAL_PHONE_DNC", "PERSONAL_STATE",
+            "PERSONAL_ZIP", "PERSONAL_ZIP4", "SENIORITY_LEVEL", "SHA256_BUSINESS_EMAIL",
+            "SHA256_PERSONAL_EMAIL", "SKILLS", "SKIPTRACE_ADDRESS", "SKIPTRACE_B2B_ADDRESS",
+            "SKIPTRACE_B2B_PHONE", "SKIPTRACE_B2B_SOURCE", "SKIPTRACE_B2B_WEBSITE", "SKIPTRACE_CITY",
+            "SKIPTRACE_CREDIT_RATING", "SKIPTRACE_DNC", "SKIPTRACE_ETHNIC_CODE", "SKIPTRACE_EXACT_AGE",
+            "SKIPTRACE_IP", "SKIPTRACE_LANDLINE_NUMBERS", "SKIPTRACE_LANGUAGE_CODE",
+            "SKIPTRACE_MATCH_SCORE", "SKIPTRACE_NAME", "SKIPTRACE_STATE", "SKIPTRACE_WIRELESS_NUMBERS",
+            "SKIPTRACE_ZIP", "SOCIAL_CONNECTIONS", "UUID", "VALID_PHONES"
+        ];
+
+        try {
+            // Ensure we're logged in and on the account dashboard
+            await this.catchUp(VacuumPhase.ACCOUNT_SET);
+
+            // Navigate to Studio for this audience (AFTER reload — critical for download availability)
+            const studioUrl = `${this.BASE_URL}/home/${this.WORKSPACE_SLUG}/studio?audience=${audienceId}`;
+            console.log(`[Vacuum Export] Navigating to studio: ${studioUrl}`);
+            await page.goto(studioUrl, { waitUntil: 'networkidle2', timeout: 60000 });
+            await new Promise(r => setTimeout(r, 2000));
+
+            // Wait for data to load — poll for "Loading Data" to disappear and row count > 0
+            console.log('[Vacuum Export] Waiting for studio data to load...');
+            const maxWait = 300000; // 5 minutes
+            const pollInterval = 2000;
+            const startWait = Date.now();
+
+            while (Date.now() - startWait < maxWait) {
+                const loadStatus = await page.evaluate(() => {
+                    // Search for any element containing "Loading Data" text
+                    const allText = document.body?.innerText || '';
+                    const isLoading = allText.includes('Loading Data') || allText.includes('loading');
+                    // Look for a row count number
+                    const rowMatch = allText.match(/Total\s*Rows[:\s]*\n?\s*([\d,]+)/i);
+                    const rowCount = rowMatch ? parseInt(rowMatch[1].replace(/,/g, '')) : 0;
+                    return { isLoading, rowCount };
+                });
+
+                if (!loadStatus.isLoading && loadStatus.rowCount > 0) {
+                    console.log(`[Vacuum Export] Data loaded. Total rows: ${loadStatus.rowCount.toLocaleString()}`);
+                    break;
+                }
+
+                const elapsed = Math.round((Date.now() - startWait) / 1000);
+                console.log(`[Vacuum Export] Still loading... (${elapsed}s) loading=${loadStatus.isLoading} rows=${loadStatus.rowCount}`);
+                await new Promise(r => setTimeout(r, pollInterval));
+            }
+
+            if (Date.now() - startWait >= maxWait) {
+                return { success: false, error: 'Timed out waiting for studio data to load' };
+            }
+
+            // Detect deployment ID
+            const deploymentId = await page.evaluate(() => {
+                const html = document.documentElement.outerHTML;
+                const m = html.match(/dpl_[A-Za-z0-9]+/);
+                return m ? m[0] : null;
+            });
+
+            if (!deploymentId) {
+                return { success: false, error: 'Could not detect deployment ID' };
+            }
+            console.log(`[Vacuum Export] Deployment ID: ${deploymentId}`);
+
+            // Build export payload
+            const pathname = `/home/${this.WORKSPACE_SLUG}/studio?audience=${audienceId}`;
+            const exportPayload = [{
+                audienceId: audienceId,
+                accountId: ACCOUNT_ID,
+                filters: { id: "root", operator: "AND", rules: [] },
+                selectedFields: SELECTED_FIELDS,
+                onlyFirstValueFields: [],
+                format: "csv",
+            }];
+
+            // Fire EXPORT_CSV server action with retry
+            const maxRetries = 6;
+            const retryDelay = 15000;
+            let lastResult: any = null;
+
+            for (let attempt = 1; attempt <= maxRetries; attempt++) {
+                console.log(`[Vacuum Export] Export attempt ${attempt}/${maxRetries}...`);
+
+                const result = await page.evaluate(async (pn: string, actionId: string, payload: any, depId: string) => {
+                    try {
+                        const res = await fetch(pn, {
+                            method: 'POST',
+                            headers: {
+                                'accept': 'text/x-component',
+                                'content-type': 'text/plain;charset=UTF-8',
+                                'next-action': actionId,
+                                'x-deployment-id': depId,
+                            },
+                            body: JSON.stringify(payload),
+                        });
+                        const text = await res.text();
+                        return { status: res.status, ok: res.ok, text };
+                    } catch (e: any) {
+                        return { error: e.message };
+                    }
+                }, pathname, ACTION_IDS.EXPORT_CSV, exportPayload, deploymentId);
+
+                lastResult = result;
+                console.log(`[Vacuum Export] Attempt ${attempt} → status: ${result.status || 'error'}`);
+
+                if (result.ok) break;
+
+                if (result.status === 404) {
+                    return { success: false, error: 'Export action ID stale (404). Need to re-capture from DevTools.' };
+                }
+
+                if (attempt < maxRetries) {
+                    console.log(`[Vacuum Export] Server not ready — retrying in ${retryDelay / 1000}s...`);
+                    await new Promise(r => setTimeout(r, retryDelay));
+                }
+            }
+
+            if (!lastResult?.ok) {
+                return { success: false, error: `Export failed after ${maxRetries} attempts: ${lastResult?.text?.substring(0, 200) || lastResult?.error}` };
+            }
+
+            // Parse GCS URL from RSC response
+            const fileUrlMatch = lastResult.text?.match(/"fileUrl"\s*:\s*"([^"]+)"/);
+            if (!fileUrlMatch) {
+                return { success: false, error: `No fileUrl in response: ${lastResult.text?.substring(0, 300)}` };
+            }
+
+            const csvUrl = fileUrlMatch[1];
+            console.log(`[Vacuum Export] CSV URL: ${csvUrl}`);
+
+            return { success: true, csvUrl };
+        } catch (err: any) {
+            console.error('[Vacuum Export] Failed:', err.message);
+            return { success: false, error: err.message };
+        }
+    }
+
+    /**
+     * COMPLETE POST-GENERATION RETRIEVAL FLOW
+     *
+     * After an audience has been generated on IntentCore, this method:
+     * 1. Navigate to the audience LIST page (/home/simple-audience)
+     * 2. Find the audience row BY NAME in the table
+     * 3. Poll its status until "Completed" (handles Hydrating, Processing, etc.)
+     * 4. REFRESH the page (critical — download modal won't work without this)
+     * 5. Navigate to Studio page for this audience
+     * 6. Wait for Studio data to load
+     * 7. Fire EXPORT_CSV server action
+     * 8. Parse GCS download URL from response
+     * 9. Return the URL
+     *
+     * @param audienceName — The exact name to search for in the list table
+     * @param intentcoreId — The IntentCore audience UUID (for Studio navigation)
+     * @param timeoutMs — Max time to wait for Completed status (default 10 min)
+     */
+    static async retrieveGeneratedCSV(
+        audienceName: string,
+        intentcoreId: string,
+        timeoutMs: number = 600000
+    ): Promise<{ success: boolean; csvUrl?: string; status?: string; error?: string }> {
+        const { page } = await this.getSession();
+        const ACCOUNT_ID = 'fceffb3b-552d-413a-9442-e62e9d423aa0';
+        const listUrl = `${this.BASE_URL}/home/${this.WORKSPACE_SLUG}`;
+        const studioUrl = `${this.BASE_URL}/home/${this.WORKSPACE_SLUG}/studio?audience=${intentcoreId}`;
+
+        const SELECTED_FIELDS = [
+            "AGE_RANGE", "BUSINESS_EMAIL", "CHILDREN", "COMPANY_ADDRESS", "COMPANY_CITY",
+            "COMPANY_DESCRIPTION", "COMPANY_DOMAIN", "COMPANY_EMPLOYEE_COUNT", "COMPANY_INDUSTRY",
+            "COMPANY_NAICS", "COMPANY_NAME", "COMPANY_NAME_HISTORY", "COMPANY_PHONE",
+            "COMPANY_REVENUE", "COMPANY_SIC", "COMPANY_STATE", "COMPANY_ZIP", "COMPANY_LINKEDIN_URL",
+            "PERSONAL_VERIFIED_EMAILS", "BUSINESS_VERIFIED_EMAILS", "DEPARTMENT", "DIRECT_NUMBER",
+            "DIRECT_NUMBER_DNC", "EDUCATION_HISTORY", "FACEBOOK_URL", "TWITTER_URL", "FIRST_NAME",
+            "GENDER", "HEADLINE", "HOMEOWNER", "INCOME_RANGE", "INFERRED_YEARS_EXPERIENCE",
+            "INTERESTS", "JOB_TITLE", "JOB_TITLE_HISTORY", "LAST_NAME", "LINKEDIN_URL", "MARRIED",
+            "MOBILE_PHONE", "MOBILE_PHONE_DNC", "NET_WORTH", "PERSONAL_ADDRESS", "PERSONAL_CITY",
+            "PERSONAL_EMAILS", "PERSONAL_PHONE", "PERSONAL_PHONE_DNC", "PERSONAL_STATE",
+            "PERSONAL_ZIP", "PERSONAL_ZIP4", "SENIORITY_LEVEL", "SHA256_BUSINESS_EMAIL",
+            "SHA256_PERSONAL_EMAIL", "SKILLS", "SKIPTRACE_ADDRESS", "SKIPTRACE_B2B_ADDRESS",
+            "SKIPTRACE_B2B_PHONE", "SKIPTRACE_B2B_SOURCE", "SKIPTRACE_B2B_WEBSITE", "SKIPTRACE_CITY",
+            "SKIPTRACE_CREDIT_RATING", "SKIPTRACE_DNC", "SKIPTRACE_ETHNIC_CODE", "SKIPTRACE_EXACT_AGE",
+            "SKIPTRACE_IP", "SKIPTRACE_LANDLINE_NUMBERS", "SKIPTRACE_LANGUAGE_CODE",
+            "SKIPTRACE_MATCH_SCORE", "SKIPTRACE_NAME", "SKIPTRACE_STATE", "SKIPTRACE_WIRELESS_NUMBERS",
+            "SKIPTRACE_ZIP", "SOCIAL_CONNECTIONS", "UUID", "VALID_PHONES"
+        ];
+
+        try {
+            // ═══════════════════════════════════════════════════
+            // STEP 1: Navigate to audience list page
+            // ═══════════════════════════════════════════════════
+            console.log(`[Retrieve] Step 1: Navigating to audience list: ${listUrl}`);
+            await page.goto(listUrl, { waitUntil: 'load', timeout: 30000 });
+            await new Promise(r => setTimeout(r, 2000));
+
+            // Wait for the table to appear
+            await page.waitForFunction(() => {
+                return document.querySelectorAll('tr').length > 1 ||
+                       document.querySelector('table') !== null;
+            }, { timeout: 15000 }).catch(() => {
+                console.log('[Retrieve] Warning: Table not found immediately, continuing...');
+            });
+
+            // ═══════════════════════════════════════════════════
+            // STEP 2: Find audience row by name and poll status
+            // ═══════════════════════════════════════════════════
+            console.log(`[Retrieve] Step 2: Polling status for "${audienceName}"...`);
+            const rowXPath = `//tr[contains(., "${audienceName}")]`;
+            const startPoll = Date.now();
+            let lastStatus = 'UNKNOWN';
+
+            while (Date.now() - startPoll < timeoutMs) {
+                const statusText = await page.evaluate((xpath: string) => {
+                    try {
+                        const result = document.evaluate(xpath, document, null, 9, null);
+                        const row = result.singleNodeValue as HTMLElement | null;
+                        if (!row) return 'ROW_NOT_FOUND';
+                        const text = row.innerText || '';
+                        // Extract status from row text
+                        if (text.includes('Completed') || text.includes('completed')) return 'COMPLETED';
+                        if (text.includes('Hydrating') || text.includes('hydrating')) return 'HYDRATING';
+                        if (text.includes('Processing') || text.includes('processing')) return 'PROCESSING';
+                        if (text.includes('Generating') || text.includes('generating')) return 'GENERATING';
+                        if (text.includes('Failed') || text.includes('failed')) return 'FAILED';
+                        if (text.includes('Active') || text.includes('active')) return 'ACTIVE';
+                        if (text.includes('Queued') || text.includes('queued')) return 'QUEUED';
+                        return 'UNKNOWN: ' + text.substring(0, 100);
+                    } catch (e: any) {
+                        return 'ERROR: ' + e.message;
+                    }
+                }, rowXPath);
+
+                lastStatus = statusText;
+                const elapsed = Math.round((Date.now() - startPoll) / 1000);
+                console.log(`[Retrieve] [${elapsed}s] Status: ${statusText}`);
+
+                if (statusText === 'COMPLETED' || statusText === 'ACTIVE') {
+                    console.log(`[Retrieve] Step 2 done: audience is ${statusText}`);
+                    break;
+                }
+
+                if (statusText === 'FAILED') {
+                    return { success: false, status: 'FAILED', error: 'IntentCore generation failed' };
+                }
+
+                // Wait 5 seconds then reload the page to get fresh status
+                await new Promise(r => setTimeout(r, 5000));
+                await page.reload({ waitUntil: 'load', timeout: 30000 });
+                await new Promise(r => setTimeout(r, 2000));
+            }
+
+            if (lastStatus !== 'COMPLETED' && lastStatus !== 'ACTIVE') {
+                return { success: false, status: lastStatus, error: `Timed out waiting for Completed (last: ${lastStatus})` };
+            }
+
+            // ═══════════════════════════════════════════════════
+            // STEP 3: REFRESH the page (critical for download)
+            // ═══════════════════════════════════════════════════
+            console.log('[Retrieve] Step 3: Refreshing page (required for download modal)...');
+            await page.reload({ waitUntil: 'load', timeout: 30000 });
+            await new Promise(r => setTimeout(r, 3000));
+
+            // ═══════════════════════════════════════════════════
+            // STEP 4: Navigate to Studio for this audience
+            // ═══════════════════════════════════════════════════
+            console.log(`[Retrieve] Step 4: Navigating to Studio: ${studioUrl}`);
+            await page.goto(studioUrl, { waitUntil: 'networkidle2', timeout: 60000 });
+            await new Promise(r => setTimeout(r, 2000));
+
+            // ═══════════════════════════════════════════════════
+            // STEP 5: Wait for Studio data to load
+            // ═══════════════════════════════════════════════════
+            console.log('[Retrieve] Step 5: Waiting for Studio data...');
+            const maxDataWait = 300000; // 5 min
+            const dataStart = Date.now();
+
+            while (Date.now() - dataStart < maxDataWait) {
+                const loadStatus = await page.evaluate(() => {
+                    const allText = document.body?.innerText || '';
+                    const isLoading = allText.toLowerCase().includes('loading data');
+                    const rowMatch = allText.match(/Total\s*Rows[:\s]*\n?\s*([\d,]+)/i);
+                    const rowCount = rowMatch ? parseInt(rowMatch[1].replace(/,/g, '')) : 0;
+                    return { isLoading, rowCount };
+                });
+
+                if (!loadStatus.isLoading && loadStatus.rowCount > 0) {
+                    console.log(`[Retrieve] Step 5 done: ${loadStatus.rowCount.toLocaleString()} rows loaded`);
+                    break;
+                }
+
+                const elapsed = Math.round((Date.now() - dataStart) / 1000);
+                if (elapsed % 10 === 0) {
+                    console.log(`[Retrieve] Still loading Studio... (${elapsed}s) loading=${loadStatus.isLoading} rows=${loadStatus.rowCount}`);
+                }
+                await new Promise(r => setTimeout(r, 2000));
+            }
+
+            // ═══════════════════════════════════════════════════
+            // STEP 6: Detect deployment ID
+            // ═══════════════════════════════════════════════════
+            const deploymentId = await page.evaluate(() => {
+                const html = document.documentElement.outerHTML;
+                const m = html.match(/dpl_[A-Za-z0-9]+/);
+                return m ? m[0] : null;
+            });
+
+            if (!deploymentId) {
+                return { success: false, error: 'Could not detect deployment ID on Studio page' };
+            }
+            console.log(`[Retrieve] Step 6: Deployment ID: ${deploymentId}`);
+
+            // ═══════════════════════════════════════════════════
+            // STEP 7: Fire EXPORT_CSV server action
+            // ═══════════════════════════════════════════════════
+            console.log('[Retrieve] Step 7: Firing CSV export...');
+            const pathname = `/home/${this.WORKSPACE_SLUG}/studio?audience=${intentcoreId}`;
+            const exportPayload = [{
+                audienceId: intentcoreId,
+                accountId: ACCOUNT_ID,
+                filters: { id: "root", operator: "AND", rules: [] },
+                selectedFields: SELECTED_FIELDS,
+                onlyFirstValueFields: [],
+                format: "csv",
+            }];
+
+            const maxRetries = 6;
+            const retryDelay = 15000;
+            let lastResult: any = null;
+
+            for (let attempt = 1; attempt <= maxRetries; attempt++) {
+                console.log(`[Retrieve] Export attempt ${attempt}/${maxRetries}...`);
+
+                const result = await page.evaluate(
+                    async (pn: string, actionId: string, payload: any, depId: string) => {
+                        try {
+                            const res = await fetch(pn, {
+                                method: 'POST',
+                                headers: {
+                                    'accept': 'text/x-component',
+                                    'content-type': 'text/plain;charset=UTF-8',
+                                    'next-action': actionId,
+                                    'x-deployment-id': depId,
+                                },
+                                body: JSON.stringify(payload),
+                            });
+                            const text = await res.text();
+                            return { status: res.status, ok: res.ok, text };
+                        } catch (e: any) {
+                            return { error: e.message };
+                        }
+                    },
+                    pathname,
+                    ACTION_IDS.EXPORT_CSV,
+                    exportPayload,
+                    deploymentId
+                );
+
+                lastResult = result;
+                console.log(`[Retrieve] Attempt ${attempt} → status: ${result.status || 'error'}`);
+
+                if (result.ok) break;
+
+                if (result.status === 404) {
+                    return { success: false, error: 'Export action ID stale (404). Need to re-capture.' };
+                }
+
+                if (attempt < maxRetries) {
+                    console.log(`[Retrieve] Server not ready — retrying in ${retryDelay / 1000}s...`);
+                    await new Promise(r => setTimeout(r, retryDelay));
+                }
+            }
+
+            if (!lastResult?.ok) {
+                return { success: false, error: `Export failed: ${lastResult?.text?.substring(0, 200) || lastResult?.error}` };
+            }
+
+            // ═══════════════════════════════════════════════════
+            // STEP 8: Parse GCS URL from RSC response
+            // ═══════════════════════════════════════════════════
+            const fileUrlMatch = lastResult.text?.match(/"fileUrl"\s*:\s*"([^"]+)"/);
+            if (!fileUrlMatch) {
+                return { success: false, error: `No fileUrl in export response: ${lastResult.text?.substring(0, 300)}` };
+            }
+
+            const csvUrl = fileUrlMatch[1];
+            console.log(`[Retrieve] Step 8 done: CSV URL obtained`);
+            console.log(`[Retrieve] ✅ RETRIEVAL COMPLETE`);
+
+            return { success: true, csvUrl, status: 'COMPLETED' };
+
+        } catch (err: any) {
+            console.error(`[Retrieve] FAILED: ${err.message}`);
+            return { success: false, error: err.message };
         }
     }
 }
