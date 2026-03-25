@@ -170,11 +170,12 @@ export class VacuumEngine {
             logger.info(`[Vacuum] 🛠️ Launching ${isHeadless ? 'Headless' : 'Headed'} Browser (${execPath})...`);
             this.browser = await puppeteer.launch({
                 executablePath: execPath,
-                headless: isHeadless,
+                headless: isHeadless ? 'new' : false,
                 args: [
                     '--no-sandbox', '--disable-setuid-sandbox', '--window-size=1280,1024',
-                    ...(isHeadless ? ['--disable-gpu', '--disable-dev-shm-usage'] : [])
+                    ...(isHeadless ? ['--disable-gpu', '--disable-dev-shm-usage', '--disable-software-rasterizer'] : [])
                 ],
+                timeout: 60000,
                 defaultViewport: isHeadless ? { width: 1280, height: 1024 } : null
             });
 
@@ -348,7 +349,7 @@ export class VacuumEngine {
                 logStep(`Navigating to ${this.WORKSPACE_SLUG} account (Current URL: ${currentUrl})...`);
                 try {
                     // Direct jump with immediate list detection
-                    await page.goto(`${this.BASE_URL}/home/${this.WORKSPACE_SLUG}`, { waitUntil: 'load', timeout: 30000 });
+                    await page.goto(`${this.BASE_URL}/home/${this.WORKSPACE_SLUG}`, { waitUntil: 'load', timeout: 60000 });
                     logger.info(`[Vacuum] Transitioned to ACCOUNT_SET. New URL: ${page.url()}`);
 
                     // Combined wait for either the Create button or an audience table row
@@ -362,13 +363,13 @@ export class VacuumEngine {
                         // Or look for audience table rows
                         const rows = document.querySelectorAll('tr');
                         return createBtn || rows.length > 5;
-                    }, { timeout: 30000 });
+                    }, { timeout: 60000 });
                 } catch (err: any) {
                     logger.warn(`⚠️ [Vacuum] Direct jump failed, falling back to click: ${err.message}`);
                     await page.waitForSelector(this.SELECTORS.ACCOUNT_CARD, { timeout: 10000 });
                     logger.info(`🚀 [Vacuum] CLICKING: Account Card (${this.WORKSPACE_SLUG})`);
                     await Promise.all([
-                        page.waitForNavigation({ waitUntil: 'load', timeout: 30000 }),
+                        page.waitForNavigation({ waitUntil: 'load', timeout: 60000 }),
                         page.click(this.SELECTORS.ACCOUNT_CARD)
                     ]);
                 }
@@ -395,7 +396,7 @@ export class VacuumEngine {
 
                 if (!currentUrl.includes(context.id)) {
                     logStep(`Direct Jump to Audience ID: ${context.id}`);
-                    await page.goto(audienceUrl, { waitUntil: 'load', timeout: 30000 });
+                    await page.goto(audienceUrl, { waitUntil: 'load', timeout: 60000 });
 
                     // Self-healing check
                     const isOuch = await page.evaluate(() => document.body.innerText.includes('Ouch!'));
@@ -459,7 +460,7 @@ export class VacuumEngine {
                 const baseHost = new URL(this.BASE_URL).hostname;
                 if (!currentUrl.includes(baseHost) || currentUrl.includes('sign-in')) {
                     logger.info(`[Vacuum] 🧱 Not on site or on sign-in page, navigating to auth on ${baseHost}...`);
-                    await page.goto(`${this.BASE_URL}/auth/sign-in`, { waitUntil: 'load', timeout: 30000 });
+                    await page.goto(`${this.BASE_URL}/auth/sign-in`, { waitUntil: 'load', timeout: 60000 });
 
                     if (page.url().includes('sign-in')) {
                         logger.info('[Vacuum] 🔑 Performing login...');
@@ -480,7 +481,7 @@ export class VacuumEngine {
 
                         logger.info('[Vacuum] 🚀 Clicking login button...');
                         await Promise.all([
-                            page.waitForNavigation({ waitUntil: 'load', timeout: 30000 }),
+                            page.waitForNavigation({ waitUntil: 'load', timeout: 60000 }),
                             page.click('button[type="submit"]')
                         ]);
                         logger.info('[Vacuum] ✅ Login successful.');
@@ -496,7 +497,7 @@ export class VacuumEngine {
                 const isOnDashboard = currentNavUrl === dashboardUrl || currentNavUrl === dashboardUrl + '/';
                 if (!isOnDashboard) {
                     logger.info(`[Vacuum] Navigating to ${this.WORKSPACE_SLUG} account dashboard (was: ${currentNavUrl})...`);
-                    await page.goto(dashboardUrl, { waitUntil: 'load', timeout: 30000 });
+                    await page.goto(dashboardUrl, { waitUntil: 'load', timeout: 60000 });
                 }
 
                 // Wait for dashboard content to load
@@ -506,7 +507,7 @@ export class VacuumEngine {
                     const createBtn = btns.some(b => b.textContent?.trim().includes('Create') && b.offsetParent !== null);
                     const rows = document.querySelectorAll('tr');
                     return createBtn || rows.length > 5;
-                }, { timeout: 30000 });
+                }, { timeout: 60000 });
 
                 this.currentPhase = VacuumPhase.ACCOUNT_SET;
                 logger.info('[Vacuum] ✅ Dashboard loaded. Clicking Create button...');
@@ -584,7 +585,7 @@ export class VacuumEngine {
         await page.waitForFunction(() => {
             const btns = Array.from(document.querySelectorAll('button'));
             return btns.some(b => b.textContent?.trim().includes('Create') && b.offsetParent !== null);
-        }, { timeout: 30000 });
+        }, { timeout: 60000 });
         await page.waitForTimeout(300); // Small settle buffer
 
         // Click via JS evaluate (most reliable across DOM structures)
@@ -631,7 +632,7 @@ export class VacuumEngine {
 
         // Use page.evaluate for submit click (same reliable pattern as transitionToNamingReady)
         await Promise.all([
-            page.waitForNavigation({ waitUntil: 'load', timeout: 30000 }),
+            page.waitForNavigation({ waitUntil: 'load', timeout: 60000 }),
             page.evaluate(() => {
                 // Find submit button inside the dialog form: primary-styled or type=submit
                 const dialog = document.querySelector('div[role="dialog"]');
@@ -739,7 +740,7 @@ export class VacuumEngine {
             if (existingFound) {
                 logTime(`Found "${name}". Navigating...`);
                 await Promise.all([
-                    page.waitForNavigation({ waitUntil: 'load', timeout: 30000 }),
+                    page.waitForNavigation({ waitUntil: 'load', timeout: 60000 }),
                     page.click(rowSelector)
                 ]);
 
@@ -1290,7 +1291,7 @@ export class VacuumEngine {
         const dashboardUrl = `${this.BASE_URL}/home/${this.WORKSPACE_SLUG}`;
         if (!currentUrl.startsWith(dashboardUrl) || currentUrl.includes('/audience/')) {
             logger.info(`[Vacuum] Navigating to dashboard for search...`);
-            await page.goto(dashboardUrl, { waitUntil: 'load', timeout: 30000 });
+            await page.goto(dashboardUrl, { waitUntil: 'load', timeout: 60000 });
         }
 
         // Dismiss any open modal (press Escape)
@@ -1321,7 +1322,7 @@ export class VacuumEngine {
         logger.info(`[Vacuum] Clicking edit button for first result...`);
 
         await Promise.all([
-            page.waitForNavigation({ waitUntil: 'load', timeout: 30000 }),
+            page.waitForNavigation({ waitUntil: 'load', timeout: 60000 }),
             page.evaluate((xpath: string) => {
                 const result = document.evaluate(xpath, document, null, 9, null);
                 const el = result.singleNodeValue as HTMLElement;
@@ -1680,7 +1681,7 @@ export class VacuumEngine {
             // STEP 1: Navigate to audience list page
             // ═══════════════════════════════════════════════════
             console.log(`[Retrieve] Step 1: Navigating to audience list: ${listUrl}`);
-            await page.goto(listUrl, { waitUntil: 'load', timeout: 30000 });
+            await page.goto(listUrl, { waitUntil: 'load', timeout: 60000 });
             await new Promise(r => setTimeout(r, 2000));
 
             // Wait for the table to appear
@@ -1735,7 +1736,7 @@ export class VacuumEngine {
 
                 // Wait 5 seconds then reload the page to get fresh status
                 await new Promise(r => setTimeout(r, 5000));
-                await page.reload({ waitUntil: 'load', timeout: 30000 });
+                await page.reload({ waitUntil: 'load', timeout: 60000 });
                 await new Promise(r => setTimeout(r, 2000));
             }
 
@@ -1747,7 +1748,7 @@ export class VacuumEngine {
             // STEP 3: REFRESH the page (critical for download)
             // ═══════════════════════════════════════════════════
             console.log('[Retrieve] Step 3: Refreshing page (required for download modal)...');
-            await page.reload({ waitUntil: 'load', timeout: 30000 });
+            await page.reload({ waitUntil: 'load', timeout: 60000 });
             await new Promise(r => setTimeout(r, 3000));
 
             // ═══════════════════════════════════════════════════
