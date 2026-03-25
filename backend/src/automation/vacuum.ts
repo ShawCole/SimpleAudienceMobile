@@ -1852,23 +1852,33 @@ export class VacuumEngine {
                 if (result.ok) break;
 
                 if (result.status === 404 && attempt === 1) {
-                    // Auto-discover fresh export action ID by scanning page JS for action IDs
-                    console.log('[Retrieve] Export action ID stale (404). Scanning page source for action IDs...');
+                    // Auto-discover fresh export action ID by fetching JS chunks and scanning for action IDs
+                    console.log('[Retrieve] Export action ID stale (404). Scanning JS chunks for action IDs...');
                     try {
-                        // Scan all script elements and inline JS for 7f-prefixed hex strings (action IDs)
-                        const candidates = await page.evaluate(() => {
+                        const candidates = await page.evaluate(async () => {
                             const ids = new Set<string>();
-                            // Scan all script tags
+                            // 1. Scan inline scripts and __next_f
                             document.querySelectorAll('script').forEach(s => {
                                 const text = s.textContent || '';
                                 const matches = text.matchAll(/["']?(7f[0-9a-f]{38,48})["']?/g);
                                 for (const m of matches) ids.add(m[1]);
                             });
-                            // Also scan __next_f data
                             if ((window as any).__next_f) {
                                 const nf = JSON.stringify((window as any).__next_f);
                                 const matches = nf.matchAll(/7f[0-9a-f]{38,48}/g);
                                 for (const m of matches) ids.add(m[0]);
+                            }
+                            // 2. Fetch and scan JS chunk files referenced on the page
+                            const scriptSrcs = [...document.querySelectorAll('script[src]')]
+                                .map(s => (s as HTMLScriptElement).src)
+                                .filter(src => src.includes('_next/static/chunks'));
+                            for (const src of scriptSrcs.slice(0, 20)) { // Limit to 20 chunks
+                                try {
+                                    const res = await fetch(src);
+                                    const text = await res.text();
+                                    const matches = text.matchAll(/["']?(7f[0-9a-f]{38,48})["']?/g);
+                                    for (const m of matches) ids.add(m[1]);
+                                } catch {}
                             }
                             return [...ids];
                         });
