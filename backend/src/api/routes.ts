@@ -316,6 +316,106 @@ export function createRouter(
   });
 
   /**
+   * Vacuum: Deep DOM analysis — full interactive surface map
+   * Returns every clickable element, form input, heading, table, dialog,
+   * with positions, aria labels, data attributes, and CSS paths.
+   */
+  router.get('/vacuum/analyze', async (req: Request, res: Response) => {
+    try {
+      const analysis = await VacuumEngine.deepAnalyze();
+      res.json({ success: true, data: analysis });
+    } catch (error: any) {
+      logger.error('Deep analysis failed', error);
+      res.status(500).json({ success: false, error: { code: 'ANALYZE_ERROR', message: error.message } });
+    }
+  });
+
+  /**
+   * Vacuum: Discover action ID by clicking a button
+   * Clicks a button matching the given text and intercepts the Next.js server action request.
+   * Returns the captured action ID, router state tree, request body, and response.
+   *
+   * Body: { buttonText: string, confirmText?: string, timeout?: number }
+   */
+  router.post('/vacuum/discover-action', async (req: Request, res: Response) => {
+    try {
+      const { buttonText, confirmText, timeout } = req.body;
+      if (!buttonText) {
+        return res.status(400).json({ success: false, error: { message: 'buttonText is required' } });
+      }
+      const result = await VacuumEngine.discoverActionByClick(buttonText, { confirmText, timeout });
+      res.json({ success: true, data: result });
+    } catch (error: any) {
+      logger.error('Action discovery failed', error);
+      res.status(500).json({ success: false, error: { code: 'DISCOVER_ERROR', message: error.message } });
+    }
+  });
+
+  /**
+   * Vacuum: Click a button by text and return the page state after
+   * Useful for navigating through UI flows (save segment, open dialogs, etc.)
+   *
+   * Body: { buttonText: string, waitMs?: number }
+   */
+  router.post('/vacuum/click', async (req: Request, res: Response) => {
+    try {
+      const { buttonText, waitMs } = req.body;
+      if (!buttonText) {
+        return res.status(400).json({ success: false, error: { message: 'buttonText is required' } });
+      }
+      const { page } = await (VacuumEngine as any).getSession();
+      const clicked = await page.evaluate((searchText: string) => {
+        const lower = searchText.toLowerCase();
+        const buttons = Array.from(document.querySelectorAll('button, [role="button"], a'));
+        for (const btn of buttons) {
+          const btnText = (btn.textContent || '').trim().toLowerCase();
+          if (btnText.includes(lower) && (btn as HTMLElement).offsetParent !== null) {
+            (btn as HTMLElement).click();
+            return btnText;
+          }
+        }
+        return null;
+      }, buttonText);
+
+      if (!clicked) {
+        const allButtons = await page.evaluate(() =>
+          Array.from(document.querySelectorAll('button'))
+            .filter((b: any) => b.offsetParent !== null)
+            .map((b: any) => (b.textContent || '').trim())
+            .filter((t: string) => t.length > 0 && t.length < 80)
+        );
+        return res.status(404).json({ success: false, error: { message: `No button matching "${buttonText}"`, visibleButtons: allButtons } });
+      }
+
+      await new Promise(r => setTimeout(r, waitMs || 2000));
+      const snapshot = await VacuumEngine.getPageSnapshot();
+      res.json({ success: true, data: { clicked, snapshot } });
+    } catch (error: any) {
+      logger.error('Click failed', error);
+      res.status(500).json({ success: false, error: { code: 'CLICK_ERROR', message: error.message } });
+    }
+  });
+
+  /**
+   * Vacuum: Navigate to a URL
+   * Body: { url: string }
+   */
+  router.post('/vacuum/goto', async (req: Request, res: Response) => {
+    try {
+      const { url } = req.body;
+      if (!url) return res.status(400).json({ success: false, error: { message: 'url is required' } });
+      const { page } = await (VacuumEngine as any).getSession();
+      await page.goto(url, { waitUntil: 'load', timeout: 60000 });
+      await new Promise(r => setTimeout(r, 2000));
+      const snapshot = await VacuumEngine.getPageSnapshot();
+      res.json({ success: true, data: snapshot });
+    } catch (error: any) {
+      logger.error('Goto failed', error);
+      res.status(500).json({ success: false, error: { code: 'GOTO_ERROR', message: error.message } });
+    }
+  });
+
+  /**
    * Vacuum: Check Audience Status
    */
   router.get('/audiences/:id/status', async (req: Request, res: Response) => {

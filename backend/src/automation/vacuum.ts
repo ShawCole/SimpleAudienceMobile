@@ -1787,171 +1787,175 @@ export class VacuumEngine {
             }
 
             // ═══════════════════════════════════════════════════
-            // STEP 6: Detect deployment ID
+            // STEP 6: Save segment if needed (required before download)
             // ═══════════════════════════════════════════════════
-            const deploymentId = await page.evaluate(() => {
-                const html = document.documentElement.outerHTML;
-                const m = html.match(/dpl_[A-Za-z0-9]+/);
-                return m ? m[0] : null;
+            const pageButtons = await page.evaluate(() =>
+                Array.from(document.querySelectorAll('button'))
+                    .filter(b => (b as HTMLElement).offsetParent !== null)
+                    .map(b => (b.textContent || '').trim())
+                    .filter(t => t.length > 0 && t.length < 80)
+            );
+            console.log(`[Retrieve] Step 6: Buttons on Studio page: ${JSON.stringify(pageButtons)}`);
+
+            const hasSaveBtn = pageButtons.some((t: string) => t.toLowerCase().includes('save'));
+            const hasDownloadBtn = pageButtons.some((t: string) => {
+                const l = t.toLowerCase();
+                return l.includes('download') || (l.includes('export') && !l.includes('import'));
             });
 
-            if (!deploymentId) {
-                return { success: false, error: 'Could not detect deployment ID on Studio page' };
+            if (hasSaveBtn && !hasDownloadBtn) {
+                // Need to save a segment first
+                const saveText = pageButtons.find((t: string) => t.toLowerCase().includes('save first'))
+                    || pageButtons.find((t: string) => t.toLowerCase().includes('save current'))
+                    || pageButtons.find((t: string) => t.toLowerCase().includes('save'));
+                console.log(`[Retrieve] Saving segment via: "${saveText}"...`);
+
+                try {
+                    const saveResult = await this.discoverActionByClick(saveText!, { timeout: 30000 });
+                    console.log(`[Retrieve] Segment saved. Action ID: ${saveResult.actionId}, Response: ${saveResult.response?.status}`);
+
+                    // Wait for segment to materialize, then reload
+                    await new Promise(r => setTimeout(r, 5000));
+                    await page.reload({ waitUntil: 'networkidle2', timeout: 60000 });
+                    await new Promise(r => setTimeout(r, 3000));
+                    console.log('[Retrieve] Step 6 done: segment saved, page reloaded');
+                } catch (saveErr: any) {
+                    console.log(`[Retrieve] Segment save failed: ${saveErr.message}. Continuing...`);
+                }
+            } else {
+                console.log(`[Retrieve] Step 6: ${hasDownloadBtn ? 'Download button already visible' : 'No save button found'}`);
             }
-            console.log(`[Retrieve] Step 6: Deployment ID: ${deploymentId}`);
 
             // ═══════════════════════════════════════════════════
-            // STEP 7: Fire EXPORT_CSV server action
+            // STEP 7: Find and click Download/Export button
             // ═══════════════════════════════════════════════════
-            console.log('[Retrieve] Step 7: Firing CSV export...');
-            const pathname = `/home/${this.WORKSPACE_SLUG}/studio?audience=${intentcoreId}`;
-            const exportPayload = [{
-                audienceId: intentcoreId,
-                accountId: ACCOUNT_ID,
-                filters: { id: "root", operator: "AND", rules: [] },
-                selectedFields: SELECTED_FIELDS,
-                onlyFirstValueFields: [],
-                format: "csv",
-            }];
+            console.log('[Retrieve] Step 7: Looking for Download/Export button...');
+            let csvUrl: string | null = null;
 
-            const maxRetries = 6;
-            const retryDelay = 15000;
-            let lastResult: any = null;
+            // Wait up to 30s for download button to appear
+            const dlStart = Date.now();
+            let downloadBtnText: string | null = null;
 
-            for (let attempt = 1; attempt <= maxRetries; attempt++) {
-                console.log(`[Retrieve] Export attempt ${attempt}/${maxRetries}...`);
+            while (Date.now() - dlStart < 30000) {
+                const btns = await page.evaluate(() =>
+                    Array.from(document.querySelectorAll('button'))
+                        .filter(b => (b as HTMLElement).offsetParent !== null)
+                        .map(b => (b.textContent || '').trim())
+                );
+                downloadBtnText = btns.find((t: string) => {
+                    const l = t.toLowerCase();
+                    return l.includes('download') || (l.includes('export') && !l.includes('import'));
+                }) || null;
+
+                if (downloadBtnText) break;
+                await new Promise(r => setTimeout(r, 2000));
+            }
+
+            if (downloadBtnText) {
+                console.log(`[Retrieve] Found: "${downloadBtnText}". Clicking + intercepting action...`);
+                try {
+                    const exportResult = await this.discoverActionByClick(downloadBtnText, { timeout: 60000 });
+
+                    // Cache discovered export action ID
+                    if (exportResult.actionId) {
+                        (ACTION_IDS as any).EXPORT_CSV = exportResult.actionId;
+                        console.log(`[Retrieve] Cached EXPORT_CSV action ID: ${exportResult.actionId}`);
+                    }
+
+                    // Parse GCS URL from response
+                    const body = exportResult.response?.body || '';
+                    const urlMatch = body.match(/"fileUrl"\s*:\s*"([^"]+)"/)
+                        || body.match(/(https:\/\/storage\.googleapis\.com\/[^\s"]+)/);
+                    if (urlMatch) {
+                        csvUrl = urlMatch[1];
+                    }
+
+                    // If no URL in immediate response, wait — export may be async
+                    if (!csvUrl && exportResult.response?.status === 200) {
+                        console.log('[Retrieve] Export accepted but no URL yet. Waiting for file generation...');
+                        await new Promise(r => setTimeout(r, 15000));
+
+                        // Check if a download link appeared on the page
+                        csvUrl = await page.evaluate(() => {
+                            const links = Array.from(document.querySelectorAll('a'));
+                            for (const a of links) {
+                                const href = a.getAttribute('href') || '';
+                                if (href.includes('storage.googleapis.com') || href.includes('.csv')) return href;
+                            }
+                            // Also check for any new text with GCS URLs
+                            const text = document.body?.innerText || '';
+                            const m = text.match(/(https:\/\/storage\.googleapis\.com\/[^\s]+)/);
+                            return m ? m[1] : null;
+                        });
+                    }
+                } catch (clickErr: any) {
+                    console.log(`[Retrieve] Download button click failed: ${clickErr.message}`);
+                }
+            } else {
+                console.log('[Retrieve] No download button found after 30s wait');
+            }
+
+            // ═══════════════════════════════════════════════════
+            // STEP 8: Fallback — direct fetch if button approach failed
+            // ═══════════════════════════════════════════════════
+            if (!csvUrl) {
+                console.log('[Retrieve] Step 8: Fallback direct fetch...');
+                const deploymentId = await page.evaluate(() => {
+                    const html = document.documentElement.outerHTML;
+                    const m = html.match(/dpl_[A-Za-z0-9]+/);
+                    return m ? m[0] : null;
+                });
+
+                const pathname = `/home/${this.WORKSPACE_SLUG}/studio?audience=${intentcoreId}`;
+                const exportPayload = [{
+                    audienceId: intentcoreId,
+                    accountId: ACCOUNT_ID,
+                    filters: { id: "root", operator: "AND", rules: [] },
+                    selectedFields: SELECTED_FIELDS,
+                    onlyFirstValueFields: [],
+                    format: "csv",
+                }];
 
                 const result = await page.evaluate(
-                    async (pn: string, actionId: string, payload: any, depId: string) => {
+                    async (pn: string, actionId: string, payload: any, depId: string | null) => {
                         try {
-                            const res = await fetch(pn, {
-                                method: 'POST',
-                                headers: {
-                                    'accept': 'text/x-component',
-                                    'content-type': 'text/plain;charset=UTF-8',
-                                    'next-action': actionId,
-                                    'x-deployment-id': depId,
-                                },
-                                body: JSON.stringify(payload),
-                            });
+                            const headers: Record<string, string> = {
+                                'accept': 'text/x-component',
+                                'content-type': 'text/plain;charset=UTF-8',
+                                'next-action': actionId,
+                            };
+                            if (depId) headers['x-deployment-id'] = depId;
+                            const res = await fetch(pn, { method: 'POST', headers, body: JSON.stringify(payload) });
                             const text = await res.text();
-                            return { status: res.status, ok: res.ok, text };
-                        } catch (e: any) {
-                            return { error: e.message };
-                        }
+                            return { status: res.status, ok: res.ok, text: text.substring(0, 2000) };
+                        } catch (e: any) { return { error: e.message }; }
                     },
-                    pathname,
-                    ACTION_IDS.EXPORT_CSV,
-                    exportPayload,
-                    deploymentId
+                    pathname, ACTION_IDS.EXPORT_CSV, exportPayload, deploymentId
                 );
 
-                lastResult = result;
-                console.log(`[Retrieve] Attempt ${attempt} → status: ${result.status || 'error'}`);
-
-                if (result.ok) break;
-
-                if (result.status === 404 && attempt === 1) {
-                    // Auto-discover fresh export action ID by fetching JS chunks and scanning for action IDs
-                    console.log('[Retrieve] Export action ID stale (404). Scanning JS chunks for action IDs...');
-                    try {
-                        const candidates = await page.evaluate(async () => {
-                            const ids = new Set<string>();
-                            // 1. Scan inline scripts and __next_f
-                            document.querySelectorAll('script').forEach(s => {
-                                const text = s.textContent || '';
-                                const matches = text.matchAll(/["']?(7f[0-9a-f]{38,48})["']?/g);
-                                for (const m of matches) ids.add(m[1]);
-                            });
-                            if ((window as any).__next_f) {
-                                const nf = JSON.stringify((window as any).__next_f);
-                                const matches = nf.matchAll(/7f[0-9a-f]{38,48}/g);
-                                for (const m of matches) ids.add(m[0]);
-                            }
-                            // 2. Fetch and scan JS chunk files referenced on the page
-                            const scriptSrcs = [...document.querySelectorAll('script[src]')]
-                                .map(s => (s as HTMLScriptElement).src)
-                                .filter(src => src.includes('_next/static/chunks'));
-                            for (const src of scriptSrcs.slice(0, 20)) { // Limit to 20 chunks
-                                try {
-                                    const res = await fetch(src);
-                                    const text = await res.text();
-                                    const matches = text.matchAll(/["']?(7f[0-9a-f]{38,48})["']?/g);
-                                    for (const m of matches) ids.add(m[1]);
-                                } catch {}
-                            }
-                            return [...ids];
-                        });
-
-                        console.log(`[Retrieve] Found ${candidates.length} candidate action IDs: ${candidates.join(', ')}`);
-
-                        // Filter out known IDs (preview, generate, create) — remaining ones are likely export/segment
-                        const knownIds = new Set([ACTION_IDS.PREVIEW, ACTION_IDS.GENERATE, ACTION_IDS.CREATE_AUDIENCE, ACTION_IDS.SAVE_SEGMENT]);
-                        const unknownIds = candidates.filter(id => !knownIds.has(id));
-                        console.log(`[Retrieve] Unknown action IDs (potential export): ${unknownIds.join(', ')}`);
-
-                        // Try each unknown ID
-                        for (const candidateId of unknownIds) {
-                            console.log(`[Retrieve] Trying candidate: ${candidateId}`);
-                            const tryResult = await page.evaluate(
-                                async (pn: string, actionId: string, payload: any, depId: string) => {
-                                    try {
-                                        const res = await fetch(pn, {
-                                            method: 'POST',
-                                            headers: {
-                                                'accept': 'text/x-component',
-                                                'content-type': 'text/plain;charset=UTF-8',
-                                                'next-action': actionId,
-                                                'x-deployment-id': depId,
-                                            },
-                                            body: JSON.stringify(payload),
-                                        });
-                                        return { status: res.status, ok: res.ok, text: (await res.text()).substring(0, 200) };
-                                    } catch (e: any) { return { error: e.message }; }
-                                },
-                                pathname, candidateId, exportPayload, deploymentId
-                            );
-
-                            if (tryResult.ok || (tryResult.status && tryResult.status < 404)) {
-                                console.log(`[Retrieve] Found working export action ID: ${candidateId}`);
-                                (ACTION_IDS as any).EXPORT_CSV = candidateId;
-                                lastResult = tryResult;
-                                break;
-                            }
-                            console.log(`[Retrieve] Candidate ${candidateId} returned ${tryResult.status}`);
-                        }
-
-                        if (lastResult?.ok) break; // Exit retry loop with success
-                    } catch (discErr: any) {
-                        console.log(`[Retrieve] Auto-discovery failed: ${discErr.message}`);
-                    }
-                    if (!lastResult?.ok) {
-                        return { success: false, error: 'Export action ID stale (404) and auto-discovery failed.' };
-                    }
-                } else if (result.status === 404) {
-                    return { success: false, error: 'Export action ID stale (404).' };
-                }
-
-                if (attempt < maxRetries) {
-                    console.log(`[Retrieve] Server not ready — retrying in ${retryDelay / 1000}s...`);
-                    await new Promise(r => setTimeout(r, retryDelay));
+                console.log(`[Retrieve] Fallback → status: ${result.status || 'error'}`);
+                if (result.ok) {
+                    const urlMatch = result.text?.match(/"fileUrl"\s*:\s*"([^"]+)"/);
+                    if (urlMatch) csvUrl = urlMatch[1];
                 }
             }
 
-            if (!lastResult?.ok) {
-                return { success: false, error: `Export failed: ${lastResult?.text?.substring(0, 200) || lastResult?.error}` };
+            if (!csvUrl) {
+                // Capture full page state for debugging
+                const debugBtns = await page.evaluate(() =>
+                    Array.from(document.querySelectorAll('button'))
+                        .filter(b => (b as HTMLElement).offsetParent !== null)
+                        .map(b => (b.textContent || '').trim())
+                        .filter(t => t.length > 0 && t.length < 50)
+                );
+                return {
+                    success: false,
+                    error: `Could not obtain CSV URL. Buttons: ${JSON.stringify(debugBtns)}`,
+                    status: 'EXPORT_FAILED'
+                };
             }
 
-            // ═══════════════════════════════════════════════════
-            // STEP 8: Parse GCS URL from RSC response
-            // ═══════════════════════════════════════════════════
-            const fileUrlMatch = lastResult.text?.match(/"fileUrl"\s*:\s*"([^"]+)"/);
-            if (!fileUrlMatch) {
-                return { success: false, error: `No fileUrl in export response: ${lastResult.text?.substring(0, 300)}` };
-            }
-
-            const csvUrl = fileUrlMatch[1];
-            console.log(`[Retrieve] Step 8 done: CSV URL obtained`);
+            console.log(`[Retrieve] CSV URL obtained: ${csvUrl.substring(0, 80)}...`);
             console.log(`[Retrieve] ✅ RETRIEVAL COMPLETE`);
 
             return { success: true, csvUrl, status: 'COMPLETED' };
