@@ -2,6 +2,7 @@ import puppeteer from 'puppeteer-extra';
 import StealthPlugin from 'puppeteer-extra-plugin-stealth';
 import { AudiencePayload } from '@shared/types/audience-payload';
 import logger from '../utils/logger';
+import { BrowserMutex } from '../utils/browser-mutex';
 import fs from 'fs';
 import path from 'path';
 
@@ -43,6 +44,7 @@ export class VacuumEngine {
     private static page: any | null = null;
     private static debug = process.env.DEBUG === 'true' || true;
     private static prewarmingPromise: Promise<any> | null = null;
+    private static mutex = new BrowserMutex();
     private static get BASE_URL() { return process.env.SIMPLEAUDIENCE_BASE_URL || 'https://app.intentcore.io'; }
     private static get WORKSPACE_SLUG() { return process.env.SIMPLEAUDIENCE_WORKSPACE_SLUG || 'bizypro'; }
 
@@ -440,6 +442,10 @@ export class VacuumEngine {
      * Pre-warm: Login ONLY (Phase 1)
      */
     static async prewarm() {
+        // NOTE: No mutex here — prewarm is called internally by catchUp() which is
+        // called by other locked methods (exportAudience, retrieveGeneratedCSV, etc.).
+        // Wrapping it would cause deadlock. The route handler at /vacuum/prewarm is the
+        // only external caller, and it's safe without the mutex since prewarm is idempotent.
         if (this.prewarmingPromise) {
             logger.info('[Vacuum] ⏳ Pre-warm already in progress, waiting...');
             return this.prewarmingPromise;
@@ -700,6 +706,8 @@ export class VacuumEngine {
      * Initialize Audience: Smart Entry (Find Existing OR Create)
      */
     static async initAudience(name: string) {
+        const release = await this.mutex.acquire(`initAudience(${name})`);
+        try {
         const start = performance.now();
         const logTime = (msg: string) => {
             const delta = ((performance.now() - start) / 1000).toFixed(3);
@@ -769,6 +777,9 @@ export class VacuumEngine {
         } catch (error: any) {
             logger.error(`[Vacuum] ❌ Init Audience Failed: ${error.message}`);
             throw error;
+        }
+        } finally {
+            release();
         }
     }
 
@@ -1009,6 +1020,126 @@ export class VacuumEngine {
         }
 
         return filters;
+    }
+
+    /**
+     * Generalized action discovery: clicks a button by its visible text label,
+     * intercepts the Next.js server action POST that fires, and returns the
+     * captured action ID along with the response body and status.
+     *
+     * Used by retrieveGeneratedCSV (Save Current, Download/Export) and the
+     * /vacuum/discover-action API endpoint.
+     */
+    static async discoverActionByClick(
+        buttonText: string,
+        options?: { confirmText?: string; timeout?: number }
+    ): Promise<{ actionId: string; response: any; status: number }> {
+        const { page } = await this.getSession();
+        const timeout = options?.timeout ?? 15000;
+
+        let capturedActionId: string | null = null;
+        let capturedStatus: number | null = null;
+        let capturedBody: string | null = null;
+        let resolved = false;
+
+        const onRequest = (req: any) => {
+            if (req.method() === 'POST' && req.headers()['next-action']) {
+                capturedActionId = req.headers()['next-action'];
+            }
+        };
+
+        const onResponse = async (res: any) => {
+            if (resolved) return;
+            try {
+                const req = res.request();
+                if (req.method() === 'POST' && req.headers()['next-action']) {
+                    capturedStatus = res.status();
+                    capturedBody = await res.text();
+                }
+            } catch (_) {
+                // Response body may not be available in some edge cases
+            }
+        };
+
+        page.on('request', onRequest);
+        page.on('response', onResponse);
+
+        try {
+            // Click the target button by matching textContent
+            const clicked = await page.evaluate((searchText: string) => {
+                const lower = searchText.toLowerCase().trim();
+                const buttons = Array.from(document.querySelectorAll('button'));
+                for (const btn of buttons) {
+                    const text = (btn.textContent || '').trim();
+                    if (text.toLowerCase() === lower || text.toLowerCase().includes(lower)) {
+                        (btn as HTMLElement).click();
+                        return true;
+                    }
+                }
+                return false;
+            }, buttonText);
+
+            if (!clicked) {
+                throw new Error(`No button found matching text: "${buttonText}"`);
+            }
+
+            logger.info(`[Vacuum] discoverActionByClick: clicked "${buttonText}"`);
+
+            // If a confirmation button is expected, wait then click it
+            if (options?.confirmText) {
+                await new Promise(r => setTimeout(r, 1000));
+                const confirmClicked = await page.evaluate((confirmText: string) => {
+                    const lower = confirmText.toLowerCase().trim();
+                    const buttons = Array.from(document.querySelectorAll('button'));
+                    for (const btn of buttons) {
+                        const text = (btn.textContent || '').trim();
+                        if (text.toLowerCase() === lower || text.toLowerCase().includes(lower)) {
+                            (btn as HTMLElement).click();
+                            return true;
+                        }
+                    }
+                    return false;
+                }, options.confirmText);
+
+                if (confirmClicked) {
+                    logger.info(`[Vacuum] discoverActionByClick: clicked confirm "${options.confirmText}"`);
+                } else {
+                    logger.warn(`[Vacuum] discoverActionByClick: confirm button "${options.confirmText}" not found, continuing...`);
+                }
+            }
+
+            // Poll until we capture both the action ID and response, or timeout
+            const start = Date.now();
+            while (Date.now() - start < timeout) {
+                if (capturedActionId && capturedBody !== null) {
+                    break;
+                }
+                await new Promise(r => setTimeout(r, 100));
+            }
+
+            if (!capturedActionId) {
+                throw new Error(
+                    `No Next.js server action intercepted within ${timeout}ms after clicking "${buttonText}". ` +
+                    `The button may not trigger a server action, or the page state may be unexpected.`
+                );
+            }
+
+            resolved = true;
+
+            logger.info(`[Vacuum] discoverActionByClick: captured action ${capturedActionId}, status ${capturedStatus}`);
+
+            return {
+                actionId: capturedActionId,
+                response: {
+                    body: capturedBody ?? '',
+                    status: capturedStatus ?? 0
+                },
+                status: capturedStatus ?? 0
+            };
+        } finally {
+            page.removeListener('request', onRequest);
+            page.removeListener('response', onResponse);
+        }
     }
 
     /**
@@ -1269,11 +1400,21 @@ export class VacuumEngine {
 
 
     static async preview(payload: AudiencePayload) {
-        return this.executeInjection(payload, 'PREVIEW');
+        const release = await this.mutex.acquire('preview');
+        try {
+            return await this.executeInjection(payload, 'PREVIEW');
+        } finally {
+            release();
+        }
     }
 
     static async generate(payload: AudiencePayload) {
-        return this.executeInjection(payload, 'GENERATE');
+        const release = await this.mutex.acquire('generate');
+        try {
+            return await this.executeInjection(payload, 'GENERATE');
+        } finally {
+            release();
+        }
     }
 
     /**
@@ -1284,6 +1425,8 @@ export class VacuumEngine {
      * Does NOT press Generate. Safe for read-only exploration.
      */
     static async navigateToAudience(name: string) {
+        const release = await this.mutex.acquire(`navigateToAudience(${name})`);
+        try {
         const { page } = await this.getSession();
 
         // Ensure we're on the dashboard
@@ -1339,25 +1482,35 @@ export class VacuumEngine {
         const audienceId = match ? match[1] : null;
 
         return { success: true, url: newUrl, audienceId };
+        } finally {
+            release();
+        }
     }
 
     /**
      * Take a screenshot of the current Puppeteer page
      */
     static async screenshot(filename?: string) {
-        const { page } = await this.getSession();
-        const screenshotDir = path.resolve(process.cwd(), 'logs', 'screenshots');
-        if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
-        const file = path.join(screenshotDir, filename || `screenshot-${Date.now()}.png`);
-        await page.screenshot({ path: file, fullPage: true });
-        logger.info(`[Vacuum] Screenshot saved: ${file}`);
-        return { success: true, path: file };
+        const release = await this.mutex.acquire('screenshot');
+        try {
+            const { page } = await this.getSession();
+            const screenshotDir = path.resolve(process.cwd(), 'logs', 'screenshots');
+            if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
+            const file = path.join(screenshotDir, filename || `screenshot-${Date.now()}.png`);
+            await page.screenshot({ path: file, fullPage: true });
+            logger.info(`[Vacuum] Screenshot saved: ${file}`);
+            return { success: true, path: file };
+        } finally {
+            release();
+        }
     }
 
     /**
      * Get full page DOM snapshot (text content, buttons, links, inputs visible)
      */
     static async getPageSnapshot() {
+        const release = await this.mutex.acquire('getPageSnapshot');
+        try {
         const { page } = await this.getSession();
         const snapshot = await page.evaluate(() => {
             const url = window.location.href;
@@ -1396,6 +1549,9 @@ export class VacuumEngine {
         });
 
         return snapshot;
+        } finally {
+            release();
+        }
     }
 
     static async checkStatus(audienceName: string) {
@@ -1479,6 +1635,8 @@ export class VacuumEngine {
      * 7. Return the download URL
      */
     static async exportAudience(audienceId: string): Promise<{ success: boolean; csvUrl?: string; error?: string }> {
+        const release = await this.mutex.acquire(`exportAudience(${audienceId})`);
+        try {
         const { page } = await this.getSession();
         const ACCOUNT_ID = 'fceffb3b-552d-413a-9442-e62e9d423aa0';
 
@@ -1598,8 +1756,30 @@ export class VacuumEngine {
 
                 if (result.ok) break;
 
-                if (result.status === 404) {
-                    return { success: false, error: 'Export action ID stale (404). Need to re-capture from DevTools.' };
+                if (result.status === 404 && attempt === 1) {
+                    // Stale action ID — use discoverActionByClick to find the fresh one
+                    console.log('[Vacuum Export] Action ID stale (404). Discovering fresh ID via Download button...');
+                    try {
+                        const discovered = await this.discoverActionByClick('Download', { timeout: 15000 });
+                        if (discovered.actionId) {
+                            (ACTION_IDS as any).EXPORT_CSV = discovered.actionId;
+                            console.log(`[Vacuum Export] Fresh EXPORT_CSV action ID: ${discovered.actionId}`);
+                            // If discovery already got the response, check if it has the file URL
+                            if (discovered.status === 200 && discovered.response) {
+                                const bodyText = typeof discovered.response === 'string' ? discovered.response : JSON.stringify(discovered.response);
+                                const urlMatch = bodyText.match(/"fileUrl"\s*:\s*"([^"]+)"/);
+                                if (urlMatch) {
+                                    const csvUrl = urlMatch[1];
+                                    console.log(`[Vacuum Export] CSV URL from discovery: ${csvUrl}`);
+                                    return { success: true, csvUrl };
+                                }
+                            }
+                            continue; // Retry with fresh action ID
+                        }
+                    } catch (discoverErr: any) {
+                        console.warn(`[Vacuum Export] Discovery failed: ${discoverErr.message}`);
+                    }
+                    return { success: false, error: 'Export action ID stale and discovery failed.' };
                 }
 
                 if (attempt < maxRetries) {
@@ -1626,6 +1806,9 @@ export class VacuumEngine {
             console.error('[Vacuum Export] Failed:', err.message);
             return { success: false, error: err.message };
         }
+        } finally {
+            release();
+        }
     }
 
     /**
@@ -1651,6 +1834,8 @@ export class VacuumEngine {
         intentcoreId: string,
         timeoutMs: number = 600000
     ): Promise<{ success: boolean; csvUrl?: string; status?: string; error?: string }> {
+        const release = await this.mutex.acquire(`retrieveGeneratedCSV(${audienceName})`);
+        try {
         const { page } = await this.getSession();
         const ACCOUNT_ID = 'fceffb3b-552d-413a-9442-e62e9d423aa0';
         const listUrl = `${this.BASE_URL}/home/${this.WORKSPACE_SLUG}`;
@@ -1677,6 +1862,11 @@ export class VacuumEngine {
         ];
 
         try {
+            // ═══════════════════════════════════════════════════
+            // STEP 0: Ensure browser is authenticated
+            // ═══════════════════════════════════════════════════
+            await this.catchUp(VacuumPhase.ACCOUNT_SET);
+
             // ═══════════════════════════════════════════════════
             // STEP 1: Navigate to audience list page
             // ═══════════════════════════════════════════════════
@@ -1842,10 +2032,11 @@ export class VacuumEngine {
                         .filter(b => (b as HTMLElement).offsetParent !== null)
                         .map(b => (b.textContent || '').trim())
                 );
-                downloadBtnText = btns.find((t: string) => {
-                    const l = t.toLowerCase();
-                    return l.includes('download') || (l.includes('export') && !l.includes('import'));
-                }) || null;
+                // Prefer "Download Export" over plain "Download" — plain Download may not trigger a server action
+                downloadBtnText = btns.find((t: string) => t.toLowerCase().includes('download export'))
+                    || btns.find((t: string) => t.toLowerCase().includes('export') && !t.toLowerCase().includes('import'))
+                    || btns.find((t: string) => t.toLowerCase() === 'download')
+                    || null;
 
                 if (downloadBtnText) break;
                 await new Promise(r => setTimeout(r, 2000));
@@ -1964,5 +2155,15 @@ export class VacuumEngine {
             console.error(`[Retrieve] FAILED: ${err.message}`);
             return { success: false, error: err.message };
         }
+        } finally {
+            release();
+        }
+    }
+
+    /**
+     * Get mutex status for monitoring/debugging.
+     */
+    static getMutexStatus() {
+        return { locked: this.mutex.isLocked, queueLength: this.mutex.queueLength };
     }
 }

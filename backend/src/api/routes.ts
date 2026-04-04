@@ -252,6 +252,18 @@ export function createRouter(
   });
 
   /**
+   * Vacuum: Mutex Status
+   * Check whether the browser mutex is locked and how many operations are queued.
+   */
+  router.get('/vacuum/mutex-status', (req: Request, res: Response) => {
+    const status = VacuumEngine.getMutexStatus();
+    res.json({
+      locked: status.locked,
+      queueLength: status.queueLength,
+    });
+  });
+
+  /**
    * Vacuum: Pre-warm Session
    * Launches headed browser and performs login to prepare for injection
    */
@@ -400,6 +412,18 @@ export function createRouter(
    * Vacuum: Navigate to a URL
    * Body: { url: string }
    */
+  router.post('/vacuum/eval', async (req: Request, res: Response) => {
+    try {
+      const { script } = req.body;
+      if (!script) return res.status(400).json({ success: false, error: { message: 'script is required' } });
+      const { page } = await (VacuumEngine as any).getSession();
+      const result = await page.evaluate(script);
+      res.json({ success: true, data: result });
+    } catch (error: any) {
+      res.status(500).json({ success: false, error: { message: error.message } });
+    }
+  });
+
   router.post('/vacuum/goto', async (req: Request, res: Response) => {
     try {
       const { url } = req.body;

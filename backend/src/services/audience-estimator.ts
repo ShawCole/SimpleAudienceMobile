@@ -237,63 +237,81 @@ const AGE_BRACKET_ORDER: Record<string, number> = {
  * Find the best retention table for a filter key given user's demographics.
  *
  * Match priority:
- *   1. Exact seniority + exact age → use that anchor
- *   2. Exact seniority + adjacent age → weighted blend by age distance
- *   3. Exact seniority + any age → average across all ages for that seniority
- *   4. No seniority match → average across all Homeowner anchors (global fallback)
- *
- * Only matches Homeowner anchors (Renter retention handled via Renter modifiers).
+ *   1. If Renter selected AND Renter L1 anchors exist → use them directly
+ *   2. Exact seniority + exact age → use that anchor
+ *   3. Exact seniority + adjacent age → weighted blend by age distance
+ *   4. Exact seniority + any age → average across all ages for that seniority
+ *   5. No seniority match → average across all anchors for that homeowner type
+ *   6. If Renter with no Renter anchors → fall back to HO anchors (caller applies modifiers)
  */
 function getRetentionTable(
   filterKey: string,
   selectedSeniorities: string[] | null,
   selectedAges: string[] | null,
-): { table: RetentionTable; matchedAnchor: string | null } {
+  homeownerStatus: 'Homeowner' | 'Renter' | 'blended' = 'blended',
+): { table: RetentionTable; matchedAnchor: string | null; directRenter: boolean } {
 
-  // Only use Homeowner L1 anchors (Renter retention = HO × renter modifier)
+  // Try Renter L1 anchors first when user selects Renter
+  if (homeownerStatus === 'Renter') {
+    const renterAnchors = L1_ANCHORS.filter(a => a.homeowner === 'Renter');
+    if (renterAnchors.length > 0) {
+      const result = matchAnchors(renterAnchors, filterKey, selectedSeniorities, selectedAges, 'Renter');
+      if (result.table && Object.keys(result.table).length > 0) {
+        return { ...result, directRenter: true };
+      }
+    }
+  }
+
+  // Use Homeowner L1 anchors (default path, or Renter fallback)
   const hoAnchors = L1_ANCHORS.filter(a => a.homeowner === 'Homeowner');
   if (hoAnchors.length === 0) {
-    return { table: {}, matchedAnchor: null };
+    return { table: {}, matchedAnchor: null, directRenter: false };
   }
 
-  // Find anchors matching the user's seniority
+  const result = matchAnchors(hoAnchors, filterKey, selectedSeniorities, selectedAges, 'HO');
+  return { ...result, directRenter: false };
+}
+
+/** Core anchor matching logic — shared between Homeowner and Renter paths */
+function matchAnchors(
+  anchors: L1Anchor[],
+  filterKey: string,
+  selectedSeniorities: string[] | null,
+  selectedAges: string[] | null,
+  label: string,
+): { table: RetentionTable; matchedAnchor: string | null } {
+
   const seniorities = selectedSeniorities?.length ? selectedSeniorities : null;
   const matchingSen = seniorities
-    ? hoAnchors.filter(a => seniorities.includes(a.seniority))
-    : hoAnchors; // no seniority → use all
+    ? anchors.filter(a => seniorities.includes(a.seniority))
+    : anchors;
 
   if (matchingSen.length === 0) {
-    // Seniority not in L1 data — fall back to all HO anchors
-    return blendAnchors(hoAnchors, filterKey, null, `global(${hoAnchors.length})`);
+    return blendAnchors(anchors, filterKey, null, `${label}-global(${anchors.length})`);
   }
 
-  // If user selected an age, try to match
   const userAge = selectedAges?.length === 1 ? selectedAges[0] : null;
 
   if (userAge && AGE_BRACKET_ORDER[userAge] != null) {
-    // Exact age match?
     const exact = matchingSen.filter(a => a.age === userAge);
     if (exact.length > 0) {
-      return blendAnchors(exact, filterKey, null, `${exact[0].seniority}@${userAge}`);
+      return blendAnchors(exact, filterKey, null, `${label}:${exact[0].seniority}@${userAge}`);
     }
 
-    // No exact → distance-weighted blend across all matching seniority anchors
     const userOrd = AGE_BRACKET_ORDER[userAge];
     const weighted: Array<{ anchor: L1Anchor; weight: number }> = [];
     for (const a of matchingSen) {
       const aOrd = AGE_BRACKET_ORDER[a.age];
       if (aOrd == null) { weighted.push({ anchor: a, weight: 1 }); continue; }
       const dist = Math.abs(userOrd - aOrd);
-      // Weight: 1/(1+dist) so exact=1.0, adjacent=0.5, 2-away=0.33, etc.
       weighted.push({ anchor: a, weight: 1 / (1 + dist) });
     }
     return blendAnchorsWeighted(weighted, filterKey,
-      `${seniorities!.join('+')}~${userAge}(${weighted.length})`);
+      `${label}:${seniorities!.join('+')}~${userAge}(${weighted.length})`);
   }
 
-  // No age or multiple ages → average across all matching seniority anchors
   return blendAnchors(matchingSen, filterKey, null,
-    `${matchingSen[0].seniority}(${matchingSen.length})`);
+    `${label}:${matchingSen[0].seniority}(${matchingSen.length})`);
 }
 
 /** Blend retention tables from multiple anchors (equal weight or by count) */
@@ -585,20 +603,131 @@ const RENTER_MODIFIERS: Record<string, RenterTierModifiers> = {
   },
 };
 
-// ── Upper-Tier Stacking Correction ──────────────────────────────────────────
+// ── Combo-Type Stacking Corrections (Apr 2, 2026 — 74 measured data points) ──
+//
+// Fixed correction factors don't work: HO Staff=0.51x pair vs HO CXO=1.22x pair.
+// New system: categorize enrichment filters into correlation groups, then look up
+// the correction based on which groups are being stacked.
+//
+// Correlation groups:
+//   'wealth' = credit_rating, incomeRange (financially correlated)
+//   'networth' = netWorth (sparse data, acts as selection gate — amplifies corrections)
+//   'education' = education (correlated with wealth but different dimension)
+//   'geo' = state (geographically independent — near-multiplicative)
+//   'industry' = industry (independent)
+//
+// Correction = f(homeowner_type, set_of_groups_involved)
 
-// Stacking corrections recalibrated for per-seniority tables (Mar 17).
-// Old values (global avg era): 2=1.44/2.27, 3=2.46/8.28, 4=4.86/13.0.
-// HO: per-seniority tables capture most correlation → corrections near 1.0.
-// Renter: Renter modifiers (0.38/0.44/0.20) compress retentions so aggressively
-//   that multiplicative independence breaks down → still needs real correction.
-// Measured from validation data (Staff anchor, F+25-34):
-//   HO pair=1.03x triple=1.21x  |  R pair=1.54x triple=5.23x
-const STACKING_CORRECTION: Record<string, { renter: number; homeowner: number }> = {
-  '2': { renter: 1.54, homeowner: 1.03 },
-  '3': { renter: 5.23, homeowner: 1.21 },
-  '4': { renter: 10.0, homeowner: 1.42 },
+type CorrectionGroup = 'wealth' | 'networth' | 'education' | 'geo' | 'industry';
+
+const FILTER_KEY_TO_GROUP: Record<string, CorrectionGroup> = {
+  'attributes.credit_rating': 'wealth',
+  'profile.incomeRange': 'wealth',
+  'profile.netWorth': 'networth',
+  'attributes.education': 'education',
+  'state': 'geo',
+  'businessProfile.industry': 'industry',
 };
+
+// ── Pure Interaction Coefficients (retention-based, Apr 3 2026) ──────────────
+// Derived from sweep data: actual_combo_retention / (retA × retB)
+// These measure ONLY filter correlation — independent of base or single-filter errors.
+// This means they generalize across anchors better than count-calibrated corrections.
+//
+// Loaded from stacking-validation-*.ndjson files at module init.
+// Keyed by "HO|comboLabel" or "Renter|comboLabel", value = median coefficient.
+
+const INTERACTION_COEFFICIENTS: Record<string, number> = {};
+
+try {
+  const stackDir = join(__dirname, '../../data/filter-explorer/calibration');
+  const stackFiles = readdirSync(stackDir).filter(f => f.startsWith('stacking-validation-') && f.endsWith('.ndjson'));
+  const byKey: Record<string, number[]> = {};
+  for (const file of stackFiles) {
+    const lines = readFileSync(join(stackDir, file), 'utf-8').trim().split('\n');
+    for (const line of lines) {
+      const d = JSON.parse(line);
+      if (!d.combo || d.stackingCorrection <= 0 || d.actualCount <= 0) continue;
+      const hoType = d.anchor.startsWith('HO:') ? 'HO' : 'Renter';
+      const key = `${hoType}|${d.combo}`;
+      if (!byKey[key]) byKey[key] = [];
+      byKey[key].push(d.stackingCorrection);
+    }
+  }
+  for (const [key, vals] of Object.entries(byKey)) {
+    const sorted = [...vals].sort((a, b) => a - b);
+    INTERACTION_COEFFICIENTS[key] = sorted[Math.floor(sorted.length / 2)]; // median
+  }
+  console.log(`[estimator] Loaded ${Object.keys(INTERACTION_COEFFICIENTS).length} interaction coefficients from ${stackFiles.length} files`);
+} catch (err) {
+  console.error('[estimator] Failed to load interaction coefficients:', err);
+}
+
+// Fallback group-based interaction coefficients for unmeasured combos
+// These are medians from measured data, grouped by filter category pattern
+const FALLBACK_INTERACTIONS: Record<string, { ho: number; renter: number }> = {
+  'wealth':                   { ho: 1.12, renter: 1.10 },  // credit+income
+  'wealth+networth':          { ho: 1.46, renter: 2.23 },  // credit+NW or income+NW
+  'wealth+education':         { ho: 1.86, renter: 2.49 },  // credit+edu
+  'wealth+geo':               { ho: 0.98, renter: 0.97 },  // credit+state (near-independent)
+  'networth+geo':             { ho: 1.46, renter: 2.26 },  // NW+state
+  'networth+education':       { ho: 1.50, renter: 2.30 },  // NW+edu (interpolated)
+  'education+geo':            { ho: 1.00, renter: 1.00 },  // edu+state (interpolated)
+  'wealth+networth+education': { ho: 2.44, renter: 4.08 },  // triple wealth+edu
+  'wealth+networth+geo':      { ho: 2.74, renter: 4.58 },  // triple wealth+geo
+  'wealth+education+geo':     { ho: 1.30, renter: 1.09 },  // triple mixed
+};
+
+/** Identify which correlation groups are present in the enrichment filters */
+function getStackingGroups(filters: FilterSpec[]): Set<CorrectionGroup> {
+  const groups = new Set<CorrectionGroup>();
+  for (const f of filters) {
+    const g = FILTER_KEY_TO_GROUP[f.key];
+    if (g) groups.add(g);
+  }
+  return groups;
+}
+
+/** Build a short label for a filter value (matches stacking-validation combo labels) */
+function filterShortName(f: FilterSpec): string {
+  const v = f.values[0] || '';
+  if (f.key === 'attributes.credit_rating') return v.includes('750') || v.includes('800') || v.includes('700') ? 'Cr750' : 'Cr650';
+  if (f.key === 'profile.incomeRange') return v.includes('100,000') || v.includes('150,000') || v.includes('200,000') || v.includes('250,000+') ? 'Inc100k' : 'Inc45k';
+  if (f.key === 'profile.netWorth') {
+    if (v.includes('750,000') || v.includes('999,999') || v.includes('1,000,000')) return 'NW750k';
+    return 'NW500k'; // Use NW500k as default for any upper NW
+  }
+  if (f.key === 'attributes.education') return v.includes('Bachelor') || v.includes('Master') || v.includes('Doctor') ? 'EduBach' : 'Edu';
+  if (f.key === 'state') return v.includes('California') ? 'CA' : v.includes('Texas') ? 'TX' : v;
+  return f.key;
+}
+
+/** Get the pure interaction coefficient for a set of enrichment filters.
+ *  Measures filter correlation independent of base/retention errors.
+ *  Generalizes across anchors because it's a property of the filters, not the population. */
+function getStackingCorrection(
+  enrichmentFilters: FilterSpec[],
+  isRenter: boolean,
+  _directRenter: boolean,
+  _selectedSeniorities: string[] | null,
+): number {
+  const groups = getStackingGroups(enrichmentFilters);
+  if (groups.size < 2) return 1.0;
+
+  const comboLabel = enrichmentFilters.map(filterShortName).join('+');
+  const hoType = isRenter ? 'Renter' : 'HO';
+
+  // Exact combo match from measured interaction data
+  const coeff = INTERACTION_COEFFICIENTS[`${hoType}|${comboLabel}`];
+  if (coeff) return coeff;
+
+  // Fallback: group-based interaction coefficient
+  const groupKey = [...groups].sort().join('+');
+  const fallback = FALLBACK_INTERACTIONS[groupKey];
+  if (fallback) return isRenter ? fallback.renter : fallback.ho;
+
+  return 1.0;
+}
 
 const UPPER_TIER_VALUES: Record<string, Set<string>> = {
   'attributes.credit_rating': new Set([
@@ -710,14 +839,6 @@ function countUpperTierFilters(filters: FilterSpec[]): number {
   return count;
 }
 
-function getStackingCorrection(upperCount: number, isRenter: boolean): number {
-  if (upperCount < 2) return 1.0;
-  const key = String(Math.min(upperCount, 4));
-  const entry = STACKING_CORRECTION[key];
-  if (!entry) return 1.0;
-  return isRenter ? entry.renter : entry.homeowner;
-}
-
 // ── Estimator ───────────────────────────────────────────────────────────────
 
 export function estimateAudienceSize(filters: FilterSpec[]): EstimateResult {
@@ -797,14 +918,16 @@ export function estimateAudienceSize(filters: FilterSpec[]): EstimateResult {
 
   let estimate = gridBase;
   let matchedAnchor: string | null = null;
+  let usingDirectRenter = false;
 
   for (const filter of enrichmentFilters) {
     const { key, values } = filter;
 
     // Per-anchor matched filters (enrichment + state + industry)
     if (ANCHOR_MATCHED_KEYS.has(key)) {
-      const { table: retentionTable, matchedAnchor: anchor } = getRetentionTable(key, selectedSeniorities, selectedAges);
+      const { table: retentionTable, matchedAnchor: anchor, directRenter } = getRetentionTable(key, selectedSeniorities, selectedAges, homeownerStatus);
       if (anchor && !matchedAnchor) matchedAnchor = anchor;
+      if (directRenter) usingDirectRenter = true;
 
       let totalRetention = 0;
       for (const v of values) {
@@ -818,8 +941,8 @@ export function estimateAudienceSize(filters: FilterSpec[]): EstimateResult {
           continue;
         }
 
-        // Apply renter modifier on top of anchor-matched retention (not for state/industry)
-        if (isRenter && key !== 'state' && key !== 'businessProfile.industry' && RENTER_MODIFIERS[key]) {
+        // Apply renter modifier ONLY when falling back to HO anchors (skip when using direct Renter L1 data)
+        if (isRenter && !directRenter && key !== 'state' && key !== 'businessProfile.industry' && RENTER_MODIFIERS[key]) {
           const mod = getRenterModifier(key, v);
           ret *= mod;
           renterModifiersApplied.push({ filter: key, value: v, modifier: mod });
@@ -850,15 +973,16 @@ export function estimateAudienceSize(filters: FilterSpec[]): EstimateResult {
     confidence = 'low';
   }
 
-  // ── Step 3: Stacking correction for upper-tier wealth combos ──────────────
-
-  const stackingCorrection = getStackingCorrection(upperTierCount, isRenter);
-  if (stackingCorrection > 1.0) {
+  // ── Step 3: Combo-type-aware stacking correction ───────────────────────────
+  // Uses measured corrections from 74 stacking validation probes (Apr 2).
+  // Correction depends on which filter categories are combined and seniority.
+  const stackingCorrection = getStackingCorrection(enrichmentFilters, isRenter, usingDirectRenter, selectedSeniorities);
+  if (stackingCorrection !== 1.0) {
     estimate *= stackingCorrection;
   }
 
-  // Renter estimates have less calibration data
-  if (isRenter && confidence === 'high') {
+  // Renter estimates without direct L1 data have less calibration confidence
+  if (isRenter && !usingDirectRenter && confidence === 'high') {
     confidence = 'medium';
   }
 
