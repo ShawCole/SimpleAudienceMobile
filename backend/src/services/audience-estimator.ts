@@ -121,6 +121,8 @@ function lookupGridBase(filters: FilterSpec[]): { count: number; capped: number;
   let capped = 0;
   let matched = 0;
 
+  // First pass: collect matching entries
+  const matchingEntries: GridEntry[] = [];
   for (const entry of GRID) {
     if (genders && !genders.includes(entry.gender)) continue;
     if (homeowners && !homeowners.includes(entry.homeowner)) continue;
@@ -128,11 +130,17 @@ function lookupGridBase(filters: FilterSpec[]): { count: number; capped: number;
     if (seniorities && !seniorities.includes(entry.seniority)) continue;
     if (childrenVals && !childrenVals.includes(entry.children)) continue;
     if (ages && !ages.includes(entry.age)) continue;
+    matchingEntries.push(entry);
+  }
 
-    total += entry.count;
+  for (const entry of matchingEntries) {
     matched++;
+    total += entry.count;
     if (entry.count >= 500_000) capped++;
   }
+
+  // Hard cap: IntentCore never returns above 500K, so neither should we
+  total = Math.min(total, 500_000);
 
   return { count: total, capped, matched };
 }
@@ -986,8 +994,8 @@ export function estimateAudienceSize(filters: FilterSpec[]): EstimateResult {
     confidence = 'medium';
   }
 
-  // Cap at grid base (enrichment can't add people)
-  estimate = Math.min(estimate, gridBase);
+  // Cap at grid base (enrichment can't add people) and at 500K (IntentCore hard cap)
+  estimate = Math.min(estimate, gridBase, 500_000);
   estimate = Math.max(0, Math.round(estimate));
 
   return {
