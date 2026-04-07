@@ -1,0 +1,932 @@
+{
+  "networkLogs": [
+    {
+      "ts": "2026-04-07T16:53:27.262Z",
+      "type": "response",
+      "url": "https://app.intentcore.io/home/simpleaudience?_rsc=1whgn",
+      "status": 200,
+      "requestId": "50812.146"
+    },
+    {
+      "ts": "2026-04-07T16:53:27.286Z",
+      "type": "response",
+      "url": "https://app.intentcore.io/home/settings?_rsc=1whgn",
+      "status": 200,
+      "requestId": "50812.148"
+    },
+    {
+      "ts": "2026-04-07T16:53:27.295Z",
+      "type": "response",
+      "url": "https://app.intentcore.io/home/simple-audience?_rsc=1whgn",
+      "status": 200,
+      "requestId": "50812.147"
+    },
+    {
+      "ts": "2026-04-07T16:53:28.128Z",
+      "type": "response",
+      "url": "https://app.intentcore.io/home/simple-audience/workflows/docs?_rsc=1bt7u",
+      "status": 200,
+      "requestId": "50812.284"
+    },
+    {
+      "ts": "2026-04-07T16:53:28.140Z",
+      "type": "response",
+      "url": "https://app.intentcore.io/home/simple-audience/segment?_rsc=1bt7u",
+      "status": 200,
+      "requestId": "50812.286"
+    },
+    {
+      "ts": "2026-04-07T16:53:28.172Z",
+      "type": "response",
+      "url": "https://app.intentcore.io/home/simple-audience/studio?_rsc=1bt7u",
+      "status": 200,
+      "requestId": "50812.285"
+    },
+    {
+      "ts": "2026-04-07T16:53:28.211Z",
+      "type": "response",
+      "url": "https://app.intentcore.io/home/simple-audience/email-validation?_rsc=1bt7u",
+      "status": 200,
+      "requestId": "50812.288"
+    },
+    {
+      "ts": "2026-04-07T16:53:28.233Z",
+      "type": "response",
+      "url": "https://app.intentcore.io/home/simple-audience/enrichment?_rsc=1bt7u",
+      "status": 200,
+      "requestId": "50812.287"
+    },
+    {
+      "ts": "2026-04-07T16:53:28.437Z",
+      "type": "request",
+      "url": "https://app.intentcore.io/home/simple-audience",
+      "method": "POST",
+      "headers": {
+        "sec-ch-ua-platform": "\"Mac OS X\"",
+        "Next-Action": "7f7a0fa032eb7f78c1f6cbd4061c6bc26badc9b2f0",
+        "Referer": "https://app.intentcore.io/home/simple-audience",
+        "sec-ch-ua": "\"Chromium\";v=\"146\", \" Not A;Brand\";v=\"99\", \"Google Chrome\";v=\"146\"",
+        "sec-ch-ua-mobile": "?0",
+        "Next-Router-State-Tree": "%5B%22%22%2C%7B%22children%22%3A%5B%22home%22%2C%7B%22children%22%3A%5B%5B%22account%22%2C%22simple-audience%22%2C%22d%22%5D%2C%7B%22children%22%3A%5B%22__PAGE__%22%2C%7B%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%2Ctrue%5D",
+        "baggage": "sentry-environment=production,sentry-release=a5f3a643069618e92b87fef4f3edc1fbabafae13,sentry-public_key=4d972780adb75aac72c5b6a604e4ad89,sentry-trace_id=b556d0b5c29ff6e1aa5c21bb3311e6b7,sentry-org_id=4510247048773632,sentry-sample_rand=0.864669613633873,sentry-sample_rate=1",
+        "sentry-trace": "b556d0b5c29ff6e1aa5c21bb3311e6b7-924c95bd82ec2f06-1",
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36",
+        "Accept": "text/x-component",
+        "Content-Type": "text/plain;charset=UTF-8",
+        "x-deployment-id": "dpl_E1CZwNZsRi1KAkFtbwHL7mMCJBLW"
+      },
+      "postData": "[{\"audienceId\":\"3a724d1e-8ef8-49f8-b1ee-7bdb9bce79e3\",\"page\":1,\"pageSize\":10}]",
+      "requestId": "50812.303"
+    },
+    {
+      "ts": "2026-04-07T16:53:28.447Z",
+      "type": "response",
+      "url": "https://app.intentcore.io/home/simple-audience/pixel?_rsc=1bt7u",
+      "status": 200,
+      "requestId": "50812.297"
+    },
+    {
+      "ts": "2026-04-07T16:53:28.448Z",
+      "type": "response",
+      "url": "https://app.intentcore.io/home/simple-audience/workflows?_rsc=1bt7u",
+      "status": 200,
+      "requestId": "50812.299"
+    },
+    {
+      "ts": "2026-04-07T16:53:28.485Z",
+      "type": "response",
+      "url": "https://app.intentcore.io/home/simple-audience/white-label?_rsc=1bt7u",
+      "status": 200,
+      "requestId": "50812.300"
+    },
+    {
+      "ts": "2026-04-07T16:53:28.502Z",
+      "type": "response",
+      "url": "https://app.intentcore.io/home/simple-audience/sync?_rsc=1bt7u",
+      "status": 200,
+      "requestId": "50812.298"
+    },
+    {
+      "ts": "2026-04-07T16:53:28.586Z",
+      "type": "response",
+      "url": "https://app.intentcore.io/home/simple-audience/white-label/teams?_rsc=1bt7u",
+      "status": 200,
+      "requestId": "50812.301"
+    },
+    {
+      "ts": "2026-04-07T16:53:28.710Z",
+      "type": "response",
+      "url": "https://app.intentcore.io/home/simple-audience/white-label/branding?_rsc=1bt7u",
+      "status": 200,
+      "requestId": "50812.305"
+    },
+    {
+      "ts": "2026-04-07T16:53:28.803Z",
+      "type": "response",
+      "url": "https://app.intentcore.io/home/simple-audience/settings?_rsc=1bt7u",
+      "status": 200,
+      "requestId": "50812.307"
+    },
+    {
+      "ts": "2026-04-07T16:53:28.820Z",
+      "type": "response",
+      "url": "https://app.intentcore.io/home/simple-audience/white-label/templates?_rsc=1bt7u",
+      "status": 200,
+      "requestId": "50812.304"
+    },
+    {
+      "ts": "2026-04-07T16:53:28.835Z",
+      "type": "response",
+      "url": "https://app.intentcore.io/home/simple-audience/members?_rsc=1bt7u",
+      "status": 200,
+      "requestId": "50812.308"
+    },
+    {
+      "ts": "2026-04-07T16:53:28.861Z",
+      "type": "response",
+      "url": "https://app.intentcore.io/home/simple-audience/usage?_rsc=1bt7u",
+      "status": 200,
+      "requestId": "50812.306"
+    },
+    {
+      "ts": "2026-04-07T16:53:28.918Z",
+      "type": "response",
+      "url": "https://app.intentcore.io/home/simple-audience",
+      "status": 200,
+      "requestId": "50812.303"
+    },
+    {
+      "ts": "2026-04-07T16:53:28.919Z",
+      "type": "request",
+      "url": "https://app.intentcore.io/home/simple-audience",
+      "method": "POST",
+      "headers": {
+        "sec-ch-ua-platform": "\"Mac OS X\"",
+        "Next-Action": "7f7a0fa032eb7f78c1f6cbd4061c6bc26badc9b2f0",
+        "Referer": "https://app.intentcore.io/home/simple-audience",
+        "sec-ch-ua": "\"Chromium\";v=\"146\", \" Not A;Brand\";v=\"99\", \"Google Chrome\";v=\"146\"",
+        "sec-ch-ua-mobile": "?0",
+        "Next-Router-State-Tree": "%5B%22%22%2C%7B%22children%22%3A%5B%22home%22%2C%7B%22children%22%3A%5B%5B%22account%22%2C%22simple-audience%22%2C%22d%22%5D%2C%7B%22children%22%3A%5B%22__PAGE__%22%2C%7B%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%2Ctrue%5D",
+        "baggage": "sentry-environment=production,sentry-release=a5f3a643069618e92b87fef4f3edc1fbabafae13,sentry-public_key=4d972780adb75aac72c5b6a604e4ad89,sentry-trace_id=b556d0b5c29ff6e1aa5c21bb3311e6b7,sentry-org_id=4510247048773632,sentry-sample_rand=0.864669613633873,sentry-sample_rate=1",
+        "sentry-trace": "b556d0b5c29ff6e1aa5c21bb3311e6b7-92fe8bc565ff3818-1",
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36",
+        "Accept": "text/x-component",
+        "Content-Type": "text/plain;charset=UTF-8",
+        "x-deployment-id": "dpl_E1CZwNZsRi1KAkFtbwHL7mMCJBLW"
+      },
+      "postData": "[{\"audienceId\":\"e47344a6-2f57-4a21-87b4-c7cfd4daae8c\",\"page\":1,\"pageSize\":10}]",
+      "requestId": "50812.309"
+    },
+    {
+      "ts": "2026-04-07T16:53:29.489Z",
+      "type": "response",
+      "url": "https://app.intentcore.io/home/simple-audience",
+      "status": 200,
+      "requestId": "50812.309"
+    },
+    {
+      "ts": "2026-04-07T16:53:29.490Z",
+      "type": "request",
+      "url": "https://app.intentcore.io/home/simple-audience",
+      "method": "POST",
+      "headers": {
+        "sec-ch-ua-platform": "\"Mac OS X\"",
+        "Next-Action": "7f7a0fa032eb7f78c1f6cbd4061c6bc26badc9b2f0",
+        "Referer": "https://app.intentcore.io/home/simple-audience",
+        "sec-ch-ua": "\"Chromium\";v=\"146\", \" Not A;Brand\";v=\"99\", \"Google Chrome\";v=\"146\"",
+        "sec-ch-ua-mobile": "?0",
+        "Next-Router-State-Tree": "%5B%22%22%2C%7B%22children%22%3A%5B%22home%22%2C%7B%22children%22%3A%5B%5B%22account%22%2C%22simple-audience%22%2C%22d%22%5D%2C%7B%22children%22%3A%5B%22__PAGE__%22%2C%7B%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%2Ctrue%5D",
+        "baggage": "sentry-environment=production,sentry-release=a5f3a643069618e92b87fef4f3edc1fbabafae13,sentry-public_key=4d972780adb75aac72c5b6a604e4ad89,sentry-trace_id=b556d0b5c29ff6e1aa5c21bb3311e6b7,sentry-org_id=4510247048773632,sentry-sample_rand=0.864669613633873,sentry-sample_rate=1",
+        "sentry-trace": "b556d0b5c29ff6e1aa5c21bb3311e6b7-952b775fe6e946d2-1",
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36",
+        "Accept": "text/x-component",
+        "Content-Type": "text/plain;charset=UTF-8",
+        "x-deployment-id": "dpl_E1CZwNZsRi1KAkFtbwHL7mMCJBLW"
+      },
+      "postData": "[{\"audienceId\":\"9c040b94-6e76-49de-b021-1d11aa18fe89\",\"page\":1,\"pageSize\":10}]",
+      "requestId": "50812.310"
+    },
+    {
+      "ts": "2026-04-07T16:53:30.024Z",
+      "type": "response",
+      "url": "https://app.intentcore.io/home/simple-audience",
+      "status": 200,
+      "requestId": "50812.310"
+    },
+    {
+      "ts": "2026-04-07T16:53:30.024Z",
+      "type": "request",
+      "url": "https://app.intentcore.io/home/simple-audience",
+      "method": "POST",
+      "headers": {
+        "sec-ch-ua-platform": "\"Mac OS X\"",
+        "Next-Action": "7f7a0fa032eb7f78c1f6cbd4061c6bc26badc9b2f0",
+        "Referer": "https://app.intentcore.io/home/simple-audience",
+        "sec-ch-ua": "\"Chromium\";v=\"146\", \" Not A;Brand\";v=\"99\", \"Google Chrome\";v=\"146\"",
+        "sec-ch-ua-mobile": "?0",
+        "Next-Router-State-Tree": "%5B%22%22%2C%7B%22children%22%3A%5B%22home%22%2C%7B%22children%22%3A%5B%5B%22account%22%2C%22simple-audience%22%2C%22d%22%5D%2C%7B%22children%22%3A%5B%22__PAGE__%22%2C%7B%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%2Ctrue%5D",
+        "baggage": "sentry-environment=production,sentry-release=a5f3a643069618e92b87fef4f3edc1fbabafae13,sentry-public_key=4d972780adb75aac72c5b6a604e4ad89,sentry-trace_id=b556d0b5c29ff6e1aa5c21bb3311e6b7,sentry-org_id=4510247048773632,sentry-sample_rand=0.864669613633873,sentry-sample_rate=1",
+        "sentry-trace": "b556d0b5c29ff6e1aa5c21bb3311e6b7-8234f50b482ce703-1",
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36",
+        "Accept": "text/x-component",
+        "Content-Type": "text/plain;charset=UTF-8",
+        "x-deployment-id": "dpl_E1CZwNZsRi1KAkFtbwHL7mMCJBLW"
+      },
+      "postData": "[{\"audienceId\":\"088aaf25-62eb-4b1b-955d-20594fb0a5cf\",\"page\":1,\"pageSize\":10}]",
+      "requestId": "50812.311"
+    },
+    {
+      "ts": "2026-04-07T16:53:30.604Z",
+      "type": "response",
+      "url": "https://app.intentcore.io/home/simple-audience",
+      "status": 200,
+      "requestId": "50812.311"
+    },
+    {
+      "ts": "2026-04-07T16:53:30.605Z",
+      "type": "request",
+      "url": "https://app.intentcore.io/home/simple-audience",
+      "method": "POST",
+      "headers": {
+        "sec-ch-ua-platform": "\"Mac OS X\"",
+        "Next-Action": "7f7a0fa032eb7f78c1f6cbd4061c6bc26badc9b2f0",
+        "Referer": "https://app.intentcore.io/home/simple-audience",
+        "sec-ch-ua": "\"Chromium\";v=\"146\", \" Not A;Brand\";v=\"99\", \"Google Chrome\";v=\"146\"",
+        "sec-ch-ua-mobile": "?0",
+        "Next-Router-State-Tree": "%5B%22%22%2C%7B%22children%22%3A%5B%22home%22%2C%7B%22children%22%3A%5B%5B%22account%22%2C%22simple-audience%22%2C%22d%22%5D%2C%7B%22children%22%3A%5B%22__PAGE__%22%2C%7B%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%2Ctrue%5D",
+        "baggage": "sentry-environment=production,sentry-release=a5f3a643069618e92b87fef4f3edc1fbabafae13,sentry-public_key=4d972780adb75aac72c5b6a604e4ad89,sentry-trace_id=b556d0b5c29ff6e1aa5c21bb3311e6b7,sentry-org_id=4510247048773632,sentry-sample_rand=0.864669613633873,sentry-sample_rate=1",
+        "sentry-trace": "b556d0b5c29ff6e1aa5c21bb3311e6b7-8349abec51487a67-1",
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36",
+        "Accept": "text/x-component",
+        "Content-Type": "text/plain;charset=UTF-8",
+        "x-deployment-id": "dpl_E1CZwNZsRi1KAkFtbwHL7mMCJBLW"
+      },
+      "postData": "[{\"audienceId\":\"b0361b05-1393-4403-a738-ab98b1c88c2a\",\"page\":1,\"pageSize\":10}]",
+      "requestId": "50812.312"
+    },
+    {
+      "ts": "2026-04-07T16:53:31.163Z",
+      "type": "response",
+      "url": "https://app.intentcore.io/home/simple-audience",
+      "status": 200,
+      "requestId": "50812.312"
+    },
+    {
+      "ts": "2026-04-07T16:53:31.164Z",
+      "type": "request",
+      "url": "https://app.intentcore.io/home/simple-audience",
+      "method": "POST",
+      "headers": {
+        "sec-ch-ua-platform": "\"Mac OS X\"",
+        "Next-Action": "7f7a0fa032eb7f78c1f6cbd4061c6bc26badc9b2f0",
+        "Referer": "https://app.intentcore.io/home/simple-audience",
+        "sec-ch-ua": "\"Chromium\";v=\"146\", \" Not A;Brand\";v=\"99\", \"Google Chrome\";v=\"146\"",
+        "sec-ch-ua-mobile": "?0",
+        "Next-Router-State-Tree": "%5B%22%22%2C%7B%22children%22%3A%5B%22home%22%2C%7B%22children%22%3A%5B%5B%22account%22%2C%22simple-audience%22%2C%22d%22%5D%2C%7B%22children%22%3A%5B%22__PAGE__%22%2C%7B%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%2Ctrue%5D",
+        "baggage": "sentry-environment=production,sentry-release=a5f3a643069618e92b87fef4f3edc1fbabafae13,sentry-public_key=4d972780adb75aac72c5b6a604e4ad89,sentry-trace_id=b556d0b5c29ff6e1aa5c21bb3311e6b7,sentry-org_id=4510247048773632,sentry-sample_rand=0.864669613633873,sentry-sample_rate=1",
+        "sentry-trace": "b556d0b5c29ff6e1aa5c21bb3311e6b7-bd410dd9d864ee8e-1",
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36",
+        "Accept": "text/x-component",
+        "Content-Type": "text/plain;charset=UTF-8",
+        "x-deployment-id": "dpl_E1CZwNZsRi1KAkFtbwHL7mMCJBLW"
+      },
+      "postData": "[{\"audienceId\":\"45d5d3bb-6bc5-4d6d-af8e-fbced63c083f\",\"page\":1,\"pageSize\":10}]",
+      "requestId": "50812.313"
+    },
+    {
+      "ts": "2026-04-07T16:53:31.909Z",
+      "type": "response",
+      "url": "https://app.intentcore.io/home/simple-audience",
+      "status": 200,
+      "requestId": "50812.313"
+    },
+    {
+      "ts": "2026-04-07T16:53:31.910Z",
+      "type": "request",
+      "url": "https://app.intentcore.io/home/simple-audience",
+      "method": "POST",
+      "headers": {
+        "sec-ch-ua-platform": "\"Mac OS X\"",
+        "Next-Action": "7f7a0fa032eb7f78c1f6cbd4061c6bc26badc9b2f0",
+        "Referer": "https://app.intentcore.io/home/simple-audience",
+        "sec-ch-ua": "\"Chromium\";v=\"146\", \" Not A;Brand\";v=\"99\", \"Google Chrome\";v=\"146\"",
+        "sec-ch-ua-mobile": "?0",
+        "Next-Router-State-Tree": "%5B%22%22%2C%7B%22children%22%3A%5B%22home%22%2C%7B%22children%22%3A%5B%5B%22account%22%2C%22simple-audience%22%2C%22d%22%5D%2C%7B%22children%22%3A%5B%22__PAGE__%22%2C%7B%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%2Ctrue%5D",
+        "baggage": "sentry-environment=production,sentry-release=a5f3a643069618e92b87fef4f3edc1fbabafae13,sentry-public_key=4d972780adb75aac72c5b6a604e4ad89,sentry-trace_id=b556d0b5c29ff6e1aa5c21bb3311e6b7,sentry-org_id=4510247048773632,sentry-sample_rand=0.864669613633873,sentry-sample_rate=1",
+        "sentry-trace": "b556d0b5c29ff6e1aa5c21bb3311e6b7-8490ca3db529fecd-1",
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36",
+        "Accept": "text/x-component",
+        "Content-Type": "text/plain;charset=UTF-8",
+        "x-deployment-id": "dpl_E1CZwNZsRi1KAkFtbwHL7mMCJBLW"
+      },
+      "postData": "[{\"audienceId\":\"8028a361-535f-4b91-acac-eacdb04a67d5\",\"page\":1,\"pageSize\":10}]",
+      "requestId": "50812.314"
+    },
+    {
+      "ts": "2026-04-07T16:53:32.324Z",
+      "type": "request",
+      "url": "https://app.intentcore.io/home/simple-audience",
+      "method": "POST",
+      "headers": {
+        "sec-ch-ua-platform": "\"Mac OS X\"",
+        "Next-Action": "7f7a0fa032eb7f78c1f6cbd4061c6bc26badc9b2f0",
+        "Referer": "https://app.intentcore.io/home/simple-audience",
+        "sec-ch-ua": "\"Chromium\";v=\"146\", \" Not A;Brand\";v=\"99\", \"Google Chrome\";v=\"146\"",
+        "sec-ch-ua-mobile": "?0",
+        "Next-Router-State-Tree": "%5B%22%22%2C%7B%22children%22%3A%5B%22home%22%2C%7B%22children%22%3A%5B%5B%22account%22%2C%22simple-audience%22%2C%22d%22%5D%2C%7B%22children%22%3A%5B%22__PAGE__%22%2C%7B%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%2Ctrue%5D",
+        "baggage": "sentry-environment=production,sentry-release=a5f3a643069618e92b87fef4f3edc1fbabafae13,sentry-public_key=4d972780adb75aac72c5b6a604e4ad89,sentry-trace_id=b556d0b5c29ff6e1aa5c21bb3311e6b7,sentry-org_id=4510247048773632,sentry-sample_rand=0.864669613633873,sentry-sample_rate=1",
+        "sentry-trace": "b556d0b5c29ff6e1aa5c21bb3311e6b7-88ab7e8eba73f2aa-1",
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36",
+        "Accept": "text/x-component",
+        "Content-Type": "text/plain;charset=UTF-8",
+        "x-deployment-id": "dpl_E1CZwNZsRi1KAkFtbwHL7mMCJBLW"
+      },
+      "postData": "[{\"audienceId\":\"b76e07aa-0c5a-4c9e-a713-7ec6d46fab67\",\"page\":1,\"pageSize\":10}]",
+      "requestId": "50812.316"
+    },
+    {
+      "ts": "2026-04-07T16:53:33.002Z",
+      "type": "response",
+      "url": "https://app.intentcore.io/home/simple-audience/studio?_rsc=1bt7u",
+      "status": 200,
+      "requestId": "50812.452"
+    },
+    {
+      "ts": "2026-04-07T16:53:33.016Z",
+      "type": "response",
+      "url": "https://app.intentcore.io/home/simple-audience/segment?_rsc=1bt7u",
+      "status": 200,
+      "requestId": "50812.453"
+    },
+    {
+      "ts": "2026-04-07T16:53:33.018Z",
+      "type": "response",
+      "url": "https://app.intentcore.io/home/simple-audience/enrichment?_rsc=1bt7u",
+      "status": 200,
+      "requestId": "50812.454"
+    },
+    {
+      "ts": "2026-04-07T16:53:33.024Z",
+      "type": "response",
+      "url": "https://app.intentcore.io/home/simple-audience/workflows/docs?_rsc=1bt7u",
+      "status": 200,
+      "requestId": "50812.451"
+    },
+    {
+      "ts": "2026-04-07T16:53:33.025Z",
+      "type": "response",
+      "url": "https://app.intentcore.io/home/simple-audience/email-validation?_rsc=1bt7u",
+      "status": 200,
+      "requestId": "50812.455"
+    },
+    {
+      "ts": "2026-04-07T16:53:33.258Z",
+      "type": "request",
+      "url": "https://app.intentcore.io/home/simple-audience",
+      "method": "POST",
+      "headers": {
+        "sec-ch-ua-platform": "\"Mac OS X\"",
+        "Next-Action": "7f7a0fa032eb7f78c1f6cbd4061c6bc26badc9b2f0",
+        "Referer": "https://app.intentcore.io/home/simple-audience",
+        "sec-ch-ua": "\"Chromium\";v=\"146\", \" Not A;Brand\";v=\"99\", \"Google Chrome\";v=\"146\"",
+        "sec-ch-ua-mobile": "?0",
+        "Next-Router-State-Tree": "%5B%22%22%2C%7B%22children%22%3A%5B%22home%22%2C%7B%22children%22%3A%5B%5B%22account%22%2C%22simple-audience%22%2C%22d%22%5D%2C%7B%22children%22%3A%5B%22__PAGE__%22%2C%7B%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%2Ctrue%5D",
+        "baggage": "sentry-environment=production,sentry-release=a5f3a643069618e92b87fef4f3edc1fbabafae13,sentry-public_key=4d972780adb75aac72c5b6a604e4ad89,sentry-trace_id=63fcdf06aeef6b365dbb9b213546f58c,sentry-org_id=4510247048773632,sentry-sample_rand=0.7206194148891539,sentry-sample_rate=1",
+        "sentry-trace": "63fcdf06aeef6b365dbb9b213546f58c-a779bc6c034be6d4-1",
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36",
+        "Accept": "text/x-component",
+        "Content-Type": "text/plain;charset=UTF-8",
+        "x-deployment-id": "dpl_E1CZwNZsRi1KAkFtbwHL7mMCJBLW"
+      },
+      "postData": "[{\"audienceId\":\"3a724d1e-8ef8-49f8-b1ee-7bdb9bce79e3\",\"page\":1,\"pageSize\":10}]",
+      "requestId": "50812.464"
+    },
+    {
+      "ts": "2026-04-07T16:53:33.281Z",
+      "type": "response",
+      "url": "https://app.intentcore.io/home/simple-audience/pixel?_rsc=1bt7u",
+      "status": 200,
+      "requestId": "50812.458"
+    },
+    {
+      "ts": "2026-04-07T16:53:33.293Z",
+      "type": "response",
+      "url": "https://app.intentcore.io/home/simple-audience/white-label?_rsc=1bt7u",
+      "status": 200,
+      "requestId": "50812.461"
+    },
+    {
+      "ts": "2026-04-07T16:53:33.307Z",
+      "type": "response",
+      "url": "https://app.intentcore.io/home/simple-audience/white-label/teams?_rsc=1bt7u",
+      "status": 200,
+      "requestId": "50812.462"
+    },
+    {
+      "ts": "2026-04-07T16:53:33.308Z",
+      "type": "response",
+      "url": "https://app.intentcore.io/home/simple-audience/workflows?_rsc=1bt7u",
+      "status": 200,
+      "requestId": "50812.460"
+    },
+    {
+      "ts": "2026-04-07T16:53:33.413Z",
+      "type": "response",
+      "url": "https://app.intentcore.io/home/simple-audience/sync?_rsc=1bt7u",
+      "status": 200,
+      "requestId": "50812.459"
+    },
+    {
+      "ts": "2026-04-07T16:53:33.541Z",
+      "type": "response",
+      "url": "https://app.intentcore.io/home/simple-audience/white-label/branding?_rsc=1bt7u",
+      "status": 200,
+      "requestId": "50812.466"
+    },
+    {
+      "ts": "2026-04-07T16:53:33.578Z",
+      "type": "response",
+      "url": "https://app.intentcore.io/home/simple-audience/white-label/templates?_rsc=1bt7u",
+      "status": 200,
+      "requestId": "50812.465"
+    },
+    {
+      "ts": "2026-04-07T16:53:33.591Z",
+      "type": "response",
+      "url": "https://app.intentcore.io/home/simple-audience/usage?_rsc=1bt7u",
+      "status": 200,
+      "requestId": "50812.467"
+    },
+    {
+      "ts": "2026-04-07T16:53:33.609Z",
+      "type": "response",
+      "url": "https://app.intentcore.io/home/simple-audience/settings?_rsc=1bt7u",
+      "status": 200,
+      "requestId": "50812.468"
+    },
+    {
+      "ts": "2026-04-07T16:53:33.659Z",
+      "type": "response",
+      "url": "https://app.intentcore.io/home/simple-audience/members?_rsc=1bt7u",
+      "status": 200,
+      "requestId": "50812.469"
+    },
+    {
+      "ts": "2026-04-07T16:53:33.791Z",
+      "type": "response",
+      "url": "https://app.intentcore.io/home/simple-audience",
+      "status": 200,
+      "requestId": "50812.464"
+    },
+    {
+      "ts": "2026-04-07T16:53:33.792Z",
+      "type": "request",
+      "url": "https://app.intentcore.io/home/simple-audience",
+      "method": "POST",
+      "headers": {
+        "sec-ch-ua-platform": "\"Mac OS X\"",
+        "Next-Action": "7f7a0fa032eb7f78c1f6cbd4061c6bc26badc9b2f0",
+        "Referer": "https://app.intentcore.io/home/simple-audience",
+        "sec-ch-ua": "\"Chromium\";v=\"146\", \" Not A;Brand\";v=\"99\", \"Google Chrome\";v=\"146\"",
+        "sec-ch-ua-mobile": "?0",
+        "Next-Router-State-Tree": "%5B%22%22%2C%7B%22children%22%3A%5B%22home%22%2C%7B%22children%22%3A%5B%5B%22account%22%2C%22simple-audience%22%2C%22d%22%5D%2C%7B%22children%22%3A%5B%22__PAGE__%22%2C%7B%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%2Ctrue%5D",
+        "baggage": "sentry-environment=production,sentry-release=a5f3a643069618e92b87fef4f3edc1fbabafae13,sentry-public_key=4d972780adb75aac72c5b6a604e4ad89,sentry-trace_id=63fcdf06aeef6b365dbb9b213546f58c,sentry-org_id=4510247048773632,sentry-sample_rand=0.7206194148891539,sentry-sample_rate=1",
+        "sentry-trace": "63fcdf06aeef6b365dbb9b213546f58c-b97ff5b54e097838-1",
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36",
+        "Accept": "text/x-component",
+        "Content-Type": "text/plain;charset=UTF-8",
+        "x-deployment-id": "dpl_E1CZwNZsRi1KAkFtbwHL7mMCJBLW"
+      },
+      "postData": "[{\"audienceId\":\"e47344a6-2f57-4a21-87b4-c7cfd4daae8c\",\"page\":1,\"pageSize\":10}]",
+      "requestId": "50812.470"
+    },
+    {
+      "ts": "2026-04-07T16:53:34.423Z",
+      "type": "response",
+      "url": "https://app.intentcore.io/home/simple-audience",
+      "status": 200,
+      "requestId": "50812.470"
+    },
+    {
+      "ts": "2026-04-07T16:53:34.423Z",
+      "type": "request",
+      "url": "https://app.intentcore.io/home/simple-audience",
+      "method": "POST",
+      "headers": {
+        "sec-ch-ua-platform": "\"Mac OS X\"",
+        "Next-Action": "7f7a0fa032eb7f78c1f6cbd4061c6bc26badc9b2f0",
+        "Referer": "https://app.intentcore.io/home/simple-audience",
+        "sec-ch-ua": "\"Chromium\";v=\"146\", \" Not A;Brand\";v=\"99\", \"Google Chrome\";v=\"146\"",
+        "sec-ch-ua-mobile": "?0",
+        "Next-Router-State-Tree": "%5B%22%22%2C%7B%22children%22%3A%5B%22home%22%2C%7B%22children%22%3A%5B%5B%22account%22%2C%22simple-audience%22%2C%22d%22%5D%2C%7B%22children%22%3A%5B%22__PAGE__%22%2C%7B%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%2Ctrue%5D",
+        "baggage": "sentry-environment=production,sentry-release=a5f3a643069618e92b87fef4f3edc1fbabafae13,sentry-public_key=4d972780adb75aac72c5b6a604e4ad89,sentry-trace_id=63fcdf06aeef6b365dbb9b213546f58c,sentry-org_id=4510247048773632,sentry-sample_rand=0.7206194148891539,sentry-sample_rate=1",
+        "sentry-trace": "63fcdf06aeef6b365dbb9b213546f58c-b21285c4d5899e0e-1",
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36",
+        "Accept": "text/x-component",
+        "Content-Type": "text/plain;charset=UTF-8",
+        "x-deployment-id": "dpl_E1CZwNZsRi1KAkFtbwHL7mMCJBLW"
+      },
+      "postData": "[{\"audienceId\":\"9c040b94-6e76-49de-b021-1d11aa18fe89\",\"page\":1,\"pageSize\":10}]",
+      "requestId": "50812.471"
+    },
+    {
+      "ts": "2026-04-07T16:53:35.093Z",
+      "type": "response",
+      "url": "https://app.intentcore.io/home/simple-audience",
+      "status": 200,
+      "requestId": "50812.471"
+    },
+    {
+      "ts": "2026-04-07T16:53:35.094Z",
+      "type": "request",
+      "url": "https://app.intentcore.io/home/simple-audience",
+      "method": "POST",
+      "headers": {
+        "sec-ch-ua-platform": "\"Mac OS X\"",
+        "Next-Action": "7f7a0fa032eb7f78c1f6cbd4061c6bc26badc9b2f0",
+        "Referer": "https://app.intentcore.io/home/simple-audience",
+        "sec-ch-ua": "\"Chromium\";v=\"146\", \" Not A;Brand\";v=\"99\", \"Google Chrome\";v=\"146\"",
+        "sec-ch-ua-mobile": "?0",
+        "Next-Router-State-Tree": "%5B%22%22%2C%7B%22children%22%3A%5B%22home%22%2C%7B%22children%22%3A%5B%5B%22account%22%2C%22simple-audience%22%2C%22d%22%5D%2C%7B%22children%22%3A%5B%22__PAGE__%22%2C%7B%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%2Ctrue%5D",
+        "baggage": "sentry-environment=production,sentry-release=a5f3a643069618e92b87fef4f3edc1fbabafae13,sentry-public_key=4d972780adb75aac72c5b6a604e4ad89,sentry-trace_id=63fcdf06aeef6b365dbb9b213546f58c,sentry-org_id=4510247048773632,sentry-sample_rand=0.7206194148891539,sentry-sample_rate=1",
+        "sentry-trace": "63fcdf06aeef6b365dbb9b213546f58c-83ff6d89bc429405-1",
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36",
+        "Accept": "text/x-component",
+        "Content-Type": "text/plain;charset=UTF-8",
+        "x-deployment-id": "dpl_E1CZwNZsRi1KAkFtbwHL7mMCJBLW"
+      },
+      "postData": "[{\"audienceId\":\"088aaf25-62eb-4b1b-955d-20594fb0a5cf\",\"page\":1,\"pageSize\":10}]",
+      "requestId": "50812.472"
+    },
+    {
+      "ts": "2026-04-07T16:53:35.723Z",
+      "type": "response",
+      "url": "https://app.intentcore.io/home/simple-audience",
+      "status": 200,
+      "requestId": "50812.472"
+    },
+    {
+      "ts": "2026-04-07T16:53:35.723Z",
+      "type": "request",
+      "url": "https://app.intentcore.io/home/simple-audience",
+      "method": "POST",
+      "headers": {
+        "sec-ch-ua-platform": "\"Mac OS X\"",
+        "Next-Action": "7f7a0fa032eb7f78c1f6cbd4061c6bc26badc9b2f0",
+        "Referer": "https://app.intentcore.io/home/simple-audience",
+        "sec-ch-ua": "\"Chromium\";v=\"146\", \" Not A;Brand\";v=\"99\", \"Google Chrome\";v=\"146\"",
+        "sec-ch-ua-mobile": "?0",
+        "Next-Router-State-Tree": "%5B%22%22%2C%7B%22children%22%3A%5B%22home%22%2C%7B%22children%22%3A%5B%5B%22account%22%2C%22simple-audience%22%2C%22d%22%5D%2C%7B%22children%22%3A%5B%22__PAGE__%22%2C%7B%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%2Ctrue%5D",
+        "baggage": "sentry-environment=production,sentry-release=a5f3a643069618e92b87fef4f3edc1fbabafae13,sentry-public_key=4d972780adb75aac72c5b6a604e4ad89,sentry-trace_id=63fcdf06aeef6b365dbb9b213546f58c,sentry-org_id=4510247048773632,sentry-sample_rand=0.7206194148891539,sentry-sample_rate=1",
+        "sentry-trace": "63fcdf06aeef6b365dbb9b213546f58c-8b840bd3ec563aff-1",
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36",
+        "Accept": "text/x-component",
+        "Content-Type": "text/plain;charset=UTF-8",
+        "x-deployment-id": "dpl_E1CZwNZsRi1KAkFtbwHL7mMCJBLW"
+      },
+      "postData": "[{\"audienceId\":\"b0361b05-1393-4403-a738-ab98b1c88c2a\",\"page\":1,\"pageSize\":10}]",
+      "requestId": "50812.473"
+    },
+    {
+      "ts": "2026-04-07T16:53:36.258Z",
+      "type": "response",
+      "url": "https://app.intentcore.io/home/simple-audience",
+      "status": 200,
+      "requestId": "50812.473"
+    },
+    {
+      "ts": "2026-04-07T16:53:36.259Z",
+      "type": "request",
+      "url": "https://app.intentcore.io/home/simple-audience",
+      "method": "POST",
+      "headers": {
+        "sec-ch-ua-platform": "\"Mac OS X\"",
+        "Next-Action": "7f7a0fa032eb7f78c1f6cbd4061c6bc26badc9b2f0",
+        "Referer": "https://app.intentcore.io/home/simple-audience",
+        "sec-ch-ua": "\"Chromium\";v=\"146\", \" Not A;Brand\";v=\"99\", \"Google Chrome\";v=\"146\"",
+        "sec-ch-ua-mobile": "?0",
+        "Next-Router-State-Tree": "%5B%22%22%2C%7B%22children%22%3A%5B%22home%22%2C%7B%22children%22%3A%5B%5B%22account%22%2C%22simple-audience%22%2C%22d%22%5D%2C%7B%22children%22%3A%5B%22__PAGE__%22%2C%7B%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%2Ctrue%5D",
+        "baggage": "sentry-environment=production,sentry-release=a5f3a643069618e92b87fef4f3edc1fbabafae13,sentry-public_key=4d972780adb75aac72c5b6a604e4ad89,sentry-trace_id=63fcdf06aeef6b365dbb9b213546f58c,sentry-org_id=4510247048773632,sentry-sample_rand=0.7206194148891539,sentry-sample_rate=1",
+        "sentry-trace": "63fcdf06aeef6b365dbb9b213546f58c-a1fb4f14b33f2f94-1",
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36",
+        "Accept": "text/x-component",
+        "Content-Type": "text/plain;charset=UTF-8",
+        "x-deployment-id": "dpl_E1CZwNZsRi1KAkFtbwHL7mMCJBLW"
+      },
+      "postData": "[{\"audienceId\":\"45d5d3bb-6bc5-4d6d-af8e-fbced63c083f\",\"page\":1,\"pageSize\":10}]",
+      "requestId": "50812.474"
+    },
+    {
+      "ts": "2026-04-07T16:53:36.785Z",
+      "type": "response",
+      "url": "https://app.intentcore.io/home/simple-audience",
+      "status": 200,
+      "requestId": "50812.474"
+    },
+    {
+      "ts": "2026-04-07T16:53:36.787Z",
+      "type": "request",
+      "url": "https://app.intentcore.io/home/simple-audience",
+      "method": "POST",
+      "headers": {
+        "sec-ch-ua-platform": "\"Mac OS X\"",
+        "Next-Action": "7f7a0fa032eb7f78c1f6cbd4061c6bc26badc9b2f0",
+        "Referer": "https://app.intentcore.io/home/simple-audience",
+        "sec-ch-ua": "\"Chromium\";v=\"146\", \" Not A;Brand\";v=\"99\", \"Google Chrome\";v=\"146\"",
+        "sec-ch-ua-mobile": "?0",
+        "Next-Router-State-Tree": "%5B%22%22%2C%7B%22children%22%3A%5B%22home%22%2C%7B%22children%22%3A%5B%5B%22account%22%2C%22simple-audience%22%2C%22d%22%5D%2C%7B%22children%22%3A%5B%22__PAGE__%22%2C%7B%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%2Ctrue%5D",
+        "baggage": "sentry-environment=production,sentry-release=a5f3a643069618e92b87fef4f3edc1fbabafae13,sentry-public_key=4d972780adb75aac72c5b6a604e4ad89,sentry-trace_id=63fcdf06aeef6b365dbb9b213546f58c,sentry-org_id=4510247048773632,sentry-sample_rand=0.7206194148891539,sentry-sample_rate=1",
+        "sentry-trace": "63fcdf06aeef6b365dbb9b213546f58c-a9f2c219b1c403b5-1",
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36",
+        "Accept": "text/x-component",
+        "Content-Type": "text/plain;charset=UTF-8",
+        "x-deployment-id": "dpl_E1CZwNZsRi1KAkFtbwHL7mMCJBLW"
+      },
+      "postData": "[{\"audienceId\":\"8028a361-535f-4b91-acac-eacdb04a67d5\",\"page\":1,\"pageSize\":10}]",
+      "requestId": "50812.480"
+    },
+    {
+      "ts": "2026-04-07T16:53:37.380Z",
+      "type": "response",
+      "url": "https://app.intentcore.io/home/simple-audience",
+      "status": 200,
+      "requestId": "50812.480"
+    },
+    {
+      "ts": "2026-04-07T16:53:37.381Z",
+      "type": "request",
+      "url": "https://app.intentcore.io/home/simple-audience",
+      "method": "POST",
+      "headers": {
+        "sec-ch-ua-platform": "\"Mac OS X\"",
+        "Next-Action": "7f7a0fa032eb7f78c1f6cbd4061c6bc26badc9b2f0",
+        "Referer": "https://app.intentcore.io/home/simple-audience",
+        "sec-ch-ua": "\"Chromium\";v=\"146\", \" Not A;Brand\";v=\"99\", \"Google Chrome\";v=\"146\"",
+        "sec-ch-ua-mobile": "?0",
+        "Next-Router-State-Tree": "%5B%22%22%2C%7B%22children%22%3A%5B%22home%22%2C%7B%22children%22%3A%5B%5B%22account%22%2C%22simple-audience%22%2C%22d%22%5D%2C%7B%22children%22%3A%5B%22__PAGE__%22%2C%7B%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%2Ctrue%5D",
+        "baggage": "sentry-environment=production,sentry-release=a5f3a643069618e92b87fef4f3edc1fbabafae13,sentry-public_key=4d972780adb75aac72c5b6a604e4ad89,sentry-trace_id=63fcdf06aeef6b365dbb9b213546f58c,sentry-org_id=4510247048773632,sentry-sample_rand=0.7206194148891539,sentry-sample_rate=1",
+        "sentry-trace": "63fcdf06aeef6b365dbb9b213546f58c-a1ba4030cb8c11d2-1",
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36",
+        "Accept": "text/x-component",
+        "Content-Type": "text/plain;charset=UTF-8",
+        "x-deployment-id": "dpl_E1CZwNZsRi1KAkFtbwHL7mMCJBLW"
+      },
+      "postData": "[{\"audienceId\":\"b76e07aa-0c5a-4c9e-a713-7ec6d46fab67\",\"page\":1,\"pageSize\":10}]",
+      "requestId": "50812.481"
+    },
+    {
+      "ts": "2026-04-07T16:53:37.925Z",
+      "type": "response",
+      "url": "https://app.intentcore.io/home/simple-audience",
+      "status": 200,
+      "requestId": "50812.481"
+    },
+    {
+      "ts": "2026-04-07T16:53:37.926Z",
+      "type": "request",
+      "url": "https://app.intentcore.io/home/simple-audience",
+      "method": "POST",
+      "headers": {
+        "sec-ch-ua-platform": "\"Mac OS X\"",
+        "Next-Action": "7f7a0fa032eb7f78c1f6cbd4061c6bc26badc9b2f0",
+        "Referer": "https://app.intentcore.io/home/simple-audience",
+        "sec-ch-ua": "\"Chromium\";v=\"146\", \" Not A;Brand\";v=\"99\", \"Google Chrome\";v=\"146\"",
+        "sec-ch-ua-mobile": "?0",
+        "Next-Router-State-Tree": "%5B%22%22%2C%7B%22children%22%3A%5B%22home%22%2C%7B%22children%22%3A%5B%5B%22account%22%2C%22simple-audience%22%2C%22d%22%5D%2C%7B%22children%22%3A%5B%22__PAGE__%22%2C%7B%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%2Ctrue%5D",
+        "baggage": "sentry-environment=production,sentry-release=a5f3a643069618e92b87fef4f3edc1fbabafae13,sentry-public_key=4d972780adb75aac72c5b6a604e4ad89,sentry-trace_id=63fcdf06aeef6b365dbb9b213546f58c,sentry-org_id=4510247048773632,sentry-sample_rand=0.7206194148891539,sentry-sample_rate=1",
+        "sentry-trace": "63fcdf06aeef6b365dbb9b213546f58c-bd400d2f4aabdfab-1",
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36",
+        "Accept": "text/x-component",
+        "Content-Type": "text/plain;charset=UTF-8",
+        "x-deployment-id": "dpl_E1CZwNZsRi1KAkFtbwHL7mMCJBLW"
+      },
+      "postData": "[{\"audienceId\":\"d44eb5f0-0046-4dfd-be45-adb3f3df06c7\",\"page\":1,\"pageSize\":10}]",
+      "requestId": "50812.482"
+    },
+    {
+      "ts": "2026-04-07T16:53:38.517Z",
+      "type": "response",
+      "url": "https://app.intentcore.io/home/simple-audience",
+      "status": 200,
+      "requestId": "50812.482"
+    },
+    {
+      "ts": "2026-04-07T16:53:38.521Z",
+      "type": "request",
+      "url": "https://app.intentcore.io/home/simple-audience",
+      "method": "POST",
+      "headers": {
+        "sec-ch-ua-platform": "\"Mac OS X\"",
+        "Next-Action": "7f7a0fa032eb7f78c1f6cbd4061c6bc26badc9b2f0",
+        "Referer": "https://app.intentcore.io/home/simple-audience",
+        "sec-ch-ua": "\"Chromium\";v=\"146\", \" Not A;Brand\";v=\"99\", \"Google Chrome\";v=\"146\"",
+        "sec-ch-ua-mobile": "?0",
+        "Next-Router-State-Tree": "%5B%22%22%2C%7B%22children%22%3A%5B%22home%22%2C%7B%22children%22%3A%5B%5B%22account%22%2C%22simple-audience%22%2C%22d%22%5D%2C%7B%22children%22%3A%5B%22__PAGE__%22%2C%7B%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%2Ctrue%5D",
+        "baggage": "sentry-environment=production,sentry-release=a5f3a643069618e92b87fef4f3edc1fbabafae13,sentry-public_key=4d972780adb75aac72c5b6a604e4ad89,sentry-trace_id=63fcdf06aeef6b365dbb9b213546f58c,sentry-org_id=4510247048773632,sentry-sample_rand=0.7206194148891539,sentry-sample_rate=1",
+        "sentry-trace": "63fcdf06aeef6b365dbb9b213546f58c-ac5cfc5988cbcda4-1",
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36",
+        "Accept": "text/x-component",
+        "Content-Type": "text/plain;charset=UTF-8",
+        "x-deployment-id": "dpl_E1CZwNZsRi1KAkFtbwHL7mMCJBLW"
+      },
+      "postData": "[{\"audienceId\":\"bf41346e-a4c5-4495-b6f0-bb41e23fc6b6\",\"page\":1,\"pageSize\":10}]",
+      "requestId": "50812.483"
+    },
+    {
+      "ts": "2026-04-07T16:53:39.099Z",
+      "type": "response",
+      "url": "https://app.intentcore.io/home/simple-audience",
+      "status": 200,
+      "requestId": "50812.483"
+    },
+    {
+      "ts": "2026-04-07T16:53:40.774Z",
+      "type": "request",
+      "url": "https://app.intentcore.io/home/simple-audience",
+      "method": "POST",
+      "headers": {
+        "sec-ch-ua-platform": "\"Mac OS X\"",
+        "Next-Action": "7fb69ab8d7dd8c25456603f957085d79c5ceb3e7ce",
+        "Referer": "https://app.intentcore.io/home/simple-audience",
+        "sec-ch-ua": "\"Chromium\";v=\"146\", \" Not A;Brand\";v=\"99\", \"Google Chrome\";v=\"146\"",
+        "sec-ch-ua-mobile": "?0",
+        "Next-Router-State-Tree": "%5B%22%22%2C%7B%22children%22%3A%5B%22home%22%2C%7B%22children%22%3A%5B%5B%22account%22%2C%22simple-audience%22%2C%22d%22%5D%2C%7B%22children%22%3A%5B%22__PAGE__%22%2C%7B%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%2Ctrue%5D",
+        "baggage": "sentry-environment=production,sentry-release=a5f3a643069618e92b87fef4f3edc1fbabafae13,sentry-public_key=4d972780adb75aac72c5b6a604e4ad89,sentry-trace_id=63fcdf06aeef6b365dbb9b213546f58c,sentry-org_id=4510247048773632,sentry-sample_rand=0.7206194148891539,sentry-sample_rate=1",
+        "sentry-trace": "63fcdf06aeef6b365dbb9b213546f58c-bd9e1dd105670bf8-1",
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36",
+        "Accept": "text/x-component",
+        "Content-Type": "text/plain;charset=UTF-8",
+        "x-deployment-id": "dpl_E1CZwNZsRi1KAkFtbwHL7mMCJBLW"
+      },
+      "postData": "[{\"accountId\":\"fceffb3b-552d-413a-9442-e62e9d423aa0\",\"name\":\"E-Waste Recycling Intent - Medical Dental Legal Ed\"}]",
+      "requestId": "50812.485"
+    },
+    {
+      "ts": "2026-04-07T16:53:41.870Z",
+      "type": "response",
+      "url": "https://app.intentcore.io/home/simple-audience",
+      "status": 200,
+      "requestId": "50812.485"
+    },
+    {
+      "ts": "2026-04-07T16:53:42.297Z",
+      "type": "response",
+      "url": "https://app.intentcore.io/home/simple-audience/audience/d34c3940-e687-4869-b197-b3b3e9c8d701?_rsc=dkw1e",
+      "status": 200,
+      "requestId": "50812.486"
+    },
+    {
+      "ts": "2026-04-07T16:53:42.725Z",
+      "type": "response",
+      "url": "https://app.intentcore.io/home/simple-audience/audience/d34c3940-e687-4869-b197-b3b3e9c8d701?_rsc=1bbvy",
+      "status": 200,
+      "requestId": "50812.487"
+    },
+    {
+      "ts": "2026-04-07T16:53:43.304Z",
+      "type": "response",
+      "url": "https://app.intentcore.io/home/simple-audience?_rsc=18411",
+      "status": 200,
+      "requestId": "50812.494"
+    },
+    {
+      "ts": "2026-04-07T16:53:43.305Z",
+      "type": "response",
+      "url": "https://app.intentcore.io/home/simple-audience/segment?_rsc=18411",
+      "status": 200,
+      "requestId": "50812.496"
+    },
+    {
+      "ts": "2026-04-07T16:53:43.322Z",
+      "type": "response",
+      "url": "https://app.intentcore.io/home/simple-audience/studio?_rsc=18411",
+      "status": 200,
+      "requestId": "50812.495"
+    },
+    {
+      "ts": "2026-04-07T16:53:43.341Z",
+      "type": "response",
+      "url": "https://app.intentcore.io/home/simple-audience/enrichment?_rsc=18411",
+      "status": 200,
+      "requestId": "50812.497"
+    },
+    {
+      "ts": "2026-04-07T16:53:43.343Z",
+      "type": "response",
+      "url": "https://app.intentcore.io/home/simple-audience/workflows/docs?_rsc=18411",
+      "status": 200,
+      "requestId": "50812.493"
+    },
+    {
+      "ts": "2026-04-07T16:53:43.585Z",
+      "type": "response",
+      "url": "https://app.intentcore.io/home/simple-audience/email-validation?_rsc=18411",
+      "status": 200,
+      "requestId": "50812.498"
+    },
+    {
+      "ts": "2026-04-07T16:53:43.587Z",
+      "type": "response",
+      "url": "https://app.intentcore.io/home/simple-audience/pixel?_rsc=18411",
+      "status": 200,
+      "requestId": "50812.499"
+    },
+    {
+      "ts": "2026-04-07T16:53:43.611Z",
+      "type": "response",
+      "url": "https://app.intentcore.io/home/simple-audience/sync?_rsc=18411",
+      "status": 200,
+      "requestId": "50812.500"
+    },
+    {
+      "ts": "2026-04-07T16:53:43.654Z",
+      "type": "response",
+      "url": "https://app.intentcore.io/home/simple-audience/workflows?_rsc=18411",
+      "status": 200,
+      "requestId": "50812.501"
+    },
+    {
+      "ts": "2026-04-07T16:53:43.676Z",
+      "type": "response",
+      "url": "https://app.intentcore.io/home/simple-audience/white-label?_rsc=18411",
+      "status": 200,
+      "requestId": "50812.502"
+    },
+    {
+      "ts": "2026-04-07T16:53:43.854Z",
+      "type": "response",
+      "url": "https://app.intentcore.io/home/simple-audience/white-label/branding?_rsc=18411",
+      "status": 200,
+      "requestId": "50812.505"
+    },
+    {
+      "ts": "2026-04-07T16:53:43.880Z",
+      "type": "response",
+      "url": "https://app.intentcore.io/home/simple-audience/white-label/teams?_rsc=18411",
+      "status": 200,
+      "requestId": "50812.503"
+    },
+    {
+      "ts": "2026-04-07T16:53:43.881Z",
+      "type": "response",
+      "url": "https://app.intentcore.io/home/simple-audience/white-label/templates?_rsc=18411",
+      "status": 200,
+      "requestId": "50812.504"
+    },
+    {
+      "ts": "2026-04-07T16:53:44.166Z",
+      "type": "response",
+      "url": "https://app.intentcore.io/home/simple-audience/usage?_rsc=18411",
+      "status": 200,
+      "requestId": "50812.506"
+    },
+    {
+      "ts": "2026-04-07T16:53:44.190Z",
+      "type": "response",
+      "url": "https://app.intentcore.io/home/simple-audience/settings?_rsc=18411",
+      "status": 200,
+      "requestId": "50812.507"
+    },
+    {
+      "ts": "2026-04-07T16:53:44.213Z",
+      "type": "response",
+      "url": "https://app.intentcore.io/home/simple-audience/members?_rsc=18411",
+      "status": 200,
+      "requestId": "50812.508"
+    },
+    {
+      "ts": "2026-04-07T16:53:46.441Z",
+      "type": "request",
+      "url": "https://app.intentcore.io/home/simple-audience/audience/d34c3940-e687-4869-b197-b3b3e9c8d701",
+      "method": "POST",
+      "headers": {
+        "sec-ch-ua-platform": "\"Mac OS X\"",
+        "next-action": "7f2fedc1659914fecb5d57837dc4b06ab5c2e0e744",
+        "Referer": "https://app.intentcore.io/home/simple-audience/audience/d34c3940-e687-4869-b197-b3b3e9c8d701",
+        "sec-ch-ua": "\"Chromium\";v=\"146\", \" Not A;Brand\";v=\"99\", \"Google Chrome\";v=\"146\"",
+        "sec-ch-ua-mobile": "?0",
+        "next-router-state-tree": "%5B%22%22%2C%7B%22children%22%3A%5B%22home%22%2C%7B%22children%22%3A%5B%5B%22account%22%2C%22simple-audience%22%2C%22d%22%5D%2C%7B%22children%22%3A%5B%22audience%22%2C%7B%22children%22%3A%5B%5B%22id%22%2C%22d34c3940-e687-4869-b197-b3b3e9c8d701%22%2C%22d%22%5D%2C%7B%22children%22%3A%5B%22__PAGE__%22%2C%7B%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%5D%7D%2Cnull%2Cnull%2Ctrue%5D",
+        "baggage": "sentry-environment=production,sentry-release=a5f3a643069618e92b87fef4f3edc1fbabafae13,sentry-public_key=4d972780adb75aac72c5b6a604e4ad89,sentry-trace_id=3f73fd14a482414b83c8bdcf34324fd2,sentry-org_id=4510247048773632,sentry-transaction=%2Fhome%2F%3Aaccount%2Faudience%2F%3Aid,sentry-sampled=true,sentry-sample_rand=0.45853610333624595,sentry-sample_rate=1",
+        "sentry-trace": "3f73fd14a482414b83c8bdcf34324fd2-8e53153686388b07-1",
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36",
+        "accept": "text/x-component",
+        "content-type": "text/plain;charset=UTF-8",
+        "x-deployment-id": "dpl_E1CZwNZsRi1KAkFtbwHL7mMCJBLW"
+      },
+      "postData": "[{\"accountId\":\"fceffb3b-552d-413a-9442-e62e9d423aa0\",\"id\":\"d34c3940-e687-4869-b197-b3b3e9c8d701\",\"filters\":{\"audience\":{\"type\":\"premade\",\"b2b\":null,\"customTopic\":\"\",\"customDescription\":\"\",\"segmentSearches\":[\"Sustainability & Green Living > Recycling & Waste Management > E-waste Management\"]},\"jobId\":\"\",\"segment\":[],\"daysBack\":7,\"score\":[],\"filters\":{\"age\":{\"minAge\":null,\"maxAge\":null},\"city\":[],\"state\":[],\"zip\":[],\"gender\":[],\"profile\":{\"incomeRange\":[],\"homeowner\":[],\"married\":[],\"netWorth\":[],",
+      "requestId": "50812.515"
+    },
+    {
+      "ts": "2026-04-07T16:53:46.723Z",
+      "type": "response",
+      "url": "https://app.intentcore.io/home/simple-audience/audience/d34c3940-e687-4869-b197-b3b3e9c8d701",
+      "status": 404,
+      "requestId": "50812.515"
+    }
+  ],
+  "previewResult": {
+    "status": 404,
+    "ok": false,
+    "text": "Server action not found."
+  }
+}
