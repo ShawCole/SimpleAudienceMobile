@@ -1,0 +1,22 @@
+{
+  "topicPath": "Technology > E-Waste & Electronics Recycling > E-Waste Recycling Services",
+  "topicSlug": "e-waste-recycling",
+  "tiers": ["low", "medium", "high"],
+  "daysBack": 7,
+  "b2b": "B2B",
+  "filters": {
+    "businessProfile": {
+      "industry": [
+        "Medical Practice",
+        "Hospital & Health Care",
+        "Dentistry",
+        "Law Practice",
+        "Legal Services",
+        "Higher Education",
+        "Education Management",
+        "Primary/Secondary Education"
+      ]
+    }
+  },
+  "audienceName": "E-Waste Recycling Intent - Medical Dental Legal Education - SC"
+}
