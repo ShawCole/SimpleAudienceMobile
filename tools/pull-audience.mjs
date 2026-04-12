@@ -56,6 +56,7 @@ const ARG_INDUSTRY = getArg('--industry')?.split(',') || [];
 const ARG_SENIORITY = getArg('--seniority')?.split(',') || [];
 const ARG_CREDIT = getArg('--credit')?.split(',') || [];
 const ARG_HOMEOWNER = getArg('--homeowner')?.split(',') || [];
+const ARG_INCOME = getArg('--income')?.split(',') || [];
 const ARG_B2B = args.includes('--b2b') ? 'B2B' : null;
 const ARG_OUTPUT = getArg('--output');
 
