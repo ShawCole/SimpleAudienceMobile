@@ -209,6 +209,7 @@ async function main() {
     if (ARG_SENIORITY.length) filters.businessProfile.seniority = ARG_SENIORITY;
     if (ARG_CREDIT.length) filters.attributes.credit_rating = ARG_CREDIT;
     if (ARG_HOMEOWNER.length) filters.profile.homeowner = ARG_HOMEOWNER;
+    if (ARG_INCOME.length) filters.profile.incomeRange = ARG_INCOME;
 
     const previewPayload = [{
         accountId: ACCOUNT_ID, id: audienceId,
