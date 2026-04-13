@@ -1,6 +1,3 @@
-2026/04/13-18:50:52.535 4632de Reusing MANIFEST /Users/ShawCole/SimpleAudienceMobile/tools/.chrome-inject-profile/Default/Local Storage/leveldb/MANIFEST-000001
-2026/04/13-18:50:52.538 4632de Recovering log #5
-2026/04/13-18:50:52.538 4632de Reusing old log /Users/ShawCole/SimpleAudienceMobile/tools/.chrome-inject-profile/Default/Local Storage/leveldb/000005.log 
-2026/04/13-18:51:33.780 4632de Level-0 table #7: started
-2026/04/13-18:51:33.788 4632de Level-0 table #7: 13591 bytes OK
-2026/04/13-18:51:33.794 4632de Delete type=0 #5
+2026/04/13-19:05:15.588 46de07 Reusing MANIFEST /Users/ShawCole/SimpleAudienceMobile/tools/.chrome-inject-profile/Default/Local Storage/leveldb/MANIFEST-000001
+2026/04/13-19:05:15.591 46de07 Recovering log #6
+2026/04/13-19:05:15.596 46de07 Reusing old log /Users/ShawCole/SimpleAudienceMobile/tools/.chrome-inject-profile/Default/Local Storage/leveldb/000006.log 
