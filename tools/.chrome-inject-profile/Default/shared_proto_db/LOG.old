@@ -1,3 +1,6 @@
-2026/04/13-19:04:40.113 46d6e0 Reusing MANIFEST /Users/ShawCole/SimpleAudienceMobile/tools/.chrome-inject-profile/Default/shared_proto_db/MANIFEST-000001
-2026/04/13-19:04:40.113 46d6e0 Recovering log #3
-2026/04/13-19:04:40.117 46d6e0 Reusing old log /Users/ShawCole/SimpleAudienceMobile/tools/.chrome-inject-profile/Default/shared_proto_db/000003.log 
+2026/04/13-19:12:47.351 473007 Reusing MANIFEST /Users/ShawCole/SimpleAudienceMobile/tools/.chrome-inject-profile/Default/shared_proto_db/MANIFEST-000001
+2026/04/13-19:12:47.351 473007 Recovering log #3
+2026/04/13-19:12:47.353 473007 Reusing old log /Users/ShawCole/SimpleAudienceMobile/tools/.chrome-inject-profile/Default/shared_proto_db/000003.log 
+2026/04/13-19:13:26.512 472fdd Level-0 table #5: started
+2026/04/13-19:13:26.517 472fdd Level-0 table #5: 77290 bytes OK
+2026/04/13-19:13:26.529 472fdd Delete type=0 #3
